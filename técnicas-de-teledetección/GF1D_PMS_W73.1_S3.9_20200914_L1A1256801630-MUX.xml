@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ProductMetaData>
+    <SatelliteID>GF1D</SatelliteID>
+    <ReceiveStationID>KSC</ReceiveStationID>
+    <SensorID>PMS</SensorID>
+    <SensorMode>NAD</SensorMode>
+    <OrbitID>13260</OrbitID>
+    <OrbitType>GPS</OrbitType>
+    <StripID>124510</StripID>
+    <ProduceType>STANDARD</ProduceType>
+    <SceneID>510890</SceneID>
+    <ProductID>1256801630</ProductID>
+    <ProductLevel>LEVEL1A</ProductLevel>
+    <ProductFormat>GEOTIFF</ProductFormat>
+    <ProduceTime>2020-9-15 8:22:00</ProduceTime>
+    <Bands>1,2,3,4</Bands>
+    <ScenePath>332</ScenePath>
+    <SceneRow>167</SceneRow>
+    <SatPath>332</SatPath>
+    <SatRow>167</SatRow>
+    <SceneCount>1</SceneCount>
+    <SceneShift>0.0</SceneShift>
+    <StartTime>2020-9-14 23:36:52</StartTime>
+    <EndTime>2020-9-14 23:37:02</EndTime>
+    <StartLine>156221</StartLine>
+    <EndLine>165391</EndLine>
+    <WidthInPixels>8540</WidthInPixels>
+    <HeightInPixels>8458</HeightInPixels>
+    <WidthInMeters>67019</WidthInMeters>
+    <HeightInMeters>68368</HeightInMeters>
+    <PixelByte>ui16</PixelByte>
+    <ImageGSDLine>7.84770482890953</ImageGSDLine>
+    <ImageGSDSample>8.08323961037967</ImageGSDSample>
+    <CloudPercent>2.10</CloudPercent>
+    <SnowPercent>0.00</SnowPercent>
+    <ProductQuality>1</ProductQuality>
+    <RollViewingAngle>0.000000</RollViewingAngle>
+    <PitchViewingAngle>0.000000</PitchViewingAngle>
+    <PitchSatelliteAngle>-0.003193</PitchSatelliteAngle>
+    <RollSatelliteAngle>-0.004470</RollSatelliteAngle>
+    <YawSatelliteAngle>3.817395</YawSatelliteAngle>
+    <SolarAzimuth>68.704209</SolarAzimuth>
+    <SolarZenith>19.014915</SolarZenith>
+    <SatelliteAzimuth>11.947864</SatelliteAzimuth>
+    <SatelliteZenith>0.822892</SatelliteZenith>
+    <ReceiveTime>2020-09-14 15:36:57.55</ReceiveTime>
+    <AttType>DMA</AttType>
+    <DDSFlag>TRUE</DDSFlag>
+    <CenterTime>2020-09-14 23:36:57</CenterTime>
+    <DataSize>551</DataSize>
+    <GainMode>3,2,4,3</GainMode>
+    <IntegrationTime>1.130220</IntegrationTime>
+    <IntegrationLevel>8,8,4,2</IntegrationLevel>
+    <ResamplingKernel />
+    <HeightMode />
+    <EphemerisData>GPS</EphemerisData>
+    <AttitudeData>DMA</AttitudeData>
+    <MtfCorrection>LAB</MtfCorrection>
+    <Denoise>MOMENT</Denoise>
+    <RayleighCorrection>N</RayleighCorrection>
+    <CenterLatitude>-3.919659</CenterLatitude>
+    <CenterLongitude>-73.099825</CenterLongitude>
+    <TopLeftLatitude>-3.557073</TopLeftLatitude>
+    <TopLeftLongitude>-73.332550</TopLeftLongitude>
+    <TopRightLatitude>-3.680851</TopRightLatitude>
+    <TopRightLongitude>-72.742234</TopRightLongitude>
+    <BottomRightLatitude>-4.282270</BottomRightLatitude>
+    <BottomRightLongitude>-72.866847</BottomRightLongitude>
+    <BottomLeftLatitude>-4.158442</BottomLeftLatitude>
+    <BottomLeftLongitude>-73.457668</BottomLeftLongitude>
+    <ImageFile>GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX.tiff</ImageFile>
+    <RPCFile>GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX.rpb</RPCFile>
+    <BrowseFile>GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX.jpg</BrowseFile>
+    <ThumbFile>GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX_thumb.jpg</ThumbFile>
+    <CheckFile>GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX_Check.xml</CheckFile>
+    <GeoBoundFile></GeoBoundFile>
+</ProductMetaData>
