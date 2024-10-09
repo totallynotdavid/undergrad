@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<history>
+<session>
+<command time_stamp="1900833c155">%-- 11/06/2024 11:48 --%</command>
+<command execution_time="70">clc</command>
+<command execution_time="129">dir</command>
+<command error="true" execution_time="14">pwd</command>
+<command error="true" execution_time="0">falla</command>
+<command error="true" execution_time="10">pwd</command>
+<command execution_time="6">cd d:</command>
+<command execution_time="12">clc</command>
+<command error="true" execution_time="0">pwd</command>
+<command error="true" execution_time="5">ls</command>
+<command execution_time="3">dir</command>
+<command error="true" execution_time="0">cd cjimenez</command>
+<command execution_time="5">cd</command>
+<command error="true" execution_time="11">cd cjimenez</command>
+</session>
+<session>
+<command time_stamp="19008351f21">%-- 11/06/2024 11:50 --%</command>
+<command execution_time="2004">restoredefaultpath;matlabrc</command>
+<command execution_time="16">cd</command>
+<command execution_time="6">cd d:</command>
+<command execution_time="12">dir</command>
+<command execution_time="0">cd E:\eventos\nazca1996\tsunami</command>
+<command execution_time="10">clc</command>
+<command execution_time="10">dir</command>
+<command error="true" execution_time="34">edit6 def_oka.f</command>
+<command execution_time="455">edit def_oka.f</command>
+<command execution_time="126">edit pfalla_inv.inp</command>
+<command execution_time="2575">! gfortran def_oka.f -O3</command>
+<command execution_time="422651">! a.exe</command>
+<command execution_time="12">clc</command>
+<command execution_time="47" repeat="2">fuji2oka</command>
+<command execution_time="13">prueba.dat</command>
+<command execution_time="329">edit fuji2oka</command>
+<command execution_time="0">fuji2oka</command>
+<command execution_time="610">prueba.dat</command>
+<command execution_time="5672">5</command>
+<command execution_time="16">fuji2oka</command>
+<command execution_time="16">pfalla.kan</command>
+<command execution_time="266">4</command>
+<command execution_time="29">edit def_oka.f</command>
+<command execution_time="17">clc</command>
+<command execution_time="263" repeat="2">! gfortran def_oka.f -O3</command>
+<command execution_time="16">clc</command>
+<command execution_time="234">! gfortran def_oka.f -O3</command>
+<command execution_time="17">clc</command>
+<command execution_time="201">! gfortran def_oka.f -O3</command>
+<command execution_time="14">clc</command>
+<command execution_time="1114">! gfortran def_oka.f -O3</command>
+<command execution_time="0">clc</command>
+<command execution_time="1129">! gfortran def_oka.f -O3</command>
+<command execution_time="16">dir</command>
+<command execution_time="242">dib_fuente</command>
+<command error="true" execution_time="2978">dispZ.grd</command>
+<command execution_time="15">clc</command>
+<command execution_time="17">dir</command>
+<command execution_time="6">clc</command>
+<command execution_time="2659" repeat="2">! gfortran def_oka.f -O3</command>
+<command execution_time="88105">! a.exe</command>
+<command execution_time="6">dib_fuente</command>
+<command execution_time="4356">dispZ.grd</command>
+</session>
+<session>
+<command time_stamp="1905aa72766">%-- 27/06/2024 12:03 --%</command>
+<command execution_time="0">clc</command>
+<command execution_time="0">clear</command>
+<command error="true" execution_time="16">ls</command>
+<command execution_time="0">dir</command>
+<command error="true" execution_time="6">edit fault_plane_n</command>
+<command error="true" execution_time="0">edit fault_plane_n.m</command>
+<command execution_time="4">dir</command>
+<command error="true" execution_time="15">edit fault_plane_n.m</command>
+<command error="true" execution_time="0">edit</command>
+</session>
+<session>
+<command time_stamp="1905aa87ea6">%-- 27/06/2024 12:05 --%</command>
+<command execution_time="1979">restoredefaultpath;matlabrc</command>
+<command execution_time="198">edit</command>
+<command execution_time="0">dir</command>
+<command execution_time="0">clear</command>
+<command execution_time="0">clc</command>
+<command execution_time="16">dir</command>
+<command execution_time="49">falla</command>
+<command execution_time="15">8.0</command>
+<command execution_time="2335">fault_plane_n</command>
+<command execution_time="35">0</command>
+<command execution_time="16" repeat="2">1</command>
+<command execution_time="141">2</command>
+<command execution_time="217">edit fault_plane_n</command>
+<command execution_time="1694">fault_plane_n</command>
+<command execution_time="32">0</command>
+<command execution_time="8" repeat="2">1</command>
+<command execution_time="135">2</command>
+<command execution_time="3">clear</command>
+<command execution_time="0">clc</command>
+<command execution_time="16" repeat="2">dir</command>
+<command execution_time="0">clear</command>
+<command execution_time="6">clc</command>
+<command execution_time="15">clear</command>
+<command execution_time="8">clc</command>
+<command execution_time="0">cd ..</command>
+<command execution_time="17">cd lab2</command>
+<command execution_time="4">ls</command>
+<command execution_time="16">falla</command>
+<command execution_time="16">8.0</command>
+<command execution_time="4187">fault_plane_n</command>
+<command execution_time="32">0</command>
+<command execution_time="3" repeat="2">1</command>
+<command execution_time="2">clear</command>
+<command execution_time="10">clc</command>
+<command execution_time="4229">fault_plane_n</command>
+<command execution_time="32">0</command>
+<command execution_time="10" repeat="2">1</command>
+<command execution_time="217">2</command>
+<command execution_time="7">clear</command>
+<command execution_time="3">clc</command>
+<command execution_time="5737">fault_plane_n</command>
+<command execution_time="50">0</command>
+<command execution_time="0" repeat="2">1</command>
+<command execution_time="249">2</command>
+<command execution_time="5">clear</command>
+<command execution_time="4">clc</command>
+<command execution_time="6338">fault_plane_n</command>
+<command execution_time="67">0</command>
+<command execution_time="9" repeat="2">1</command>
+<command execution_time="340">2</command>
+<command execution_time="6876">fault_plane_n</command>
+<command execution_time="46">0</command>
+<command execution_time="9" repeat="2">1</command>
+<command execution_time="365">2</command>
+<command execution_time="7">clear</command>
+<command execution_time="16">clc</command>
+<command execution_time="6823" repeat="2">fault_plane_n</command>
+<command execution_time="33">0</command>
+<command execution_time="2" repeat="2">1</command>
+<command execution_time="418">2</command>
+<command execution_time="3">clear</command>
+<command execution_time="0">clc</command>
+<command execution_time="6673">fault_plane_n</command>
+<command execution_time="49">0</command>
+<command execution_time="4" repeat="2">1</command>
+<command execution_time="334">2</command>
+<command execution_time="12">clear</command>
+<command execution_time="5">clc</command>
+<command execution_time="7074">fault_plane_n</command>
+<command execution_time="34">0</command>
+<command execution_time="14" repeat="2">1</command>
+<command execution_time="367">2</command>
+<command execution_time="0">clear</command>
+<command execution_time="17">clc</command>
+<command execution_time="7255">fault_plane_n</command>
+<command execution_time="50">0</command>
+<command execution_time="17" repeat="2">1</command>
+<command execution_time="401">2</command>
+<command execution_time="0">dir</command>
+<command execution_time="684">!gfortran deform.f</command>
+<command execution_time="116">!a.exe</command>
+<command execution_time="133">dib_fuente</command>
+<command error="true" execution_time="3787">deform_a.grd</command>
+<command execution_time="701">!gfortran deform.f</command>
+<command execution_time="83">!a.exe</command>
+<command execution_time="851">!gfortran def_oka.f</command>
+<command execution_time="100">!a.exe</command>
+<command execution_time="17">dib_fuente</command>
+<command error="true" execution_time="4304">deform_a.grd</command>
+<command execution_time="0">clear</command>
+<command execution_time="1">clc</command>
+<command execution_time="17">dir</command>
+<command execution_time="200">edit pfalla.inp</command>
+<command execution_time="17">load xya.mat</command>
+<command execution_time="0">length(xa)</command>
+<command execution_time="17">length(ya)</command>
+<command execution_time="17">load xyo.mat</command>
+<command execution_time="0">IDS,IDE,JDS,JDE</command>
+<command error="true" execution_time="33">A=load(grid_a.grd)</command>
+<command execution_time="5639">A=load('grid_a.grd')</command>
+<command execution_time="117">pcolor(xa,ya,-A'),grid</command>
+<command error="true" execution_time="65">pcolor(xa,ya,-A'),shading,flat, grid</command>
+<command error="true" execution_time="101">pcolor(xa,ya,-A'),shading,flat, grid on</command>
+<command execution_time="61">pcolor(xa,ya,-A'),shading flat, grid on</command>
+<command execution_time="4453">fault_plane_n</command>
+<command execution_time="34">0</command>
+<command execution_time="2" repeat="2">1</command>
+<command execution_time="234">2</command>
+<command execution_time="0">dir</command>
+<command execution_time="566">!gfortran def_oka.f</command>
+<command execution_time="134">edit def_oka.f</command>
+<command execution_time="517">!gfortran deform.f</command>
+<command execution_time="83">!a.exe</command>
+<command execution_time="99">edit deform.f</command>
+<command batch="1">IDS =   153</command>
+<command batch="1">IDE =   637</command>
+<command batch="1">JDS =   844</command>
+<command batch="1" execution_time="7">JDE =  1396</command>
+<command execution_time="8">save xyo.mat IDS IDE JDS JDE</command>
+<command execution_time="7">deg2km(30/3600)*1000</command>
+<command execution_time="484">!gfortran deform.f</command>
+<command execution_time="1236">!a.exe</command>
+<command execution_time="499">!gfortran deform.f</command>
+<command execution_time="1226">!a.exe</command>
+<command execution_time="51">dib_fuente</command>
+<command execution_time="3657">deform_a.grd</command>
+<command execution_time="633">y</command>
+<command execution_time="0">dir</command>
+<command execution_time="34">edit def_oka.f</command>
+<command execution_time="486">!gfortran def_oka.f</command>
+<command execution_time="1366">!a.exe</command>
+<command execution_time="10">1</command>
+<command execution_time="3">dib_fuente</command>
+<command execution_time="3617">deform_a.grd</command>
+<command execution_time="517">y</command>
+<command execution_time="513">!gfortran def_oka.f</command>
+<command execution_time="1345">!a.exe</command>
+<command execution_time="3">dib_fuente</command>
+<command execution_time="3620">deform_a.grd</command>
+<command execution_time="486">y</command>
+<command execution_time="2">prefdir</command>
+</session>
+</history>
