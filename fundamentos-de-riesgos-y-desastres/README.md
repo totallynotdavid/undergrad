@@ -1,4 +1,4 @@
-# Extractor de Datos SIGRID
+# Extractor de datos de SIGRID
 
 Este proyecto proporciona una herramienta para extraer datos de SIGRID, la base de datos de CENEPRED para desastres en Perú (específicamente huaicos, otros endpoints no son considerados), y guardarlos en formatos CSV y XLSX.
 
@@ -6,8 +6,8 @@ Nota: ¡Otros endpoints pueden o deberían de ser añadidos en versiones futuras
 
 ## Requisitos
 
-- Python 3.10 o superior (<3.13)
-- Poetry
+-   Python 3.10 o superior (<3.13)
+-   Poetry
 
 ## Instalación
 
@@ -33,15 +33,7 @@ Nota: ¡Otros endpoints pueden o deberían de ser añadidos en versiones futuras
 
 ## Parámetros
 
-- `service_endpoint`: URL del servicio de SIGRID.
-- `geometry`: Define la geometría espacial para la consulta. Especifica una región en sí, no necesariamente un departamento.
-- `where`: Condición WHERE para la consulta.
-- `out_fields`: Campos a ser recuperados en la consulta.
-
-## Contribuciones
-
-Las contribuciones son bienvenidas. Por favor, abre un issue si encuentras un bug o tienes una sugerencia de mejora.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+-   `service_endpoint`: URL del servicio de SIGRID.
+-   `geometry`: Define la geometría espacial para la consulta. Especifica una región en sí, no necesariamente un departamento.
+-   `where`: Condición WHERE para la consulta.
+-   `out_fields`: Campos a ser recuperados en la consulta.

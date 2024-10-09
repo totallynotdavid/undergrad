@@ -8,9 +8,9 @@ Los primeros dos programas derivan funciones ingresadas por archivo externo como
 
 ### Métodos usados:
 
-- Diferencias finitas hacia adelante
-- Diferencias finitas hacia atrás
-- Diferencias finitas centradas
+-   Diferencias finitas hacia adelante
+-   Diferencias finitas hacia atrás
+-   Diferencias finitas centradas
 
 ## EDO
 
@@ -18,16 +18,16 @@ Se resuelven EDOs de primer y segundo orden.
 
 ### Métodos usados:
 
-- Euler simple
-- Runge-Kutta 2do orden
-- Runge-Kutta 4to orden
+-   Euler simple
+-   Runge-Kutta 2do orden
+-   Runge-Kutta 4to orden
 
 ## Solución de ecuaciones no lineales
 
 ### Métodos usados
 
-- Método de bisección
-- Método de Newton-Raphson
+-   Método de bisección
+-   Método de Newton-Raphson
 
 ## EDP
 

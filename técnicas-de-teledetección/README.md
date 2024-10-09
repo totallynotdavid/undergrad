@@ -1,6 +1,6 @@
 # Física y Técnicas de Teledetección
 
-Para poder visualizar los archivos correctamente, se recomienda instalar [Anaconda](https://repo.anaconda.com/archive/) y Jupyter Notebook en su equipo. 
+Para poder visualizar los archivos correctamente, se recomienda instalar [Anaconda](https://repo.anaconda.com/archive/) y Jupyter Notebook en su equipo.
 
 ## Descripción
 

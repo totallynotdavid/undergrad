@@ -1,8 +1,9 @@
 # P-01: INSTALACION Y CONFIGURACION (06/04/2024)
 
 La presente practica tiene por objeto instalar y configurar los programas, librerías y IDE necesarios para el procesamiento digital de imágenes de teledetección.
+
 1. Instalar ANACONDA: https://www.anaconda.com/download
-2. Crear entorno virtual usando conda: 
+2. Crear entorno virtual usando conda:
     ```
     conda create fcf-sr -c conda-forge python=3
     conda activate fcf-sr
