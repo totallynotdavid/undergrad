@@ -30,7 +30,8 @@
                 "ms-toolsai.jupyter",
                 "MathWorks.language-matlab",
                 "ms-python.python",
-                "jock.svg"
+                "jock.svg",
+                "frinkr.pdf"
             ]
         }
     }
