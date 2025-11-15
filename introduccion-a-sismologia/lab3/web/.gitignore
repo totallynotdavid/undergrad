@@ -1,0 +1,7 @@
+.ruff_cache
+eventos_procesados
+archivos
+raw
+__pycache__
+*.pdf
+*.m
