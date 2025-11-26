@@ -1,0 +1,15 @@
+[project]
+name = "tecnicas-de-teledeteccion"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10, <3.14"
+dependencies = [
+    "earthengine-api>=1.7.1",
+    "rasterio>=1.4.3",
+    "earthpy>=0.9.4",
+    "pandas>=2.3.3",
+    "pyproj>=3.7.1",
+    "matplotlib>=3.10.7",
+    "numpy>=2.2.6",
+]
