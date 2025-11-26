@@ -1,5 +1,0 @@
-nbconvert
-matplotlib
-numpy
-numba
-ipywidgets

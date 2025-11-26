@@ -20,19 +20,5 @@
     "containerEnv": {
         "MATLAB_USERWORKDIR": "${containerWorkspaceFolder}",
         "MATLAB_USE_USERWORK": "1"
-    },
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-python.autopep8",
-                "GitHub.copilot",
-                "GitHub.copilot-chat",
-                "ms-toolsai.jupyter",
-                "MathWorks.language-matlab",
-                "ms-python.python",
-                "jock.svg",
-                "frinkr.pdf"
-            ]
-        }
     }
 }
