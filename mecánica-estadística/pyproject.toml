@@ -10,4 +10,5 @@ dependencies = [
     "numpy>=2.2.6",
     "numba>=0.62.1",
     "ipywidgets>=8.1.8",
+    "plotly>=6.1.1",
 ]
