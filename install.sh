@@ -6,8 +6,7 @@ if ! command -v apt-get >/dev/null 2>&1; then
   exit 1
 fi
 
-GFORTRAN_MAJOR="${1:-13}"
-PACKAGE="gfortran-${GFORTRAN_MAJOR}"
+PACKAGE="gfortran-13"
 SUDO=""
 if [[ "${EUID}" -ne 0 ]]; then
   SUDO="sudo"
