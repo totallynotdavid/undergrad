@@ -6,3 +6,5 @@
 *.png
 *.out
 node_modules
+
+__marimo__/
