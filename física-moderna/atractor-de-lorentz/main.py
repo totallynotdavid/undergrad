@@ -13,14 +13,7 @@ def _():
 
     INITIAL_STATE = (0.1, 0.0, 0.0)
     POINT_DENSITY = 500
-    return (
-        INITIAL_STATE,
-        POINT_DENSITY,
-        mo,
-        np,
-        odeint,
-        plt,
-    )
+    return INITIAL_STATE, POINT_DENSITY, mo, np, odeint, plt
 
 
 @app.cell(hide_code=True)
@@ -35,7 +28,6 @@ def _(mo):
 
 @app.cell
 def _(mo):
-    # Widgets are defined here; we render them next to the image in a later cell.
     sigma = mo.ui.slider(0.0, 30.0, value=10.0, step=0.1, label="sigma")
     rho = mo.ui.slider(0.0, 60.0, value=28.0, step=0.1, label="rho")
     beta = mo.ui.slider(0.5, 5.0, value=8.0 / 3.0, step=0.01, label="beta")
@@ -72,8 +64,7 @@ def _(INITIAL_STATE, odeint, puntos_tiempo, sistema_lorenz):
 
 
 @app.cell
-def _(puntos, plt):
-    # Build the figure in memory for notebook-first rendering.
+def _(plt, puntos):
     fig = plt.figure(figsize=(12, 9))
     ax = fig.add_subplot(111, projection="3d")
     fig.patch.set_alpha(0)
@@ -89,7 +80,7 @@ def _(puntos, plt):
     ax.set_yticks([])
     ax.set_zticks([])
     ax.axis("off")
-    return fig
+    return (fig,)
 
 
 @app.cell
