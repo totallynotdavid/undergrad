@@ -1,6 +1,7 @@
 import json
-import requests
+
 import pandas as pd
+import requests
 
 # Constantes y variables globales
 BASE_URL = "https://sigrid.cenepred.gob.pe/arcgis/rest/services/Cartografia_Peligros/MapServer/5020100/query"

@@ -15,6 +15,7 @@ members = [
     "mecánica-estadística",
     "introduccion-a-sismologia",
     "técnicas-de-teledetección",
+    "fundamentos-de-riesgos-y-desastres",
 ]
 
 [tool.ruff]
