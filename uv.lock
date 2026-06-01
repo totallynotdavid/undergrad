@@ -20,6 +20,20 @@ members = [
 ]
 
 [[package]]
+name = "6s-bin"
+version = "0.11.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0d/98/8d2a4fe10206cc85b04fcc7c485993ba6da82567a33981571f5cf3b5dd34/6s_bin-0.11.3.tar.gz", hash = "sha256:2d40f0f4606221d95893a7935b89eadc3725184401c4d1641e99ff41c7402958", size = 13413, upload-time = "2024-01-15T15:41:50.374Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/52/92acb0070ec00a9bfe26ccd8a4a97a0bd250711123d51fef45db9870188a/6s_bin-0.11.3-py3-none-macosx_12_0_x86_64.whl", hash = "sha256:2c83c6f1a5d3d7774f5c067142cc64ada1129a4af96f8bb33a7104f137f27801", size = 823858, upload-time = "2024-01-15T15:41:45.116Z" },
+    { url = "https://files.pythonhosted.org/packages/89/b0/8e6a812d56035e6f18241eecc32bc80eeb5eaaca6220532dbc09e5ec4cb1/6s_bin-0.11.3-py3-none-manylinux_2_35_x86_64.whl", hash = "sha256:861abecb7e2c506e62115223512686533af7124d1174cd8bae5761cb650ad483", size = 828168, upload-time = "2024-01-15T15:41:47.4Z" },
+    { url = "https://files.pythonhosted.org/packages/53/b9/137e4fa94c0b14a3a4deda6d1b4daa5429b42ba59d9c97d99176d955426c/6s_bin-0.11.3-py3-none-win_amd64.whl", hash = "sha256:1667613f3ef16fe3a4bd30403365c8fd047871c17a28b27c46b5439055aaedd3", size = 1328450, upload-time = "2024-01-15T15:41:48.629Z" },
+]
+
+[[package]]
 name = "affine"
 version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2039,6 +2053,17 @@ wheels = [
 ]
 
 [[package]]
+name = "py6s"
+version = "1.9.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pysolar" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6e/47/d1931df56bb48f6982574f56b8589c0c43291ce06baa1118dbb979d1d57d/Py6S-1.9.2.tar.gz", hash = "sha256:2378ef027bbd3ead67cec47e9a14cf799b3bd851bc7833fbd44e2440666c0ff3", size = 80198, upload-time = "2022-06-30T19:54:25.51Z" }
+
+[[package]]
 name = "pyasn1"
 version = "0.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2242,6 +2267,19 @@ wheels = [
 ]
 
 [[package]]
+name = "pysolar"
+version = "0.13"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/97/f0/6f0b4e997370ce023212a8073ff581fdebb779d7e84435846af90079bfbe/pysolar-0.13.tar.gz", hash = "sha256:05913740694e4bb2af8412de3fa278c0435b3b15b2975c8e38625fc4eed1fd6c", size = 44526, upload-time = "2025-01-04T15:31:47.768Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/71/d4/d9440ff5da6547ac2587f93a9af7e779be0aed78e1f0734dede94e440f6b/pysolar-0.13-py3-none-any.whl", hash = "sha256:9019323af1a4db0b1cd5df5570b34a22b290f5ee817497aacfd63475779da004", size = 46930, upload-time = "2025-01-04T15:31:46.511Z" },
+]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 source = { registry = "https://pypi.org/simple" }
@@ -2251,6 +2289,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload-time = "2024-03-01T18:36:20.211Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload-time = "2024-03-01T18:36:18.57Z" },
+]
+
+[[package]]
+name = "python-dotenv"
+version = "1.2.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/ed/0301aeeac3e5353ef3d94b6ec08bbcabd04a72018415dcb29e588514bba8/python_dotenv-1.2.2.tar.gz", hash = "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3", size = 50135, upload-time = "2026-03-01T16:00:26.196Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0b/d7/1959b9648791274998a9c3526f6d0ec8fd2233e4d4acce81bbae76b44b2a/python_dotenv-1.2.2-py3-none-any.whl", hash = "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a", size = 22101, upload-time = "2026-03-01T16:00:25.09Z" },
 ]
 
 [[package]]
@@ -2749,6 +2796,15 @@ wheels = [
 ]
 
 [[package]]
+name = "setuptools"
+version = "81.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0d/1c/73e719955c59b8e424d015ab450f51c0af856ae46ea2da83eba51cc88de1/setuptools-81.0.0.tar.gz", hash = "sha256:487b53915f52501f0a79ccfd0c02c165ffe06631443a886740b91af4b7a5845a", size = 1198299, upload-time = "2026-02-06T21:10:39.601Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/e3/c164c88b2e5ce7b24d667b9bd83589cf4f3520d97cad01534cd3c4f55fdb/setuptools-81.0.0-py3-none-any.whl", hash = "sha256:fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6", size = 1062021, upload-time = "2026-02-06T21:10:37.175Z" },
+]
+
+[[package]]
 name = "shapely"
 version = "2.1.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2850,26 +2906,34 @@ name = "tecnicas-de-teledeteccion"
 version = "0.1.0"
 source = { virtual = "técnicas-de-teledetección" }
 dependencies = [
+    { name = "6s-bin" },
     { name = "earthengine-api" },
     { name = "earthpy" },
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pandas" },
+    { name = "py6s" },
     { name = "pyproj", version = "3.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pyproj", version = "3.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "python-dotenv" },
     { name = "rasterio" },
+    { name = "setuptools" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "6s-bin", specifier = ">=0.11.3" },
     { name = "earthengine-api", specifier = ">=1.7.1" },
     { name = "earthpy", specifier = ">=0.9.4" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "py6s", specifier = ">=1.9.2" },
     { name = "pyproj", specifier = ">=3.7.1" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "rasterio", specifier = ">=1.4.3" },
+    { name = "setuptools", specifier = ">=69,<82" },
 ]
 
 [[package]]
