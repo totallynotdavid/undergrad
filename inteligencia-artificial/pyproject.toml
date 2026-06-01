@@ -1,9 +1,11 @@
 [project]
 name = "inteligencia-artificial"
 version = "0.1.0"
-description = ""
+description = "Notebooks de inteligencia artificial"
 readme = "README.md"
 requires-python = ">=3.10, <3.14"
 dependencies = [
+    "marimo>=0.17.0",
+    "pandas>=2.1.0",
     "seaborn>=0.13.2",
 ]
