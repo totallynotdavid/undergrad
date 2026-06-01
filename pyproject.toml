@@ -9,6 +9,7 @@ dependencies = []
 [tool.uv.workspace]
 members = [
     "dinamica-molecular",
+    "física-general",
     "física-moderna",
     "inteligencia-artificial",
     "mecánica-estadística",
