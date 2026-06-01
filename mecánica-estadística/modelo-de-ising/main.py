@@ -6,12 +6,13 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
+    from inspect import cleandoc
+
     import marimo as mo
-    import numpy as np
     import matplotlib.pyplot as plt
+    import numpy as np
     import plotly.express as px
     from numba import njit
-    from inspect import cleandoc
 
     return cleandoc, mo, njit, np, plt, px
 
