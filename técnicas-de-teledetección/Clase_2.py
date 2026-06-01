@@ -1,8 +1,8 @@
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import osgeo.gdal
 import osgeo.gdal_array
+
 filepath = r"/workspaces/teledeteccion/LC08_L1TP_007068_20240427_20240427_02_RT_refl.tif" #Ruta de la imagen
 #l. Usando Libreria GDAL
 raster_b4 = osgeo.gdal.Open(filepath) #Abrimos el archivo y almacenamos en una raviable raster

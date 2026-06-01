@@ -13,6 +13,7 @@ AOT = Atmospheric.aerosol(geom,date)
 
 import ee
 
+
 class Atmospheric():
 
   def round_date(date,xhour):
@@ -56,17 +57,16 @@ class Atmospheric():
     # Point geometry required
     centroid = geom.centroid()
     
-    # H2O datetime is in 6 hour intervals
-    H2O_date = Atmospheric.round_date(date,6)
+    H2O_date = Atmospheric.round_date(date,1)
     
     # filtered water collection
-    water_ic = ee.ImageCollection('NCEP_RE/surface_wv').filterDate(H2O_date, H2O_date.advance(1,'month'))
+    water_ic = ee.ImageCollection('ECMWF/ERA5/HOURLY').filterDate(H2O_date, H2O_date.advance(1,'hour'))
     
     # water image
     water_img = ee.Image(water_ic.first())
     
     # water_vapour at target
-    water = water_img.reduceRegion(reducer=ee.Reducer.mean(), geometry=centroid).get('pr_wtr')
+    water = water_img.reduceRegion(reducer=ee.Reducer.mean(), geometry=centroid).get('total_column_water_vapour')
                                         
     # convert to Py6S units (Google = kg/m^2, Py6S = g/cm^2)
     water_Py6S_units = ee.Number(water).divide(10)                                   
@@ -91,7 +91,7 @@ class Atmospheric():
     def ozone_measurement(centroid,O3_date):
       
       # filtered ozone collection
-      ozone_ic = ee.ImageCollection('TOMS/MERGED').filterDate(O3_date, O3_date.advance(1,'month'))
+      ozone_ic = ee.ImageCollection('TOMS/MERGED_V4').filterDate(O3_date, O3_date.advance(1,'month'))
       
       # ozone image
       ozone_img = ee.Image(ozone_ic.first())
@@ -169,7 +169,7 @@ class Atmospheric():
       """
       # image for this month
       img =  ee.Image(\
-                      ee.ImageCollection('MODIS/006/MOD08_M3')\
+                      ee.ImageCollection('MODIS/061/MOD08_M3')\
                         .filterDate(Atmospheric.round_month(date))\
                         .first()\
                      )
@@ -178,7 +178,7 @@ class Atmospheric():
       img = ee.Algorithms.If(img,\
                                # all good
                                img\
-                               .select(['Aerosol_Optical_Depth_Land_Mean_Mean_550'])\
+                               .select(['Aerosol_Optical_Depth_Land_Ocean_Mean_Mean'])\
                                .divide(1000)\
                                .rename(['AOT_550']),\
                               # missing month
