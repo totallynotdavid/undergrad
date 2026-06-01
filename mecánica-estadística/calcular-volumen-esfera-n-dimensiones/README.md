@@ -1,5 +1,8 @@
-```
-wget https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-amd64.deb
-sudo dpkg -i pandoc-3.1.2-1-amd64.deb
-pandoc -v
-```
+# Volumen de la hiperesfera en n dimensiones
+
+Notebook marimo: `main.py`
+
+## Ejecutar
+
+- `uv run --package mecanica-estadistica marimo edit mecánica-estadística/calcular-volumen-esfera-n-dimensiones/main.py`
+- `uv run --package mecanica-estadistica marimo check mecánica-estadística/calcular-volumen-esfera-n-dimensiones/main.py`
