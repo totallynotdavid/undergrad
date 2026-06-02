@@ -9,13 +9,6 @@ on:
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/deploy.yml"
-  pull_request:
-    paths:
-      - "física-general/péndulo-doble/main.py"
-      - "física-general/pyproject.toml"
-      - "pyproject.toml"
-      - "uv.lock"
-      - ".github/workflows/deploy.yml"
 
 concurrency:
   group: "pages"
