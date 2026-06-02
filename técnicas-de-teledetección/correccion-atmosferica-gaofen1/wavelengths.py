@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with Py6S.  If not, see <http://www.gnu.org/licenses/>.
 
-# ruff: noqa: E501
-
 import numpy as np
 
 #from .. import sixs_exceptions

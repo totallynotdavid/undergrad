@@ -7,9 +7,7 @@ Usage
 H2O = Atmospheric.water(geom,date)
 O3 = Atmospheric.ozone(geom,date)
 AOT = Atmospheric.aerosol(geom,date)
-
 """
-
 
 import ee
 
