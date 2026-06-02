@@ -1,6 +1,7 @@
 import os
 import shutil
 
+
 def retornar_archivos(directorio_procesado, directorio_destino):
     # Recorrer todos los subdirectorios y archivos en el directorio procesado
     for root, dirs, files in os.walk(directorio_procesado, topdown=False):

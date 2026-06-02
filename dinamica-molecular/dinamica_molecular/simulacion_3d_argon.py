@@ -10,10 +10,10 @@ de fuerza más rápidos y la biblioteca matplotlib para
 visualizar la simulación a través de animación.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 import numba
+import numpy as np
 
 # Simulación de interacciones molecular de Lennard-Jones
 np.random.seed(0)

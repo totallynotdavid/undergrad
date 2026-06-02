@@ -1,7 +1,8 @@
 import csv
-import numpy as np
-from math import sqrt,exp
+from math import exp, sqrt
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Definición de constantes para la molécula de potasio (K)
 eps = (1.51/1000)*(27.21138386/2.0) # eV

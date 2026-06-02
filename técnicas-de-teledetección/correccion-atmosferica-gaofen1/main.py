@@ -229,7 +229,7 @@ def _(datetime, xml):
     fecha =datetime.strptime(tiempo_inicial.firstChild.data[0:9],'%Y-%m-%d')
     mes=fecha.timetuple().tm_mon   # month
     dia=fecha.timetuple().tm_mday  # day
-    anio=fecha.timetuple().tm_year # year
+    fecha.timetuple().tm_year # year
     # Solar geometric     
     sun_z=float(xml.getElementsByTagName("SolarZenith")[0].firstChild.data[0:4])  #Solar Zenith Angle
     sun_a=float(xml.getElementsByTagName("SolarAzimuth")[0].firstChild.data[0:4]) #Solar Azimuth Angle

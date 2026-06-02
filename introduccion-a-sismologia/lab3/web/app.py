@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, send_from_directory, jsonify, abort
+
 import file_processor
+from flask import Flask, abort, jsonify, render_template, request, send_from_directory
 
 
 class SismicDataManager:
