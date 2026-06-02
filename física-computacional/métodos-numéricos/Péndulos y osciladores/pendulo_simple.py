@@ -47,22 +47,22 @@ def _():
 def _(mo):
     theta0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=0.2, label="theta(0)")
     omega0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega(0)")
-    l = mo.ui.number(start=0.2, stop=10.0, step=0.1, value=1.0, label="l")
+    length = mo.ui.number(start=0.2, stop=10.0, step=0.1, value=1.0, label="l")
     g = mo.ui.number(start=0.1, stop=20.0, step=0.1, value=9.81, label="g")
     dt = mo.ui.number(start=0.001, stop=0.1, step=0.001, value=0.01, label="dt")
     tf = mo.ui.number(start=1.0, stop=60.0, step=1.0, value=20.0, label="t_final")
-    return dt, g, l, omega0, tf, theta0
+    return dt, g, length, omega0, tf, theta0
 
 
 @app.cell(hide_code=True)
-def _(dt, g, l, mo, omega0, tf, theta0):
-    mo.hstack([theta0, omega0, l, g, dt, tf], justify="start")
+def _(dt, g, length, mo, omega0, tf, theta0):
+    mo.hstack([theta0, omega0, length, g, dt, tf], justify="start")
     return
 
 
 @app.cell
 def _(np):
-    def integrate_pendulum_rk4(theta0, omega0, l, g, dt, tf):
+    def integrate_pendulum_rk4(theta0, omega0, length, g, dt, tf):
         n = int(tf / dt)
         t = np.linspace(0.0, n * dt, n + 1)
         theta = np.zeros(n + 1)
@@ -74,7 +74,7 @@ def _(np):
             return _omega
 
         def f_omega(_theta, _omega):
-            return -(g / l) * _theta
+            return -(g / length) * _theta
 
         for i in range(n):
             k1_theta = dt * f_theta(theta[i], omega[i])
@@ -92,19 +92,19 @@ def _(np):
             theta[i + 1] = theta[i] + (k1_theta + 2 * k2_theta + 2 * k3_theta + k4_theta) / 6
             omega[i + 1] = omega[i] + (k1_omega + 2 * k2_omega + 2 * k3_omega + k4_omega) / 6
 
-        x = l * np.sin(theta)
-        y = -l * np.cos(theta)
+        x = length * np.sin(theta)
+        y = -length * np.cos(theta)
         return t, theta, omega, x, y
 
     return (integrate_pendulum_rk4,)
 
 
 @app.cell
-def _(dt, g, integrate_pendulum_rk4, l, omega0, tf, theta0):
+def _(dt, g, integrate_pendulum_rk4, length, omega0, tf, theta0):
     t, theta, omega, x, y = integrate_pendulum_rk4(
         theta0.value,
         omega0.value,
-        l.value,
+        length.value,
         g.value,
         dt.value,
         tf.value,
