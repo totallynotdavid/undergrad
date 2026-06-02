@@ -1,14 +1,14 @@
 [project]
 name = "undergrad"
 version = "0.1.0"
-description = "Monorepo for undergrad projects"
-readme = "README.md"
+readme = "readme.txt"
 requires-python = ">=3.10, <3.14"
 dependencies = []
 
 [tool.uv.workspace]
 members = [
     "dinamica-molecular",
+    "física-computacional",
     "física-general",
     "física-moderna",
     "inteligencia-artificial",
