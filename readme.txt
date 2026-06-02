@@ -1,6 +1,3 @@
-Notebooks I wrote during my undergrad studies
-=============================================
-
 Quick start:
 uv sync --all-packages
 
