@@ -28,5 +28,5 @@ ignore = ["E501"]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.14.6",
+    "ruff>=0.15.15",
 ]
