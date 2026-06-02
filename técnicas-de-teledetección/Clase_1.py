@@ -109,13 +109,13 @@ def _(ee, mo, project_form, project_resolved):
 @app.cell
 def _(ee):
     # Import the MODIS land cover collection.
-    lc = ee.ImageCollection('MODIS_061_MCD12Q1')
+    ee.ImageCollection('MODIS_061_MCD12Q1')
 
     # Import the MODIS land surface temperature collection.
     lst = ee.ImageCollection('MODIS_061_MOD11A1')
 
     # Import the USGS ground elevation image.
-    elv = ee.Image('USGS/SRTMGL1_003')
+    ee.Image('USGS/SRTMGL1_003')
     return (lst,)
 
 
@@ -126,7 +126,7 @@ def _(lst):
     f_date = '2020-01-01'
     # Final date of interest (exclusive).
     # Selection of appropriate bands and dates for LST.
-    lst_1 = lst.select('LST_Day_1km', 'QC_Day').filterDate(i_date, f_date)
+    lst.select('LST_Day_1km', 'QC_Day').filterDate(i_date, f_date)
     return
 
 
@@ -135,12 +135,12 @@ def _(ee):
     # Define the urban location of interest as a point near Lyon, France.
     u_lon = 4.8148
     u_lat = 45.7758
-    u_poi = ee.Geometry.Point(u_lon, u_lat)
+    ee.Geometry.Point(u_lon, u_lat)
 
     # Define the rural location of interest as a point away from the city.
     r_lon = 5.175964
     r_lat = 45.574064
-    r_poi = ee.Geometry.Point(r_lon, r_lat)
+    ee.Geometry.Point(r_lon, r_lat)
     return
 
 

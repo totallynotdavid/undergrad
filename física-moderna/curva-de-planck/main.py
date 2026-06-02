@@ -10,8 +10,8 @@ def _():
     import subprocess
     from pathlib import Path
 
-    import matplotlib.pyplot as plt
     import marimo as mo
+    import matplotlib.pyplot as plt
     import pandas as pd
 
     NOTEBOOK_DIR = Path(__file__).resolve().parent

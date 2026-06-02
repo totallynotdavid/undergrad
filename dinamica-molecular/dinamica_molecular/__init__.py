@@ -1,4 +1,4 @@
-import k_p__potencial 
+import k_p__potencial
 import simulacion_3d
 
 __version__ = '1.0.0'

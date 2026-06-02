@@ -7,8 +7,8 @@ app = marimo.App()
 @app.cell(hide_code=True)
 def _():
     import marimo as mo
-    import numpy as np
     import matplotlib.pyplot as plt
+    import numpy as np
     from scipy.integrate import odeint
 
     INITIAL_STATE = (0.1, 0.0, 0.0)
