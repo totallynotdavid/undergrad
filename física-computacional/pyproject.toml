@@ -1,9 +1,9 @@
 [project]
-name = "dinamica-molecular"
+name = "fisica-computacional"
 version = "0.1.0"
 readme = "readme.txt"
 dependencies = [
-    "numba>=0.62.1",
+    "marimo>=0.23.8",
     "matplotlib>=3.10.7",
     "numpy>=2.2.6",
 ]
