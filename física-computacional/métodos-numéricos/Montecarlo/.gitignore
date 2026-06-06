@@ -1,0 +1,4 @@
+*.so
+_build/
+__pycache__/
+__marimo__/
