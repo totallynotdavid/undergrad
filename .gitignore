@@ -1,11 +1,17 @@
+# generated files
+*.mod
 *.exe
 *.o
-*.mod
-*.csv
-.ipynb_checkpoints/
-*.png
 *.out
+*.so
+
+# data/output files
+*.csv
+*.png
+
 node_modules
 
+# artifacts
+_build/
 __marimo__/
 __pycache__/
