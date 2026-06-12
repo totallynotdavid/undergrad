@@ -1,6 +1,6 @@
 [site]
-title = "Apuntes de pregrado"
-description = "Cuadernos interactivos y materiales para ejecucion local."
+title = "Notebooks"
+description = "Material interactivo de cursos de física de pregrado."
 repository = "https://github.com/totallynotdavid/undergrad"
 branch = "master"
 
