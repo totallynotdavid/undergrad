@@ -1,0 +1,195 @@
+[site]
+title = "Apuntes de pregrado"
+description = "Cuadernos interactivos y materiales para ejecucion local."
+repository = "https://github.com/totallynotdavid/undergrad"
+branch = "master"
+
+[defaults]
+root = "packages"
+
+[[courses]]
+id = "fisica-general"
+title = "Fisica general"
+package = "fisica-general"
+
+[[courses.sections]]
+id = "pendulos"
+title = "Pendulos"
+
+[[courses.sections.notebooks]]
+id = "pendulo-doble"
+title = "Pendulo doble acoplado"
+file = "pendulo_doble.py"
+summary = "Modelo didactico de dos angulos acoplados con integracion explicita de Euler."
+export = true
+
+[[courses]]
+id = "fisica-computacional"
+title = "Fisica computacional"
+package = "fisica-computacional"
+
+[[courses.sections]]
+id = "metodos-numericos"
+title = "Metodos numericos"
+
+[[courses.sections.notebooks]]
+id = "pendulo-simple"
+title = "Pendulo simple"
+file = "metodos-numericos/pendulos-y-osciladores/pendulo_simple.py"
+summary = "Integracion numerica y visualizacion de un pendulo simple."
+export = true
+
+[[courses.sections.notebooks]]
+id = "pendulo-doble"
+title = "Pendulo doble"
+file = "metodos-numericos/pendulos-y-osciladores/pendulo_doble.py"
+summary = "Integracion numerica y visualizacion de un pendulo doble."
+export = true
+
+[[courses.sections.notebooks]]
+id = "edp-calor"
+title = "EDP de calor en una dimension"
+file = "metodos-numericos/edp/edp_calor.py"
+summary = "Metodo explicito de diferencias finitas y condicion de estabilidad."
+export = true
+
+[[courses.sections.notebooks]]
+id = "monte-carlo"
+title = "Integracion de Monte Carlo"
+file = "metodos-numericos/monte-carlo/main.py"
+summary = "Estimadores de Monte Carlo, error estadistico y comparacion con resultados locales en Fortran."
+export = true
+
+[[courses.sections.notebooks]]
+id = "monte-carlo-fortran"
+title = "Monte Carlo con Fortran y f2py"
+file = "metodos-numericos/monte-carlo/fortran_f2py.py"
+summary = "Compilacion local de rutinas Fortran y extensiones nativas."
+export = false
+
+[[courses]]
+id = "fisica-moderna"
+title = "Fisica moderna"
+package = "fisica-moderna"
+
+[[courses.sections]]
+id = "sistemas-dinamicos"
+title = "Sistemas dinamicos"
+
+[[courses.sections.notebooks]]
+id = "atractor-de-lorenz"
+title = "Atractor de Lorenz"
+file = "atractor_de_lorenz.py"
+summary = "Integracion del sistema de Lorenz y visualizacion tridimensional."
+export = true
+
+[[courses.sections]]
+id = "radiacion"
+title = "Radiacion"
+
+[[courses.sections.notebooks]]
+id = "curva-de-planck"
+title = "Curva de Planck"
+file = "curva-de-planck/main.py"
+summary = "Requiere gfortran-13 para compilar y ejecutar el codigo Fortran."
+export = false
+
+[[courses]]
+id = "mecanica-estadistica"
+title = "Mecanica estadistica"
+package = "mecanica-estadistica"
+
+[[courses.sections]]
+id = "monte-carlo"
+title = "Monte Carlo"
+
+[[courses.sections.notebooks]]
+id = "volumen-hiperesfera"
+title = "Volumen de la hiperesfera"
+file = "calcular_volumen_esfera_n_dimensiones.py"
+summary = "Estimacion Monte Carlo del volumen de una bola unitaria en n dimensiones con numba."
+export = false
+
+[[courses.sections.notebooks]]
+id = "modelo-de-ising"
+title = "Modelo de Ising 3D"
+file = "modelo_de_ising.py"
+summary = "Muestreo de Metropolis con rutinas locales aceleradas por numba."
+export = false
+
+[[courses]]
+id = "inteligencia-artificial"
+title = "Inteligencia artificial"
+package = "inteligencia-artificial"
+
+[[courses.sections]]
+id = "datos-tabulares"
+title = "Datos tabulares"
+
+[[courses.sections.notebooks]]
+id = "limpieza-datos-tabulares"
+title = "Limpieza de datos tabulares"
+file = "limpieza_datos_tabulares.py"
+summary = "Usa el dataset Titanic de seaborn; conviene fijar los datos antes de publicarlo en WASM."
+export = false
+
+[[courses]]
+id = "tecnicas-de-teledeteccion"
+title = "Tecnicas de teledeteccion"
+package = "tecnicas-de-teledeteccion"
+
+[[courses.sections]]
+id = "earth-engine-y-6s"
+title = "Earth Engine y 6S"
+
+[[courses.sections.notebooks]]
+id = "clase-0-py6s"
+title = "Clase 0: Py6S"
+file = "earth-engine-y-6s/clase_0_py6s.py"
+summary = "Requiere Py6S y el binario 6S."
+export = false
+
+[[courses.sections.notebooks]]
+id = "clase-1-earth-engine"
+title = "Clase 1: Earth Engine"
+file = "earth-engine-y-6s/clase_1_earth_engine.py"
+summary = "Requiere credenciales y configuracion de Earth Engine."
+export = false
+
+[[courses.sections]]
+id = "raster-y-gdal"
+title = "Raster y GDAL"
+
+[[courses.sections.notebooks]]
+id = "clase-2-gdal"
+title = "Clase 2: GDAL"
+file = "raster-y-gdal/clase_2_gdal.py"
+summary = "Requiere un raster Landsat local y GDAL."
+export = false
+
+[[courses.sections]]
+id = "correccion-atmosferica"
+title = "Correccion atmosferica"
+
+[[courses.sections.notebooks]]
+id = "correccion-atmosferica-gaofen1"
+title = "Correccion atmosferica GaoFen-1"
+file = "correccion-atmosferica-gaofen1/main.py"
+summary = "Requiere credenciales, raster local, Py6S, 6S y rasterio."
+export = false
+
+[[courses]]
+id = "fundamentos-de-riesgos-y-desastres"
+title = "Fundamentos de riesgos y desastres"
+package = "fundamentos-de-riesgos-y-desastres"
+
+[[courses.sections]]
+id = "sigrid"
+title = "SIGRID"
+
+[[courses.sections.notebooks]]
+id = "huaicos-ancash"
+title = "Analisis de huaicos en Ancash"
+file = "sigrid/analisis_huaicos_ancash.py"
+summary = "Consulta datos remotos y usa geopandas; debe prepararse para navegador."
+export = false
