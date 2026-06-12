@@ -1,28 +1,31 @@
 {
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"dev": "vite dev",
-		"data": "uv run python ../scripts/export_notebooks.py data",
-		"export:notebooks": "uv run python ../scripts/export_notebooks.py export --clean",
-		"build": "vite build",
-		"build:pages": "bun run export:notebooks && vite build",
-		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
-	},
-	"devDependencies": {
-		"@sveltejs/adapter-static": "next",
-		"@sveltejs/kit": "next",
-		"@sveltejs/vite-plugin-svelte": "^7.1.2",
-		"@tailwindcss/typography": "^0.5.19",
-		"@tailwindcss/vite": "^4.3.0",
-		"@types/node": "^24.0.0",
-		"svelte": "^5.56.1",
-		"svelte-check": "^4.6.0",
-		"tailwindcss": "^4.3.0",
-		"typescript": "^6.0.3",
-		"vite": "^8.0.16"
-	}
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "data": "uv run python ../scripts/export_notebooks.py data",
+    "export:notebooks": "uv run python ../scripts/export_notebooks.py export --clean",
+    "build": "vite build",
+    "build:pages": "bun run export:notebooks && vite build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/source-serif-4": "^5.2.9"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "next",
+    "@sveltejs/kit": "next",
+    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@tailwindcss/vite": "^4.3.0",
+    "@types/node": "^24.0.0",
+    "svelte": "^5.56.1",
+    "svelte-check": "^4.6.0",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  }
 }
