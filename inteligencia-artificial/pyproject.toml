@@ -1,9 +1,7 @@
 [project]
 name = "inteligencia-artificial"
 version = "0.1.0"
-readme = "readme.txt"
 dependencies = [
-    "marimo>=0.23.8",
     "pandas>=2.3.3",
     "seaborn>=0.13.2",
 ]

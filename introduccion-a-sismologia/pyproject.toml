@@ -1,7 +1,6 @@
 [project]
 name = "introduccion-a-sismologia"
 version = "0.1.0"
-readme = "readme.txt"
 dependencies = [
     "flask>=3.1.2",
 ]

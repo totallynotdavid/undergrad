@@ -1,9 +1,7 @@
 [project]
 name = "fisica-computacional"
 version = "0.1.0"
-readme = "readme.txt"
 dependencies = [
-    "marimo>=0.23.9",
     "matplotlib>=3.10.7",
     "meson>=1.5",
     "ninja>=1.11",

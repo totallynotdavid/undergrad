@@ -1,7 +1,6 @@
 [project]
 name = "dinamica-molecular"
 version = "0.1.0"
-readme = "readme.txt"
 dependencies = [
     "numba>=0.62.1",
     "matplotlib>=3.10.7",

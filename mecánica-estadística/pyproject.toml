@@ -1,9 +1,7 @@
 [project]
 name = "mecanica-estadistica"
 version = "0.1.0"
-readme = "readme.txt"
 dependencies = [
-    "marimo>=0.23.8",
     "matplotlib>=3.10.7",
     "numpy>=2.2.6",
     "numba>=0.62.1",
