@@ -2,7 +2,6 @@
 name = "fisica-moderna"
 version = "0.1.0"
 dependencies = [
-    "marimo>=0.23.8",
     "matplotlib>=3.10.7",
     "numpy>=2.2.6",
     "pandas>=2.3.3",

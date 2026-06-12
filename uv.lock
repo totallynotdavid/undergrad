@@ -505,7 +505,6 @@ name = "fisica-computacional"
 version = "0.1.0"
 source = { virtual = "física-computacional" }
 dependencies = [
-    { name = "marimo" },
     { name = "matplotlib" },
     { name = "meson" },
     { name = "ninja" },
@@ -515,7 +514,6 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "meson", specifier = ">=1.5" },
     { name = "ninja", specifier = ">=1.11" },
@@ -527,7 +525,6 @@ name = "fisica-general"
 version = "0.1.0"
 source = { virtual = "física-general" }
 dependencies = [
-    { name = "marimo" },
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -535,7 +532,6 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "numpy", specifier = ">=2.2.6" },
 ]
@@ -545,7 +541,6 @@ name = "fisica-moderna"
 version = "0.1.0"
 source = { virtual = "física-moderna" }
 dependencies = [
-    { name = "marimo" },
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
@@ -556,7 +551,6 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "numpy", specifier = ">=2.2.6" },
     { name = "pandas", specifier = ">=2.3.3" },
@@ -627,7 +621,6 @@ version = "0.1.0"
 source = { editable = "fundamentos-de-riesgos-y-desastres" }
 dependencies = [
     { name = "geopandas" },
-    { name = "marimo" },
     { name = "matplotlib" },
     { name = "openpyxl" },
     { name = "pandas" },
@@ -637,7 +630,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "geopandas", specifier = ">=1.0.0" },
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "openpyxl", specifier = ">=3.1.2" },
     { name = "pandas", specifier = ">=2.3.3" },
@@ -860,14 +852,12 @@ name = "inteligencia-artificial"
 version = "0.1.0"
 source = { virtual = "inteligencia-artificial" }
 dependencies = [
-    { name = "marimo" },
     { name = "pandas" },
     { name = "seaborn" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "seaborn", specifier = ">=0.13.2" },
 ]
@@ -1297,7 +1287,6 @@ name = "mecanica-estadistica"
 version = "0.1.0"
 source = { virtual = "mecánica-estadística" }
 dependencies = [
-    { name = "marimo" },
     { name = "matplotlib" },
     { name = "numba" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -1307,7 +1296,6 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "marimo", specifier = ">=0.23.9" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "numba", specifier = ">=0.62.1" },
     { name = "numpy", specifier = ">=2.2.6" },
@@ -2619,13 +2607,25 @@ source = { virtual = "." }
 
 [package.dev-dependencies]
 dev = [
+    { name = "marimo" },
     { name = "ruff" },
+]
+lint = [
+    { name = "ruff" },
+]
+notebooks = [
+    { name = "marimo" },
 ]
 
 [package.metadata]
 
 [package.metadata.requires-dev]
-dev = [{ name = "ruff", specifier = ">=0.14.6" }]
+dev = [
+    { name = "marimo", specifier = ">=0.23.9" },
+    { name = "ruff", specifier = ">=0.14.6" },
+]
+lint = [{ name = "ruff", specifier = ">=0.14.6" }]
+notebooks = [{ name = "marimo", specifier = ">=0.23.9" }]
 
 [[package]]
 name = "uritemplate"
