@@ -56,7 +56,7 @@ def _(md):
         ```bash
         ./install.sh
         uv run --package fisica-computacional marimo edit \
-          'física-computacional/métodos-numéricos/Montecarlo/fortran_f2py.py'
+          packages/fisica-computacional/metodos-numericos/monte-carlo/fortran_f2py.py
         ```
         """
     )

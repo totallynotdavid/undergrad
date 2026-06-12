@@ -6,17 +6,7 @@ requires-python = ">=3.10, <3.14"
 dependencies = []
 
 [tool.uv.workspace]
-members = [
-    "dinamica-molecular",
-    "física-computacional",
-    "física-general",
-    "física-moderna",
-    "inteligencia-artificial",
-    "mecánica-estadística",
-    "introduccion-a-sismologia",
-    "técnicas-de-teledetección",
-    "fundamentos-de-riesgos-y-desastres",
-]
+members = ["packages/*"]
 
 [tool.ruff]
 line-length = 88
