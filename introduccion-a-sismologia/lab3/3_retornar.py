@@ -9,11 +9,11 @@ def retornar_archivos(directorio_procesado, directorio_destino):
             # Ruta completa del archivo actual
             ruta_origen = os.path.join(root, file)
             ruta_destino = os.path.join(directorio_destino, file)
-            
+
             # Mover el archivo al directorio de destino
             shutil.move(ruta_origen, ruta_destino)
             print(f"Archivo '{file}' movido a '{directorio_destino}'")
-        
+
         # Después de mover los archivos, intentar eliminar el directorio si está vacío
         for dir in dirs:
             dir_path = os.path.join(root, dir)
@@ -32,8 +32,9 @@ def retornar_archivos(directorio_procesado, directorio_destino):
 
     print("Todos los archivos han sido retornados al directorio original.")
 
+
 # Uso
-directorio_procesado = r'C:\Users\david\Downloads\sismologia\lab3\archivos\comparacion'
-directorio_destino = r'C:\Users\david\Downloads\sismologia\lab3\archivos'
+directorio_procesado = r"C:\Users\david\Downloads\sismologia\lab3\archivos\comparacion"
+directorio_destino = r"C:\Users\david\Downloads\sismologia\lab3\archivos"
 
 retornar_archivos(directorio_procesado, directorio_destino)

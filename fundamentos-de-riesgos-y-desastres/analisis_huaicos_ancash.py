@@ -105,7 +105,10 @@ def _(mo):
 @app.cell
 def _(ancash_df):
     event_distribution = (
-        ancash_df["peligro_es"].value_counts().rename_axis("evento").reset_index(name="cantidad")
+        ancash_df["peligro_es"]
+        .value_counts()
+        .rename_axis("evento")
+        .reset_index(name="cantidad")
     )
     event_distribution
     return (event_distribution,)
@@ -146,8 +149,15 @@ def _(GEOJSON_PATH, gpd):
 
 @app.cell
 def _(ancash_df, peru_provinces):
-    events_per_province = ancash_df["prov"].value_counts().rename_axis("prov").reset_index(name="num_eventos")
-    merged = peru_provinces.merge(events_per_province, left_on="NOMBPROV", right_on="prov", how="left")
+    events_per_province = (
+        ancash_df["prov"]
+        .value_counts()
+        .rename_axis("prov")
+        .reset_index(name="num_eventos")
+    )
+    merged = peru_provinces.merge(
+        events_per_province, left_on="NOMBPROV", right_on="prov", how="left"
+    )
     merged["num_eventos"] = merged["num_eventos"].fillna(0)
     ancash_map = merged[merged["NOMBPROV"].isin(ancash_df["prov"].unique())].copy()
     return (ancash_map,)
@@ -162,7 +172,10 @@ def _(ancash_df, ancash_map, gpd, plt):
         cmap="OrRd",
         edgecolor="gray",
         legend=True,
-        legend_kwds={"label": "Número de peligros por provincia", "orientation": "horizontal"},
+        legend_kwds={
+            "label": "Número de peligros por provincia",
+            "orientation": "horizontal",
+        },
     )
 
     points = gpd.GeoDataFrame(
@@ -175,7 +188,14 @@ def _(ancash_df, ancash_map, gpd, plt):
     for _, row in ancash_map.iterrows():
         if row["num_eventos"] > 0:
             centroid = row["geometry"].centroid
-            ax_map.text(centroid.x, centroid.y, int(row["num_eventos"]), fontsize=9, ha="center", va="center")
+            ax_map.text(
+                centroid.x,
+                centroid.y,
+                int(row["num_eventos"]),
+                fontsize=9,
+                ha="center",
+                va="center",
+            )
 
     ax_map.set_title("Peligros registrados en provincias de Áncash")
     ax_map.set_axis_off()

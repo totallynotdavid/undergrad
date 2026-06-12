@@ -12,21 +12,24 @@ def copiar_archivos_sac(directorio_origen, directorio_destino):
 
     # Filtrar y copiar archivos
     for archivo in archivos:
-        if archivo.endswith('.SAC'):
-            partes = archivo.split('.')
+        if archivo.endswith(".SAC"):
+            partes = archivo.split(".")
             if len(partes) >= 5:
                 red, estacion, sensor, componente = partes[:4]
-                
+
                 # Verificar si el archivo cumple con los criterios
-                if componente == 'BHZ' and sensor == '00':
+                if componente == "BHZ" and sensor == "00":
                     ruta_origen = os.path.join(directorio_origen, archivo)
                     ruta_destino = os.path.join(directorio_destino, archivo)
                     shutil.copy2(ruta_origen, ruta_destino)
                     print(f"Copiado: {archivo}")
 
+
 # Definir directorios
-directorio_origen = r'C:\Users\david\Downloads\sismologia\2007-08-15-mw80-near-coast-of-peru'
-directorio_destino = r'C:\Users\david\Downloads\sismologia\lab3\archivos'
+directorio_origen = (
+    r"C:\Users\david\Downloads\sismologia\2007-08-15-mw80-near-coast-of-peru"
+)
+directorio_destino = r"C:\Users\david\Downloads\sismologia\lab3\archivos"
 
 copiar_archivos_sac(directorio_origen, directorio_destino)
 print("Copia de archivos completada.")

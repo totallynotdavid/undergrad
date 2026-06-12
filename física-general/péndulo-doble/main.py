@@ -73,7 +73,9 @@ def _():
 
 @app.cell
 def _(np):
-    def metodo_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, b, dt, num_pasos):
+    def metodo_euler(
+        theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, b, dt, num_pasos
+    ):
         theta1 = np.zeros(num_pasos)
         theta2 = np.zeros(num_pasos)
         omega1 = np.zeros(num_pasos)
@@ -86,7 +88,11 @@ def _(np):
 
         for i in range(1, num_pasos):
             theta1_acc = (
-                -m2 * l2 / (l1 * (m1 + m2)) * np.cos(theta1[i - 1] - theta2[i - 1]) * omega2[i - 1] ** 2
+                -m2
+                * l2
+                / (l1 * (m1 + m2))
+                * np.cos(theta1[i - 1] - theta2[i - 1])
+                * omega2[i - 1] ** 2
                 - g / l1 * np.sin(theta1[i - 1])
                 + b / (l1 * (m1 + m2)) * theta1[i - 1]
             )
@@ -115,13 +121,23 @@ def _(mo):
     g = mo.ui.number(start=0.1, stop=20.0, step=0.1, value=9.81, label="g")
     b = mo.ui.number(start=-10.0, stop=10.0, step=0.1, value=-2.5, label="b")
 
-    theta1_0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=0.1, label="theta1(0)")
-    theta2_0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=0.2, label="theta2(0)")
-    omega1_0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega1(0)")
-    omega2_0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega2(0)")
+    theta1_0 = mo.ui.number(
+        start=-3.14, stop=3.14, step=0.01, value=0.1, label="theta1(0)"
+    )
+    theta2_0 = mo.ui.number(
+        start=-3.14, stop=3.14, step=0.01, value=0.2, label="theta2(0)"
+    )
+    omega1_0 = mo.ui.number(
+        start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega1(0)"
+    )
+    omega2_0 = mo.ui.number(
+        start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega2(0)"
+    )
 
     dt = mo.ui.number(start=0.001, stop=0.05, step=0.001, value=0.01, label="dt")
-    num_pasos = mo.ui.slider(start=200, stop=5000, step=100, value=1000, label="num_pasos")
+    num_pasos = mo.ui.slider(
+        start=200, stop=5000, step=100, value=1000, label="num_pasos"
+    )
 
     return b, dt, g, l1, l2, m1, m2, num_pasos, omega1_0, omega2_0, theta1_0, theta2_0
 
@@ -139,7 +155,22 @@ def _(b, dt, g, l1, l2, m1, m2, mo, num_pasos, omega1_0, omega2_0, theta1_0, the
 
 
 @app.cell
-def _(b, dt, g, l1, l2, m1, m2, metodo_euler, num_pasos, np, omega1_0, omega2_0, theta1_0, theta2_0):
+def _(
+    b,
+    dt,
+    g,
+    l1,
+    l2,
+    m1,
+    m2,
+    metodo_euler,
+    num_pasos,
+    np,
+    omega1_0,
+    omega2_0,
+    theta1_0,
+    theta2_0,
+):
     theta1, theta2, omega1, omega2 = metodo_euler(
         theta1_0.value,
         theta2_0.value,
@@ -166,7 +197,9 @@ def _(b, dt, g, l1, l2, m1, m2, metodo_euler, num_pasos, np, omega1_0, omega2_0,
 
 @app.cell
 def _(mo, t):
-    frame = mo.ui.slider(start=0, stop=len(t) - 1, step=1, value=min(200, len(t) - 1), label="frame")
+    frame = mo.ui.slider(
+        start=0, stop=len(t) - 1, step=1, value=min(200, len(t) - 1), label="frame"
+    )
     return (frame,)
 
 

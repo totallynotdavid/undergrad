@@ -39,10 +39,18 @@ def _():
 
 @app.cell
 def _(mo):
-    theta1_0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=1.2, label="theta1(0)")
-    omega1_0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega1(0)")
-    theta2_0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=0.8, label="theta2(0)")
-    omega2_0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega2(0)")
+    theta1_0 = mo.ui.number(
+        start=-3.14, stop=3.14, step=0.01, value=1.2, label="theta1(0)"
+    )
+    omega1_0 = mo.ui.number(
+        start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega1(0)"
+    )
+    theta2_0 = mo.ui.number(
+        start=-3.14, stop=3.14, step=0.01, value=0.8, label="theta2(0)"
+    )
+    omega2_0 = mo.ui.number(
+        start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega2(0)"
+    )
 
     m1 = mo.ui.number(start=0.1, stop=10.0, step=0.1, value=1.0, label="m1")
     m2 = mo.ui.number(start=0.1, stop=10.0, step=0.1, value=2.0, label="m2")
@@ -80,7 +88,10 @@ def _(np):
         domega1 = (
             -g * (2 * m1 + m2) * np.sin(theta1)
             - m2 * g * np.sin(theta1 - 2 * theta2)
-            - 2 * np.sin(delta) * m2 * (omega2 * omega2 * l2 + omega1 * omega1 * l1 * np.cos(delta))
+            - 2
+            * np.sin(delta)
+            * m2
+            * (omega2 * omega2 * l2 + omega1 * omega1 * l1 * np.cos(delta))
         ) / (l1 * den)
 
         domega2 = (
@@ -95,7 +106,9 @@ def _(np):
 
         return dtheta1, domega1, dtheta2, domega2
 
-    def integrate_double_pendulum(theta1_0, omega1_0, theta2_0, omega2_0, m1, m2, l1, l2, g, dt, nsteps):
+    def integrate_double_pendulum(
+        theta1_0, omega1_0, theta2_0, omega2_0, m1, m2, l1, l2, g, dt, nsteps
+    ):
         t = np.arange(nsteps + 1) * dt
         theta1 = np.zeros(nsteps + 1)
         omega1 = np.zeros(nsteps + 1)
@@ -129,7 +142,20 @@ def _(np):
 
 
 @app.cell
-def _(dt, g, integrate_double_pendulum, l1, l2, m1, m2, nsteps, omega1_0, omega2_0, theta1_0, theta2_0):
+def _(
+    dt,
+    g,
+    integrate_double_pendulum,
+    l1,
+    l2,
+    m1,
+    m2,
+    nsteps,
+    omega1_0,
+    omega2_0,
+    theta1_0,
+    theta2_0,
+):
     t, theta1, omega1, theta2, omega2 = integrate_double_pendulum(
         theta1_0.value,
         omega1_0.value,
@@ -157,7 +183,9 @@ def _(l1, l2, np, theta1, theta2):
 
 @app.cell
 def _(mo, t):
-    frame = mo.ui.slider(start=0, stop=len(t) - 1, step=1, value=min(300, len(t) - 1), label="frame")
+    frame = mo.ui.slider(
+        start=0, stop=len(t) - 1, step=1, value=min(300, len(t) - 1), label="frame"
+    )
     return (frame,)
 
 

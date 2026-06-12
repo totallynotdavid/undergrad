@@ -16,8 +16,8 @@ def mover_datos_estacion(directorio_origen, directorio_destino):
 
     # Agrupar archivos por estación
     for archivo in archivos:
-        if archivo.endswith('.SAC'):
-            partes = archivo.split('.')
+        if archivo.endswith(".SAC"):
+            partes = archivo.split(".")
             if len(partes) >= 5:
                 red, estacion = partes[:2]
                 clave_estacion = f"{red}.{estacion}"
@@ -29,7 +29,7 @@ def mover_datos_estacion(directorio_origen, directorio_destino):
             # Crear un subdirectorio para esta estación
             directorio_estacion = os.path.join(directorio_destino, estacion)
             os.makedirs(directorio_estacion, exist_ok=True)
-            
+
             # Mover archivos a este subdirectorio
             for archivo in archivos:
                 ruta_origen = os.path.join(directorio_origen, archivo)
@@ -39,8 +39,9 @@ def mover_datos_estacion(directorio_origen, directorio_destino):
 
     print("Movimiento y separación de datos completada.")
 
+
 # Uso
-directorio_origen = r'C:\Users\david\Downloads\sismologia\lab3\archivos'
-directorio_destino = r'C:\Users\david\Downloads\sismologia\lab3\archivos\comparacion'
+directorio_origen = r"C:\Users\david\Downloads\sismologia\lab3\archivos"
+directorio_destino = r"C:\Users\david\Downloads\sismologia\lab3\archivos\comparacion"
 
 mover_datos_estacion(directorio_origen, directorio_destino)

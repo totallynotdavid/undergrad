@@ -60,7 +60,7 @@ def _(EXECUTABLE, FORTRAN_FILE, GFORTRAN_BIN, NOTEBOOK_DIR, os, subprocess):
         print(e)
         raise
 
-    if os.name != 'nt':
+    if os.name != "nt":
         os.chmod(EXECUTABLE, 0o755)
 
     if EXECUTABLE.exists():
@@ -121,7 +121,9 @@ def _(TEMPERATURES, datos, plt):
             plt.plot(df["x"], df["y"], linewidth=2, label=f"{_temp} K")
     plt.title("Distribución de Planck", fontsize=15, pad=20)
     plt.xlabel("Longitud de onda λ (nm)", fontsize=12)
-    plt.ylabel("Radiación $B_\\lambda$ $(\\frac{W}{m^2 \\cdot sr \\cdot nm})$", fontsize=12)
+    plt.ylabel(
+        "Radiación $B_\\lambda$ $(\\frac{W}{m^2 \\cdot sr \\cdot nm})$", fontsize=12
+    )
     plt.xlim(0, 2000)
     plt.ylim(0, 2500000000000000.0)
     plt.legend()

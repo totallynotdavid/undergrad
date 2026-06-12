@@ -45,8 +45,12 @@ def _():
 
 @app.cell
 def _(mo):
-    theta0 = mo.ui.number(start=-3.14, stop=3.14, step=0.01, value=0.2, label="theta(0)")
-    omega0 = mo.ui.number(start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega(0)")
+    theta0 = mo.ui.number(
+        start=-3.14, stop=3.14, step=0.01, value=0.2, label="theta(0)"
+    )
+    omega0 = mo.ui.number(
+        start=-10.0, stop=10.0, step=0.01, value=0.0, label="omega(0)"
+    )
     length = mo.ui.number(start=0.2, stop=10.0, step=0.1, value=1.0, label="l")
     g = mo.ui.number(start=0.1, stop=20.0, step=0.1, value=9.81, label="g")
     dt = mo.ui.number(start=0.001, stop=0.1, step=0.001, value=0.01, label="dt")
@@ -80,17 +84,29 @@ def _(np):
             k1_theta = dt * f_theta(theta[i], omega[i])
             k1_omega = dt * f_omega(theta[i], omega[i])
 
-            k2_theta = dt * f_theta(theta[i] + 0.5 * k1_theta, omega[i] + 0.5 * k1_omega)
-            k2_omega = dt * f_omega(theta[i] + 0.5 * k1_theta, omega[i] + 0.5 * k1_omega)
+            k2_theta = dt * f_theta(
+                theta[i] + 0.5 * k1_theta, omega[i] + 0.5 * k1_omega
+            )
+            k2_omega = dt * f_omega(
+                theta[i] + 0.5 * k1_theta, omega[i] + 0.5 * k1_omega
+            )
 
-            k3_theta = dt * f_theta(theta[i] + 0.5 * k2_theta, omega[i] + 0.5 * k2_omega)
-            k3_omega = dt * f_omega(theta[i] + 0.5 * k2_theta, omega[i] + 0.5 * k2_omega)
+            k3_theta = dt * f_theta(
+                theta[i] + 0.5 * k2_theta, omega[i] + 0.5 * k2_omega
+            )
+            k3_omega = dt * f_omega(
+                theta[i] + 0.5 * k2_theta, omega[i] + 0.5 * k2_omega
+            )
 
             k4_theta = dt * f_theta(theta[i] + k3_theta, omega[i] + k3_omega)
             k4_omega = dt * f_omega(theta[i] + k3_theta, omega[i] + k3_omega)
 
-            theta[i + 1] = theta[i] + (k1_theta + 2 * k2_theta + 2 * k3_theta + k4_theta) / 6
-            omega[i + 1] = omega[i] + (k1_omega + 2 * k2_omega + 2 * k3_omega + k4_omega) / 6
+            theta[i + 1] = (
+                theta[i] + (k1_theta + 2 * k2_theta + 2 * k3_theta + k4_theta) / 6
+            )
+            omega[i + 1] = (
+                omega[i] + (k1_omega + 2 * k2_omega + 2 * k3_omega + k4_omega) / 6
+            )
 
         x = length * np.sin(theta)
         y = -length * np.cos(theta)
@@ -114,7 +130,9 @@ def _(dt, g, integrate_pendulum_rk4, length, omega0, tf, theta0):
 
 @app.cell
 def _(mo, t):
-    frame = mo.ui.slider(start=0, stop=len(t) - 1, step=1, value=min(150, len(t) - 1), label="frame")
+    frame = mo.ui.slider(
+        start=0, stop=len(t) - 1, step=1, value=min(150, len(t) - 1), label="frame"
+    )
     return (frame,)
 
 
