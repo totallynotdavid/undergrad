@@ -28,8 +28,6 @@
 	};
 
 	const notebooks = manifest.notebooks as Notebook[];
-	const onlineCount = notebooks.filter((notebook) => notebook.export).length;
-	const localCount = notebooks.length - onlineCount;
 
 	const groups: CourseGroup[] = [];
 	for (const notebook of notebooks) {
@@ -49,7 +47,7 @@
 	}
 
 	function notebookHref(notebook: Notebook): string {
-		return `${base}${notebook.assetPath}`;
+		return notebook.export ? `${base}${notebook.assetPath}` : notebook.sourceUrl;
 	}
 </script>
 
@@ -58,263 +56,104 @@
 	<meta name="description" content={manifest.site.description} />
 </svelte:head>
 
-<main>
-	<header class="site-header">
-		<div>
-			<p class="eyebrow">Universidad Nacional de Ingenieria</p>
-			<h1>{manifest.site.title}</h1>
-			<p class="intro">{manifest.site.description}</p>
-		</div>
-		<div class="counts" aria-label="Resumen del catalogo">
-			<span><strong>{onlineCount}</strong> en linea</span>
-			<span><strong>{localCount}</strong> locales</span>
-		</div>
+<div class="min-h-screen bg-paper font-sans text-ink antialiased">
+	<header class="mx-auto w-full max-w-5xl px-6 pt-20 pb-14 text-center sm:pt-28">
+		<h1 class="font-display text-5xl leading-tight font-medium sm:text-6xl">
+			{manifest.site.title}
+		</h1>
+		<p class="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-soft">
+			{manifest.site.description}
+		</p>
+		<nav class="mt-10 flex flex-wrap justify-center gap-2" aria-label="Cursos">
+			{#each groups as group (group.id)}
+				<a
+					href="#{group.id}"
+					class="rounded-full border border-line bg-surface px-4 py-1.5 text-sm transition-colors hover:border-ink"
+				>
+					{group.course}
+				</a>
+			{/each}
+		</nav>
 	</header>
 
-	{#each groups as group}
-		<section class="course" aria-labelledby={group.id}>
-			<h2 id={group.id}>{group.course}</h2>
+	<main class="mx-auto w-full max-w-5xl px-6 pb-24">
+		{#each groups as group (group.id)}
+			<section
+				id={group.id}
+				class="scroll-mt-8 border-t border-line py-12"
+				aria-labelledby="{group.id}-title"
+			>
+				<h2 id="{group.id}-title" class="font-display text-3xl font-medium">{group.course}</h2>
 
-			{#each group.sections as section}
-				<div class="section-group">
-					<h3>{section.section}</h3>
-					<div class="grid">
-						{#each section.notebooks as notebook}
-							<article class="card">
-								<div class="card-title">
-									<h4>{notebook.title}</h4>
-									{#if notebook.export}
-										<span class="badge online">En linea</span>
-									{:else}
-										<span class="badge local">Local</span>
-									{/if}
-								</div>
-
-								<p>{notebook.summary}</p>
-
-								<div class="actions">
-									{#if notebook.export}
-										<a class="button" href={notebookHref(notebook)} rel="external">Abrir notebook</a>
-									{:else}
-										<a class="button secondary" href={notebook.sourceUrl}>Ver fuente</a>
-									{/if}
-									<a class="source" href={notebook.sourceUrl}>Codigo</a>
-								</div>
-							</article>
-						{/each}
+				{#each group.sections as section (section.id)}
+					<div class="mt-8">
+						<p
+							class="inline-block rounded-full border border-line bg-surface px-3 py-1 text-xs font-semibold tracking-wide text-soft uppercase"
+						>
+							{section.section}
+						</p>
+						<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+							{#each section.notebooks as notebook (notebook.slug)}
+								<article
+									class="group relative flex flex-col rounded-2xl border border-line bg-surface p-6 transition duration-150 hover:-translate-y-0.5 hover:border-soft/60 hover:shadow-[0_10px_28px_-14px_rgba(33,32,28,0.35)]"
+								>
+									<h3 class="font-display text-xl leading-snug font-medium">
+										<a
+											href={notebookHref(notebook)}
+											rel="external"
+											class="rounded-2xl after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+										>
+											{notebook.title}
+										</a>
+									</h3>
+									<p class="mt-2 text-sm leading-relaxed text-soft">{notebook.summary}</p>
+									<div class="mt-auto flex items-center justify-between pt-6 text-sm">
+										{#if notebook.export}
+											<span class="inline-flex items-center gap-2 text-pine">
+												<span class="size-1.5 rounded-full bg-pine"></span>
+												En linea
+											</span>
+											<span class="font-medium group-hover:underline">Abrir cuaderno</span>
+										{:else}
+											<span class="inline-flex items-center gap-2 text-soft">
+												<span class="size-1.5 rounded-full bg-soft/70"></span>
+												Local
+											</span>
+											<span class="font-medium group-hover:underline">Ver codigo</span>
+										{/if}
+									</div>
+								</article>
+							{/each}
+						</div>
 					</div>
-				</div>
-			{/each}
+				{/each}
+			</section>
+		{/each}
+
+		<section class="rounded-3xl bg-panel px-6 py-10 sm:px-10" aria-labelledby="local-title">
+			<h2 id="local-title" class="font-display text-3xl font-medium">Ejecucion local</h2>
+			<p class="mt-3 max-w-2xl leading-relaxed text-soft">
+				Los cuadernos marcados como locales dependen de herramientas que no funcionan en el
+				navegador, como gfortran, GDAL o credenciales de Earth Engine. Cada tarjeta local enlaza
+				al codigo fuente con la ruta exacta del cuaderno.
+			</p>
+			<pre
+				class="mt-6 overflow-x-auto rounded-xl bg-shell p-5 text-sm leading-relaxed text-shell-ink"><code
+					>git clone {manifest.site.repository}.git
+cd undergrad
+./install.sh
+uv run --package &lt;curso&gt; marimo edit &lt;cuaderno.py&gt;</code></pre>
 		</section>
-	{/each}
-</main>
+	</main>
 
-<style>
-	:global(body) {
-		margin: 0;
-		background: #f7faf8;
-		color: #17211c;
-		font-family:
-			Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-		line-height: 1.5;
-	}
-
-	:global(*) {
-		box-sizing: border-box;
-	}
-
-	main {
-		width: min(1120px, calc(100% - 32px));
-		margin: 0 auto;
-		padding: 40px 0 56px;
-	}
-
-	.site-header {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		gap: 24px;
-		align-items: start;
-		margin-bottom: 32px;
-	}
-
-	.eyebrow {
-		margin: 0 0 8px;
-		color: #4f6459;
-		font-size: 0.88rem;
-		font-weight: 650;
-		letter-spacing: 0.02em;
-		text-transform: uppercase;
-	}
-
-	h1,
-	h2,
-	h3,
-	h4,
-	p {
-		margin-top: 0;
-	}
-
-	h1 {
-		margin-bottom: 10px;
-		font-size: clamp(2rem, 4vw, 3rem);
-		line-height: 1.1;
-	}
-
-	.intro {
-		max-width: 720px;
-		margin-bottom: 0;
-		color: #5b6961;
-		font-size: 1.05rem;
-	}
-
-	.counts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		justify-content: flex-end;
-	}
-
-	.counts span {
-		border: 1px solid #d8e0db;
-		border-radius: 999px;
-		background: #ffffff;
-		padding: 8px 12px;
-		color: #5b6961;
-		font-size: 0.92rem;
-		white-space: nowrap;
-	}
-
-	.counts strong {
-		color: #17211c;
-	}
-
-	.course {
-		padding-top: 24px;
-		border-top: 1px solid #d8e0db;
-		margin-top: 28px;
-	}
-
-	h2 {
-		margin-bottom: 18px;
-		font-size: 1.55rem;
-	}
-
-	.section-group + .section-group {
-		margin-top: 24px;
-	}
-
-	h3 {
-		margin-bottom: 12px;
-		color: #5b6961;
-		font-size: 1rem;
-		font-weight: 650;
-	}
-
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 14px;
-	}
-
-	.card {
-		display: flex;
-		min-height: 170px;
-		flex-direction: column;
-		border: 1px solid #d8e0db;
-		border-radius: 8px;
-		background: #ffffff;
-		padding: 18px;
-	}
-
-	.card-title {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 12px;
-		margin-bottom: 10px;
-	}
-
-	h4 {
-		margin-bottom: 0;
-		font-size: 1.1rem;
-		line-height: 1.25;
-	}
-
-	.card p {
-		color: #5b6961;
-	}
-
-	.badge {
-		flex: 0 0 auto;
-		border-radius: 999px;
-		padding: 3px 8px;
-		font-size: 0.78rem;
-		font-weight: 650;
-		white-space: nowrap;
-	}
-
-	.online {
-		background: #dcece5;
-		color: #145c43;
-	}
-
-	.local {
-		background: #f4edcf;
-		color: #5a4a18;
-	}
-
-	.actions {
-		display: flex;
-		align-items: center;
-		gap: 12px;
-		margin-top: auto;
-		padding-top: 18px;
-	}
-
-	a {
-		color: #145c43;
-	}
-
-	.button {
-		border-radius: 6px;
-		background: #145c43;
-		color: white;
-		padding: 8px 12px;
-		text-decoration: none;
-		font-weight: 650;
-	}
-
-	.button.secondary {
-		background: #eef5f1;
-		color: #145c43;
-	}
-
-	.source {
-		font-size: 0.92rem;
-	}
-
-	@media (max-width: 720px) {
-		main {
-			width: min(100% - 24px, 1120px);
-			padding-top: 28px;
-		}
-
-		.site-header {
-			display: block;
-		}
-
-		.counts {
-			justify-content: flex-start;
-			margin-top: 20px;
-		}
-
-		.card-title {
-			display: block;
-		}
-
-		.badge {
-			display: inline-block;
-			margin-top: 8px;
-		}
-	}
-</style>
+	<footer class="border-t border-line">
+		<div
+			class="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-8 text-sm text-soft"
+		>
+			<p>{manifest.site.title}</p>
+			<a href={manifest.site.repository} class="transition-colors hover:text-ink">
+				Codigo fuente en GitHub
+			</a>
+		</div>
+	</footer>
+</div>
