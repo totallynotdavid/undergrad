@@ -6,224 +6,332 @@ app = marimo.App()
 
 @app.cell(hide_code=True)
 def _():
-    import importlib.util
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
-    import os
-    from pathlib import Path
-    import shutil
-    import subprocess
-    import sys
     from textwrap import dedent
-
-    notebook_dir = Path(__file__).resolve().parent
-    build_dir = notebook_dir / "_build"
-
 
     def md(text):
         return mo.md(dedent(text))
 
-    return (
-        build_dir,
-        dedent,
-        importlib,
-        md,
-        mo,
-        np,
-        os,
-        plt,
-        shutil,
-        subprocess,
-        sys,
-    )
+    return md, mo, np, plt
 
 
 @app.cell(hide_code=True)
 def _(md):
     md(
         r"""
-        # Método de Monte Carlo
+        # Integración de Monte Carlo
 
-        El método de Monte Carlo aproxima cantidades numéricas usando muestras
-        aleatorias. Es especialmente útil cuando el problema no tiene solución
-        analítica, por ejemplo, integrales de alta dimensión.
+        La versión interactiva de este notebook usa Python y NumPy (WASM). Las rutinas en Fortran se incluyen como referencia y solo se ejecutan localmente.
+    
+        GitHub Pages no puede compilar Fortran ni cargar extensiones nativas (.so) generadas con f2py. Para ejecutar el notebook localmente con Fortran y f2py:
 
-        En esta clase cubrimos tres ejemplos progresivos:
-
-        1. Estimar $\pi$ con puntos aleatorios en el cuadrado unitario
-        2. Integrales en una dimensión: $\displaystyle\int_a^b f(x)\,dx$
-        3. Integrales en dos dimensiones: $\displaystyle\iint_R f(x,y)\,dx\,dy$
-
-        En todos los casos la idea es la misma: muestrear puntos al azar,
-        evaluar la cantidad de interés en cada punto, y promediar.
-
-        El error del método escala como $1/\sqrt{N}$, donde $N$ es el número
-        de muestras. Esto se deduce del teorema central del límite y es
-        independiente de la dimensión del problema, a diferencia de los
-        métodos de Newton–Cotes, cuyo error escala como $1/N^{k/d}$.
+        ```bash
+        git clone https://github.com/totallynotdavid/undergrad
+        cd undergrad
+        ./install.sh
+        uv run --package fisica-computacional marimo edit \
+          'física-computacional/métodos-numéricos/Montecarlo/fortran_f2py.py'
+        ```
         """
     )
     return
 
 
 @app.cell(hide_code=True)
-def _(build_dir, fortran_sources, importlib, os, shutil, subprocess, sys):
-    def extension_path(name):
-        candidates = sorted(build_dir.glob(f"{name}*.so"))
-        return candidates[0] if candidates else None
+def _(md):
+    md(
+        r"""
+        En física estadística, muchas cantidades observables se escriben como
+        valores esperados sobre un espacio de configuraciones. Si $R$ representa
+        todos los grados de libertad de un sistema con Hamiltoniano $H(R)$,
 
+        $$
+        Z = \int e^{-\beta H(R)}\,dR,
+        \qquad
+        \langle A\rangle =
+        \frac{1}{Z}\int e^{-\beta H(R)} A(R)\,dR.
+        $$
 
-    def build_extension(name, source_text):
-        build_dir.mkdir(parents=True, exist_ok=True)
-        source_path = build_dir / f"{name}.f90"
-        source_path.write_text(source_text, encoding="utf-8")
-
-        existing = extension_path(name)
-        if existing and existing.stat().st_mtime >= source_path.stat().st_mtime:
-            return existing
-
-        if shutil.which("gfortran-13") is None:
-            raise RuntimeError(
-                "gfortran-13 is required; run ./install.sh from the repo root."
-            )
-
-        env = os.environ.copy()
-        env["FC"] = "gfortran-13"
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "numpy.f2py",
-                "-c",
-                source_path.name,
-                "-m",
-                name,
-            ],
-            cwd=build_dir,
-            env=env,
-            text=True,
-            capture_output=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(result.stdout + result.stderr)
-
-        built = extension_path(name)
-        if built is None:
-            raise RuntimeError(
-                "f2py finished without producing a Python extension."
-            )
-        return built
-
-
-    def load_module(name, path):
-        spec = importlib.util.spec_from_file_location(name, path)
-        if spec is None or spec.loader is None:
-            raise RuntimeError(f"Could not load {path}")
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module
-
-
-    extensions = {
-        name: load_module(name, build_extension(name, source))
-        for name, source in fortran_sources.items()
-    }
-    return (extensions,)
-
-
-@app.cell(hide_code=True)
-def _():
-    pi_source = """\
-    subroutine compute_pi(n, pi_estimate)
-        implicit none
-        integer, intent(in) :: n
-        real, intent(out) :: pi_estimate
-        integer :: i, k
-        real :: x, y
-
-        k = 0
-        do i = 1, n
-            call random_number(x)
-            call random_number(y)
-            x = 2.0 * x - 1.0
-            y = 2.0 * y - 1.0
-            if (x * x + y * y <= 1.0) then
-                k = k + 1
-            end if
-        end do
-
-        pi_estimate = 4.0 * real(k) / real(n)
-    end subroutine
-    """
-
-    integral_1d_source = """\
-    subroutine compute_integral_1d(n, a, b, integral)
-        implicit none
-        integer, intent(in) :: n
-        real, intent(in) :: a, b
-        real, intent(out) :: integral
-        integer :: i
-        real :: x, acc
-
-        acc = 0.0
-        do i = 1, n
-            call random_number(x)
-            x = a + (b - a) * x
-            acc = acc + sqrt(4.0 - x * x)
-        end do
-
-        integral = (b - a) * acc / real(n)
-    end subroutine
-    """
-
-    integral_2d_source = """\
-    subroutine compute_integral_2d(n, a, b, c, d, integral)
-        implicit none
-        integer, intent(in) :: n
-        real, intent(in) :: a, b, c, d
-        real, intent(out) :: integral
-        integer :: i
-        real :: x, y, acc
-
-        acc = 0.0
-        do i = 1, n
-            call random_number(x)
-            call random_number(y)
-            x = a + (b - a) * x
-            y = c + (d - c) * y
-            acc = acc + 9.0 * x * x * y * y
-        end do
-
-        integral = (b - a) * (d - c) * acc / real(n)
-    end subroutine
-    """
-
-    fortran_sources = {
-        "pi_module": pi_source,
-        "integral_1d_module": integral_1d_source,
-        "integral_2d_module": integral_2d_source,
-    }
-    return fortran_sources, integral_2d_source, pi_source
+        El problema numérico es que $R$ puede tener dimensión muy alta. Un
+        sistema con $N$ partículas ya tiene posiciones y momentos para cada
+        partícula. En modelos de red, el número de variables también crece con
+        el número de sitios. Por eso el punto central no es el azar por sí
+        mismo, sino cómo aproximar integrales de alta dimensión mediante el
+        promedio de valores muestreados.
+        """
+    )
+    return
 
 
 @app.cell(hide_code=True)
 def _(md):
     md(
         r"""
-        ## 1. Estimar $\pi$
-
-        El área del círculo unitario es $\pi$, y el área del cuadrado
-        $[-1, 1] \times [-1, 1]$ es $4$. Si elegimos puntos al azar uniformes
-        dentro del cuadrado, la fracción que cae dentro del círculo aproxima
-        el cociente de las áreas:
+        Una regla de cuadratura en una dimensión aproxima una integral de la
+        forma
 
         $$
-        \hat\pi = 4\,\frac{k}{N}
+        \int_a^b f(x)\,dx
         $$
 
-        donde $k$ es el número de puntos dentro del círculo y $N$ el total.
+        evaluando $f$ en puntos del intervalo. Algunos métodos, como punto
+        medio, trapecio o Simpson, usan nodos igualmente espaciados. Otros,
+        como la cuadratura de Gauss, eligen nodos y pesos especiales.
+
+        Para comparar con una malla regular, supongamos que la separación entre
+        nodos es $h$. Si la regla tiene orden $k$, el error típico es
+        proporcional a $h^k$ para funciones suficientemente suaves.
+
+        En $d$ dimensiones, si se usan $n$ nodos por dirección, una malla
+        tensorial requiere
+
+        $$
+        N = n^d.
+        $$
+
+        Entonces $n=N^{1/d}$ y el error se comporta como
+
+        $$
+        h^k \sim n^{-k} = N^{-k/d}.
+        $$
+
+        Esta degradación con $d$ es la razón por la que Monte Carlo puede ser
+        más conveniente en integrales de alta dimensión, aunque sea ineficiente
+        en muchos problemas de una sola variable.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Sea $\Omega$ una región de volumen $V_\Omega$ y sea $X$ una variable
+        aleatoria uniforme en $\Omega$. La notación $\mathbb{E}$ representa el
+        valor esperado respecto a esa distribución uniforme. Entonces
+
+        $$
+        I = \int_\Omega f(x)\,dx
+        = \textcolor{teal}{V_\Omega}\,
+        \mathbb{E}\!\left[\textcolor{purple}{f(X)}\right].
+        $$
+
+        Con muestras independientes $X_1,\ldots,X_N$, el estimador de Monte
+        Carlo es
+
+        $$
+        \hat I_N =
+        \textcolor{teal}{V_\Omega}\,
+        \frac{1}{N}\sum_{i=1}^N \textcolor{purple}{f(X_i)}.
+        $$
+
+        La estructura siempre es la misma: muestrear el dominio, evaluar el
+        integrando, promediar y multiplicar por el volumen.
+
+        ```python
+        volume = ...
+        values = f(samples)
+        estimate = volume * values.mean()
+        ```
+
+        `volume` representa $V_\Omega$, `values` contiene los valores
+        $f(X_i)$, y `values.mean()` implementa
+        $\frac{1}{N}\sum_i f(X_i)$.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Python/NumPy y Fortran implementan el mismo estimador con estilos
+        distintos. En Python trabajaremos con arreglos completos:
+
+        ```python
+        u = rng.uniform(0.0, 1.0, size=n)
+        x = a + (b - a) * u
+        values = f(x)
+        estimate = (b - a) * values.mean()
+        ```
+
+        En Fortran aparecerá el mismo cálculo como un bucle explícito:
+
+        ```fortran
+        acc = 0.0
+        do i = 1, n
+            call random_number(u)
+            x = a + (b - a) * u
+            acc = acc + f(x)
+        end do
+        integral = (b - a) * acc / real(n)
+        ```
+
+        La variable `acc` acumula $\sum_i f(X_i)$; dividir por `real(n)` forma
+        el promedio muestral. En NumPy, `uniform(a, b)` genera valores en
+        $[a,b)$. Para una variable continua, excluir el extremo derecho no
+        cambia el valor de la integral.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Las simulaciones de Monte Carlo usan casi siempre números
+        pseudoaleatorios: secuencias deterministas con propiedades estadísticas
+        suficientemente parecidas a una muestra aleatoria. La semilla fija el
+        estado inicial del generador.
+
+        Usar una semilla no vuelve aleatorio el cálculo. Lo vuelve reproducible.
+        Eso es necesario para depurar, comparar implementaciones y discutir
+        resultados en clase.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Primero recordemos el caso general. Si un estimador tiene la forma
+
+        $$
+        \hat\theta_N = \textcolor{teal}{c}\,\bar Y,
+        \qquad
+        \bar Y = \frac{1}{N}\sum_{i=1}^N \textcolor{purple}{Y_i},
+        $$
+
+        donde $Y_i$ son muestras independientes de una variable aleatoria $Y$ y
+        $c$ es una constante, entonces
+
+        $$
+        \operatorname{Var}(\hat\theta_N)
+        =
+        \textcolor{teal}{c^2}\,
+        \frac{\operatorname{Var}(\textcolor{purple}{Y})}{N},
+        \qquad
+        \sigma_{\hat\theta}
+        =
+        \frac{|\textcolor{teal}{c}|}{\sqrt{N}}
+        \sqrt{\operatorname{Var}(\textcolor{purple}{Y})}.
+        $$
+
+        Para la integral de Monte Carlo, la sustitución es
+
+        $$
+        \textcolor{teal}{c=V_\Omega},
+        \qquad
+        \textcolor{purple}{Y_i=f(X_i)}.
+        $$
+
+        Con esta sustitución,
+
+        $$
+        \hat I_N = \textcolor{teal}{V_\Omega}\,\bar f,
+        \qquad
+        \bar f =
+        \frac{1}{N}\sum_{i=1}^N \textcolor{purple}{f(X_i)}.
+        $$
+
+        La desviación estándar del estimador es
+
+        $$
+        \sigma_{\hat I}
+        =
+        \frac{\textcolor{teal}{V_\Omega}}{\sqrt{N}}
+        \sqrt{\operatorname{Var}\!\left[\textcolor{purple}{f(X)}\right]}.
+        $$
+
+        Como no conocemos $\operatorname{Var}[f(X)]$ de antemano, la estimamos
+        con la varianza muestral:
+
+        $$
+        s_f^2 =
+        \frac{1}{N-1}\sum_{i=1}^N
+        \left(\textcolor{purple}{f(X_i)}-\bar f\right)^2,
+        \qquad
+        \widehat{\sigma}_{\hat I}
+        =
+        \frac{\textcolor{teal}{V_\Omega} s_f}{\sqrt{N}}.
+        $$
+
+        El factor $N-1$ evita subestimar la varianza a partir de la misma
+        muestra usada para calcular la media.
+
+        Esta cantidad es el error estándar estimado de $\hat I_N$.
+
+        En los ejemplos se implementa como:
+
+        ```python
+        standard_error = volume * values.std(ddof=1) / np.sqrt(n)
+        ```
+
+        `ddof=1` indica que NumPy debe usar $N-1$ en el denominador de la
+        varianza muestral.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        ## Ejemplo 1: $\pi$ como integral de una indicadora
+
+        El área del círculo unitario puede escribirse como una integral sobre
+        el cuadrado $[-1,1]\times[-1,1]$:
+
+        $$
+        \pi =
+        \int_{-1}^{1}\int_{-1}^{1}
+        \mathbf{1}_{x^2+y^2\leq 1}\,dx\,dy.
+        $$
+
+        Aquí $V_\Omega=4$ y el integrando solo toma dos valores: $1$ si el
+        punto cae dentro del círculo y $0$ si cae fuera. Por tanto,
+
+        $$
+        \hat\pi_N =
+        \textcolor{teal}{4}\,\frac{1}{N}
+        \sum_{i=1}^N
+        \textcolor{purple}{\mathbf{1}_{x_i^2+y_i^2\leq 1}}.
+        $$
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Para esta integral, `pi_volume = 4.0` porque el dominio es el cuadrado
+        $[-1,1]\times[-1,1]$. La muestra se guarda en `pi_points`: cada fila es
+        un punto $(x_i,y_i)$.
+
+        La función que se promedia es la indicadora. En el código aparece como
+        `pi_indicator`: vale `1.0` cuando el punto satisface
+        $x_i^2+y_i^2\leq 1$ y `0.0` en caso contrario.
+
+        Las líneas esenciales son:
+
+        ```python
+        pi_volume = 4.0
+        pi_indicator = (np.sum(pi_points**2, axis=1) <= 1.0).astype(float)
+        pi_python = pi_volume * pi_indicator.mean()
+        pi_standard_error = (
+            pi_volume * pi_indicator.std(ddof=1) / np.sqrt(pi_n_value)
+        )
+        ```
         """
     )
     return
@@ -231,12 +339,8 @@ def _(md):
 
 @app.cell
 def _(mo):
-    pi_n = mo.ui.slider(
-        start=100, stop=50000, step=100, value=5000, label="puntos"
-    )
-    pi_seed = mo.ui.number(
-        start=0, stop=1_000_000, step=1, value=42, label="semilla"
-    )
+    pi_n = mo.ui.slider(start=100, stop=50000, step=100, value=5000, label="puntos")
+    pi_seed = mo.ui.number(start=0, stop=1_000_000, step=1, value=42, label="semilla")
     return pi_n, pi_seed
 
 
@@ -248,19 +352,15 @@ def _(pi_n, pi_seed):
 
 
 @app.cell
-def _(extensions, pi_n_value):
-    pi_fortran = extensions["pi_module"].compute_pi(pi_n_value)
-    return (pi_fortran,)
-
-
-@app.cell
 def _(np, pi_n_value, pi_seed_value):
-    rng = np.random.default_rng(pi_seed_value)
-    pi_points = rng.uniform(-1.0, 1.0, size=(pi_n_value, 2))
-    pi_inside = np.sum(pi_points**2, axis=1) <= 1.0
-    pi_python = 4.0 * pi_inside.mean()
-    pi_count = int(pi_inside.sum())
-    return pi_count, pi_inside, pi_points, pi_python
+    pi_rng = np.random.default_rng(pi_seed_value)
+    pi_points = pi_rng.uniform(-1.0, 1.0, size=(pi_n_value, 2))
+    pi_volume = 4.0
+    pi_indicator = (np.sum(pi_points**2, axis=1) <= 1.0).astype(float)
+    pi_python = pi_volume * pi_indicator.mean()
+    pi_count = int(pi_indicator.sum())
+    pi_standard_error = pi_volume * pi_indicator.std(ddof=1) / np.sqrt(pi_n_value)
+    return pi_count, pi_indicator, pi_points, pi_python, pi_standard_error
 
 
 @app.cell(hide_code=True)
@@ -268,26 +368,27 @@ def _(
     mo,
     np,
     pi_count,
-    pi_fortran,
-    pi_inside,
+    pi_indicator,
     pi_n,
     pi_n_value,
     pi_points,
     pi_python,
     pi_seed,
+    pi_standard_error,
     plt,
 ):
     _fig, _ax = plt.subplots(figsize=(4.5, 4.5))
+    _inside = pi_indicator.astype(bool)
     _ax.scatter(
-        pi_points[~pi_inside, 0],
-        pi_points[~pi_inside, 1],
+        pi_points[~_inside, 0],
+        pi_points[~_inside, 1],
         alpha=0.25,
         s=10,
         label="fuera",
     )
     _ax.scatter(
-        pi_points[pi_inside, 0],
-        pi_points[pi_inside, 1],
+        pi_points[_inside, 0],
+        pi_points[_inside, 1],
         alpha=0.45,
         s=10,
         label="dentro",
@@ -297,87 +398,61 @@ def _(
     _ax.set_ylim(-1, 1)
     _ax.set_xlabel("x")
     _ax.set_ylabel("y")
-    _ax.set_title(
-        rf"$N = {pi_n_value}$, $\hat\pi = {pi_python:.4f}$, $k = {pi_count}$"
-    )
+    _ax.set_title(rf"$N={pi_n_value}$, $\hat\pi={pi_python:.4f}$, $k={pi_count}$")
     _ax.legend()
     _fig.tight_layout()
 
     _results = mo.md(rf"""
-    **Resultados:**
-
-    | | estimación | error absoluto |
-    |---|---|---|
-    | Python/numpy | $\hat\pi = {pi_python:.6f}$ | ${abs(pi_python - np.pi):.6f}$ |
-    | Fortran/f2py | $\hat\pi = {pi_fortran:.6f}$ | ${abs(pi_fortran - np.pi):.6f}$ |
+    | cantidad | valor |
+    |---|---:|
+    | estimación Python/NumPy | ${pi_python:.6f}$ |
+    | error absoluto | ${abs(pi_python - np.pi):.6f}$ |
+    | error estándar estimado de $\hat\pi_N$ | ${pi_standard_error:.6f}$ |
     """)
 
     _controls = mo.vstack([pi_n, pi_seed], gap=1)
-    _right = mo.vstack([_fig, _results], gap=1, align="center")
-    mo.hstack([_controls, _right], gap=2, justify="start", align="center")
-    return
-
-
-@app.cell
-def _(extensions, np, pi_n_value, pi_seed_value):
-    _n_lo = 100
-    _n_hi = max(_n_lo * 2, int(pi_n_value))
-    pi_sample_sizes = np.unique(
-        np.logspace(np.log10(_n_lo), np.log10(_n_hi), 6).astype(int)
-    )
-    pi_python_errors = []
-    pi_fortran_estimates = []
-    for _i, _n in enumerate(pi_sample_sizes):
-        _rng = np.random.default_rng(pi_seed_value + _i)
-        _points = _rng.uniform(-1.0, 1.0, size=(int(_n), 2))
-        _inside = np.sum(_points**2, axis=1) <= 1.0
-        pi_python_errors.append(abs(4.0 * _inside.mean() - np.pi))
-        pi_fortran_estimates.append(extensions["pi_module"].compute_pi(int(_n)))
-    pi_python_errors = np.array(pi_python_errors)
-    pi_fortran_estimates = np.array(pi_fortran_estimates)
-    pi_fortran_errors = np.abs(pi_fortran_estimates - np.pi)
-    pi_sigma = np.sqrt(np.pi * (4.0 - np.pi) / pi_sample_sizes)
-    return pi_fortran_errors, pi_python_errors, pi_sample_sizes, pi_sigma
-
-
-@app.cell
-def _(np, pi_fortran_errors, pi_python_errors, pi_sample_sizes, pi_sigma, plt):
-    _fig, _ax = plt.subplots(figsize=(6, 4))
-    _ax.loglog(pi_sample_sizes, pi_python_errors, "o-", label="Python")
-    _ax.loglog(pi_sample_sizes, pi_fortran_errors, "s-", label="Fortran")
-    _ax.loglog(pi_sample_sizes, pi_sigma, "--", label=r"$\sigma_{\hat\pi}$")
-    _ax.loglog(
-        pi_sample_sizes,
-        1 / np.sqrt(pi_sample_sizes),
-        ":",
-        alpha=0.6,
-        label=r"$1/\sqrt{N}$",
-    )
-    _ax.set_xlabel(r"$N$")
-    _ax.set_ylabel(r"$|\pi - \hat\pi|$")
-    _ax.set_title("Convergencia ($\\pi$)")
-    _ax.legend()
-    _ax.grid(True, which="both")
-    _fig.tight_layout()
-    pi_convergence = _fig
+    mo.hstack([_controls, mo.vstack([_fig, _results], gap=1)], gap=2)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ### Implementación en Fortran
-
-    El mismo algoritmo, compilado con `numpy.f2py` (usando `gfortran-13`):
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(dedent, md, pi_source):
+def _(md):
     md(
-        rf"""
-        {dedent(pi_source)}
+        r"""
+        La subrutina Fortran implementa el mismo estimador con un contador
+        explícito. `k` acumula
+        $\sum_i \mathbf{1}_{x_i^2+y_i^2\leq 1}$, `real(k) / real(n)` es el
+        promedio muestral, y el factor `4.0` multiplica por el área del
+        cuadrado.
+
+        ```fortran
+        subroutine compute_pi(n, pi_estimate)
+            implicit none
+            integer, intent(in) :: n
+            real, intent(out) :: pi_estimate
+            integer :: i, k
+            real :: x, y
+
+            k = 0
+            do i = 1, n
+                call random_number(x)
+                call random_number(y)
+                x = 2.0 * x - 1.0
+                y = 2.0 * y - 1.0
+                if (x * x + y * y <= 1.0) then
+                    k = k + 1
+                end if
+            end do
+
+            pi_estimate = 4.0 * real(k) / real(n)
+        end subroutine
+        ```
+
+        Una ejecución local de `fortran_f2py.py` dio:
+
+        | implementación | $N$ | estimación | error absoluto |
+        |---|---:|---:|---:|
+        | Fortran/f2py local | 5000 | 3.175200 | 0.033607 |
         """
     )
     return
@@ -387,17 +462,35 @@ def _(dedent, md, pi_source):
 def _(md):
     md(
         r"""
-        ## 2. Integral en una dimensión
+        ## Ejemplo 2: integral en una dimensión
 
-        Para estimar $\displaystyle I = \int_a^b f(x)\,dx$ muestreamos
-        $x_1, \ldots, x_N$ uniformes en $[a, b]$ y promediamos:
+        Consideremos
 
         $$
-        I \;\approx\; (b - a)\,\frac{1}{N}\sum_{i=1}^{N} f(x_i)
+        I = \int_0^2 \sqrt{4-x^2}\,dx.
         $$
 
-        Probamos con $f(x) = \sqrt{4 - x^2}$ en $[0, 2]$, cuya integral
-        vale $\pi$.
+        Esta integral vale $\pi$, porque corresponde al área de un cuarto de
+        círculo de radio $2$. Para Monte Carlo escribimos
+
+        $$
+        I =
+        \textcolor{teal}{(2-0)}\,
+        \mathbb{E}\!\left[\textcolor{purple}{\sqrt{4-X^2}}\right],
+        \qquad X\sim U(0,2).
+        $$
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Antes de muestrear, examinemos el integrando. El área bajo esta curva
+        es la integral que el estimador aproximará usando valores de la función
+        en puntos aleatorios.
         """
     )
     return
@@ -410,10 +503,40 @@ def _(np, plt):
     _ax.fill_between(_x, np.sqrt(4.0 - _x**2), alpha=0.2)
     _ax.plot(_x, np.sqrt(4.0 - _x**2))
     _ax.set_xlabel("x")
-    _ax.set_ylabel(r"$\sqrt{4 - x^2}$")
-    _ax.set_title(r"Función a integrar en $[0, 2]$")
+    _ax.set_ylabel(r"$\sqrt{4-x^2}$")
+    _ax.set_title(r"Integrando en $[0,2]$")
     _fig.tight_layout()
-    int1d_plot = _fig
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        Aquí `int1d_volume = 2.0` representa la longitud del intervalo. La
+        muestra `int1d_x` contiene puntos uniformes en $[0,2]$, y
+        `int1d_values` contiene $\sqrt{4-x_i^2}$ para cada punto.
+
+        Las líneas centrales del estimador son:
+
+        ```python
+        int1d_volume = 2.0
+        int1d_x = int1d_rng.uniform(0.0, 2.0, size=int1d_n_value)
+        int1d_values = np.sqrt(4.0 - int1d_x**2)
+        int1d_python = int1d_volume * int1d_values.mean()
+        int1d_standard_error = (
+            int1d_volume
+            * int1d_values.std(ddof=1)
+            / np.sqrt(int1d_n_value)
+        )
+        ```
+
+        La subrutina Fortran que veremos después hace el mismo promedio con un
+        acumulador `acc`. Para estimar también el error estándar en Fortran se
+        puede añadir otro acumulador para $f(x_i)^2$.
+        """
+    )
     return
 
 
@@ -422,9 +545,7 @@ def _(mo):
     int1d_n = mo.ui.slider(
         start=100, stop=100000, step=100, value=10000, label="puntos"
     )
-    int1d_seed = mo.ui.number(
-        start=0, stop=1_000_000, step=1, value=7, label="semilla"
-    )
+    int1d_seed = mo.ui.number(start=0, stop=1_000_000, step=1, value=7, label="semilla")
     return int1d_n, int1d_seed
 
 
@@ -436,108 +557,28 @@ def _(int1d_n, int1d_seed):
 
 
 @app.cell
-def _(extensions, int1d_n_value):
-    int1d_fortran = extensions["integral_1d_module"].compute_integral_1d(
-        int1d_n_value, 0.0, 2.0
-    )
-    return (int1d_fortran,)
-
-
-@app.cell
 def _(int1d_n_value, int1d_seed_value, np):
-    _rng = np.random.default_rng(int1d_seed_value)
-    _x = _rng.uniform(0.0, 2.0, size=int1d_n_value)
-    int1d_python = 2.0 * np.sqrt(4.0 - _x**2).mean()
-    return (int1d_python,)
+    int1d_rng = np.random.default_rng(int1d_seed_value)
+    int1d_volume = 2.0
+    int1d_x = int1d_rng.uniform(0.0, 2.0, size=int1d_n_value)
+    int1d_values = np.sqrt(4.0 - int1d_x**2)
+    int1d_python = int1d_volume * int1d_values.mean()
+    int1d_standard_error = (
+        int1d_volume * int1d_values.std(ddof=1) / np.sqrt(int1d_n_value)
+    )
+    return int1d_python, int1d_standard_error
 
 
 @app.cell(hide_code=True)
-def _(int1d_fortran, int1d_n, int1d_python, int1d_seed, mo, np):
+def _(int1d_n, int1d_python, int1d_seed, int1d_standard_error, mo, np):
     _results = mo.md(rf"""
-    **Resultados para** $\int_0^2 \sqrt{{4 - x^2}}\,dx = \pi$:
-
-    | | estimación | error absoluto |
-    |---|---|---|
-    | Python/numpy | ${int1d_python:.6f}$ | ${abs(int1d_python - np.pi):.6f}$ |
-    | Fortran/f2py | ${int1d_fortran:.6f}$ | ${abs(int1d_fortran - np.pi):.6f}$ |
+    | cantidad | valor |
+    |---|---:|
+    | estimación Python/NumPy | ${int1d_python:.6f}$ |
+    | error absoluto | ${abs(int1d_python - np.pi):.6f}$ |
+    | error estándar estimado de $\hat I_N$ | ${int1d_standard_error:.6f}$ |
     """)
-
-    _controls = mo.vstack([int1d_n, int1d_seed], gap=1)
-    mo.hstack([_controls, _results], gap=2, justify="start", align="center")
-    return
-
-
-@app.cell
-def _(extensions, int1d_n_value, int1d_seed_value, np):
-    _n_lo = 100
-    _n_hi = max(_n_lo * 2, int(int1d_n_value))
-    int1d_sample_sizes = np.unique(
-        np.logspace(np.log10(_n_lo), np.log10(_n_hi), 5).astype(int)
-    )
-    int1d_python_errors = []
-    int1d_fortran_estimates = []
-    for _i, _n in enumerate(int1d_sample_sizes):
-        _rng = np.random.default_rng(int1d_seed_value + _i)
-        _x = _rng.uniform(0.0, 2.0, size=int(_n))
-        int1d_python_errors.append(abs(2.0 * np.sqrt(4.0 - _x**2).mean() - np.pi))
-        int1d_fortran_estimates.append(
-            extensions["integral_1d_module"].compute_integral_1d(int(_n), 0.0, 2.0)
-        )
-    int1d_python_errors = np.array(int1d_python_errors)
-    int1d_fortran_estimates = np.array(int1d_fortran_estimates)
-    int1d_fortran_errors = np.abs(int1d_fortran_estimates - np.pi)
-    int1d_sigma = np.sqrt(np.pi * (4.0 - np.pi) / int1d_sample_sizes)
-    return (
-        int1d_fortran_errors,
-        int1d_python_errors,
-        int1d_sample_sizes,
-        int1d_sigma,
-    )
-
-
-@app.cell
-def _(
-    int1d_fortran_errors,
-    int1d_python_errors,
-    int1d_sample_sizes,
-    int1d_sigma,
-    np,
-    plt,
-):
-    _fig, _ax = plt.subplots(figsize=(6, 4))
-    _ax.loglog(int1d_sample_sizes, int1d_python_errors, "o-", label="Python")
-    _ax.loglog(int1d_sample_sizes, int1d_fortran_errors, "s-", label="Fortran")
-    _ax.loglog(int1d_sample_sizes, int1d_sigma, "--", label=r"$\sigma_I$")
-    _ax.loglog(
-        int1d_sample_sizes,
-        1 / np.sqrt(int1d_sample_sizes),
-        ":",
-        alpha=0.6,
-        label=r"$1/\sqrt{N}$",
-    )
-    _ax.set_xlabel(r"$N$")
-    _ax.set_ylabel(r"$|I - \hat I|$")
-    _ax.set_title("Convergencia (integral 1D)")
-    _ax.legend()
-    _ax.grid(True, which="both")
-    _fig.tight_layout()
-    int1d_convergence = _fig
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ### Implementación en Fortran
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    {dedent(integral_1d_source)}
-    """)
+    mo.hstack([mo.vstack([int1d_n, int1d_seed], gap=1), _results], gap=2)
     return
 
 
@@ -545,17 +586,77 @@ def _(mo):
 def _(md):
     md(
         r"""
-        ## 3. Integral en dos dimensiones
+        En Fortran, `random_number` genera primero un número uniforme en
+        $[0,1)$. La línea `x = a + (b - a) * x` lo lleva al intervalo
+        $[a,b]$. Luego `acc` acumula los valores
+        $\sqrt{4-x_i^2}$ y la última línea multiplica el promedio por la
+        longitud del intervalo.
 
-        Generalizamos a un rectángulo $R = [a, b] \times [c, d]$:
+        ```fortran
+        subroutine compute_integral_1d(n, a, b, integral)
+            implicit none
+            integer, intent(in) :: n
+            real, intent(in) :: a, b
+            real, intent(out) :: integral
+            integer :: i
+            real :: x, acc
+
+            acc = 0.0
+            do i = 1, n
+                call random_number(x)
+                x = a + (b - a) * x
+                acc = acc + sqrt(4.0 - x * x)
+            end do
+
+            integral = (b - a) * acc / real(n)
+        end subroutine
+        ```
+
+        Una ejecución local de `fortran_f2py.py` dio:
+
+        | implementación | $N$ | estimación | error absoluto |
+        |---|---:|---:|---:|
+        | Fortran/f2py local | 10000 | 3.146916 | 0.005323 |
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        ## Ejemplo 3: integral en dos dimensiones
+
+        Ahora estimamos
 
         $$
-        I \;=\; \iint_R f(x, y)\,dx\,dy
-        \;\approx\; (b-a)(d-c)\,\frac{1}{N}\sum_{i=1}^{N} f(x_i, y_i)
+        I =
+        \int_0^1\int_0^1
+        \textcolor{purple}{9x^2y^2}\,dx\,dy.
         $$
 
-        Probamos con $f(x, y) = 9 x^2 y^2$ en $[0, 1] \times [0, 1]$,
-        donde la integral vale $1$.
+        Como
+
+        $$
+        \int_0^1 x^2\,dx = \frac{1}{3},
+        $$
+
+        el valor exacto es $9(1/3)(1/3)=1$. En el estimador de Monte Carlo,
+        $\textcolor{teal}{V_\Omega=1}$ porque el dominio es el cuadrado
+        unitario.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        En dos dimensiones la integral corresponde al volumen bajo una
+        superficie sobre el dominio. La muestra seguirá siendo uniforme en todo
+        el cuadrado, aunque el integrando sea mayor cerca de $(1,1)$.
         """
     )
     return
@@ -570,9 +671,37 @@ def _(np, plt):
     _ax.pcolormesh(_X, _Y, 9.0 * _X**2 * _Y**2, shading="auto")
     _ax.set_xlabel("x")
     _ax.set_ylabel("y")
-    _ax.set_title(r"$f(x, y) = 9 x^2 y^2$")
+    _ax.set_title(r"$f(x,y)=9x^2y^2$")
     _fig.tight_layout()
-    int2d_plot = _fig
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        El estimador tiene la misma forma. Ahora cada muestra tiene dos
+        coordenadas. `int2d_x` e `int2d_y` son arreglos independientes de
+        puntos uniformes en $[0,1]$. `int2d_values` contiene
+        $9x_i^2y_i^2$.
+
+        Como el dominio es el cuadrado unitario, el volumen es `1.0`:
+
+        ```python
+        int2d_volume = 1.0
+        int2d_x = int2d_rng.uniform(0.0, 1.0, size=int2d_n_value)
+        int2d_y = int2d_rng.uniform(0.0, 1.0, size=int2d_n_value)
+        int2d_values = 9.0 * int2d_x**2 * int2d_y**2
+        int2d_python = int2d_volume * int2d_values.mean()
+        int2d_standard_error = (
+            int2d_volume
+            * int2d_values.std(ddof=1)
+            / np.sqrt(int2d_n_value)
+        )
+        ```
+        """
+    )
     return
 
 
@@ -595,112 +724,69 @@ def _(int2d_n, int2d_seed):
 
 
 @app.cell
-def _(extensions, int2d_n_value):
-    int2d_fortran = extensions["integral_2d_module"].compute_integral_2d(
-        int2d_n_value, 0.0, 1.0, 0.0, 1.0
-    )
-    return (int2d_fortran,)
-
-
-@app.cell
 def _(int2d_n_value, int2d_seed_value, np):
-    _rng = np.random.default_rng(int2d_seed_value)
-    _x = _rng.uniform(0.0, 1.0, size=int2d_n_value)
-    _y = _rng.uniform(0.0, 1.0, size=int2d_n_value)
-    int2d_python = (9.0 * _x**2 * _y**2).mean()
-    return (int2d_python,)
+    int2d_rng = np.random.default_rng(int2d_seed_value)
+    int2d_volume = 1.0
+    int2d_x = int2d_rng.uniform(0.0, 1.0, size=int2d_n_value)
+    int2d_y = int2d_rng.uniform(0.0, 1.0, size=int2d_n_value)
+    int2d_values = 9.0 * int2d_x**2 * int2d_y**2
+    int2d_python = int2d_volume * int2d_values.mean()
+    int2d_standard_error = (
+        int2d_volume * int2d_values.std(ddof=1) / np.sqrt(int2d_n_value)
+    )
+    return int2d_python, int2d_standard_error
 
 
 @app.cell(hide_code=True)
-def _(int2d_fortran, int2d_n, int2d_python, int2d_seed, mo):
+def _(int2d_n, int2d_python, int2d_seed, int2d_standard_error, mo):
     _results = mo.md(rf"""
-    **Resultados para** $\int_0^1\!\!\int_0^1 9x^2y^2\,dx\,dy = 1$:
-
-    | | estimación | error absoluto |
-    |---|---|---|
-    | Python/numpy | ${int2d_python:.6f}$ | ${abs(int2d_python - 1.0):.6f}$ |
-    | Fortran/f2py | ${int2d_fortran:.6f}$ | ${abs(int2d_fortran - 1.0):.6f}$ |
+    | cantidad | valor |
+    |---|---:|
+    | estimación Python/NumPy | ${int2d_python:.6f}$ |
+    | error absoluto | ${abs(int2d_python - 1.0):.6f}$ |
+    | error estándar estimado de $\hat I_N$ | ${int2d_standard_error:.6f}$ |
     """)
-
-    _controls = mo.vstack([int2d_n, int2d_seed], gap=1)
-    mo.hstack([_controls, _results], gap=2, justify="start", align="center")
-    return
-
-
-@app.cell
-def _(extensions, int2d_n_value, int2d_seed_value, np):
-    _n_lo = 100
-    _n_hi = max(_n_lo * 2, int(int2d_n_value))
-    int2d_sample_sizes = np.unique(
-        np.logspace(np.log10(_n_lo), np.log10(_n_hi), 5).astype(int)
-    )
-    int2d_python_errors = []
-    int2d_fortran_estimates = []
-    for _i, _n in enumerate(int2d_sample_sizes):
-        _rng = np.random.default_rng(int2d_seed_value + _i)
-        _x = _rng.uniform(0.0, 1.0, size=int(_n))
-        _y = _rng.uniform(0.0, 1.0, size=int(_n))
-        int2d_python_errors.append(abs((9.0 * _x**2 * _y**2).mean() - 1.0))
-        int2d_fortran_estimates.append(
-            extensions["integral_2d_module"].compute_integral_2d(
-                int(_n), 0.0, 1.0, 0.0, 1.0
-            )
-        )
-    int2d_python_errors = np.array(int2d_python_errors)
-    int2d_fortran_estimates = np.array(int2d_fortran_estimates)
-    int2d_fortran_errors = np.abs(int2d_fortran_estimates - 1.0)
-    int2d_sigma = np.sqrt(81.0 / 45.0 / int2d_sample_sizes)
-    return (
-        int2d_fortran_errors,
-        int2d_python_errors,
-        int2d_sample_sizes,
-        int2d_sigma,
-    )
-
-
-@app.cell
-def _(
-    int2d_fortran_errors,
-    int2d_python_errors,
-    int2d_sample_sizes,
-    int2d_sigma,
-    np,
-    plt,
-):
-    _fig, _ax = plt.subplots(figsize=(6, 4))
-    _ax.loglog(int2d_sample_sizes, int2d_python_errors, "o-", label="Python")
-    _ax.loglog(int2d_sample_sizes, int2d_fortran_errors, "s-", label="Fortran")
-    _ax.loglog(int2d_sample_sizes, int2d_sigma, "--", label=r"$\sigma_I$")
-    _ax.loglog(
-        int2d_sample_sizes,
-        1 / np.sqrt(int2d_sample_sizes),
-        ":",
-        alpha=0.6,
-        label=r"$1/\sqrt{N}$",
-    )
-    _ax.set_xlabel(r"$N$")
-    _ax.set_ylabel(r"$|I - \hat I|$")
-    _ax.set_title("Convergencia (integral 2D)")
-    _ax.legend()
-    _ax.grid(True, which="both")
-    _fig.tight_layout()
-    int2d_convergence = _fig
+    mo.hstack([mo.vstack([int2d_n, int2d_seed], gap=1), _results], gap=2)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
-    ### Implementación en Fortran
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(dedent, integral_2d_source, md):
+def _(md):
     md(
-        rf"""
-        {dedent(integral_2d_source)}
+        r"""
+        La subrutina Fortran usa dos llamadas a `random_number`, una para cada
+        coordenada. Después aplica los mapas
+        `x = a + (b - a) * x` y `y = c + (d - c) * y`. El acumulador `acc`
+        suma $9x_i^2y_i^2$, y la última línea multiplica el promedio por el
+        área del rectángulo.
+
+        ```fortran
+        subroutine compute_integral_2d(n, a, b, c, d, integral)
+            implicit none
+            integer, intent(in) :: n
+            real, intent(in) :: a, b, c, d
+            real, intent(out) :: integral
+            integer :: i
+            real :: x, y, acc
+
+            acc = 0.0
+            do i = 1, n
+                call random_number(x)
+                call random_number(y)
+                x = a + (b - a) * x
+                y = c + (d - c) * y
+                acc = acc + 9.0 * x * x * y * y
+            end do
+
+            integral = (b - a) * (d - c) * acc / real(n)
+        end subroutine
+        ```
+
+        Una ejecución local de `fortran_f2py.py` dio:
+
+        | implementación | $N$ | estimación | error absoluto |
+        |---|---:|---:|---:|
+        | Fortran/f2py local | 20000 | 1.008351 | 0.008351 |
         """
     )
     return
@@ -710,20 +796,167 @@ def _(dedent, integral_2d_source, md):
 def _(md):
     md(
         r"""
-        ## 4. Convergencia
+        ## Experimento de convergencia
 
-        En los tres casos el error empírico cae como $1/\sqrt{N}$, como
-        predice el teorema central del límite:
+        Para verificar el comportamiento $N^{-1/2}$ es necesario repetir el
+        proceso para varios tamaños de muestra. En cada caso calculamos el error
+        absoluto contra el valor exacto y lo comparamos con el error estándar
+        estimado desde la muestra.
+
+        La línea proporcional a $1/\sqrt{N}$ no predice cada fluctuación
+        individual. Indica la escala típica de las fluctuaciones del promedio.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(int1d_seed_value, int2d_seed_value, np, pi_seed_value):
+    convergence_sizes = np.unique(np.logspace(2, 5, 7).astype(int))
+
+    pi_convergence_errors = []
+    pi_convergence_se = []
+    int1d_convergence_errors = []
+    int1d_convergence_se = []
+    int2d_convergence_errors = []
+    int2d_convergence_se = []
+
+    for _i, _n in enumerate(convergence_sizes):
+        _pi_rng = np.random.default_rng(pi_seed_value + _i)
+        _pi_points = _pi_rng.uniform(-1.0, 1.0, size=(int(_n), 2))
+        _pi_indicator = (np.sum(_pi_points**2, axis=1) <= 1.0).astype(float)
+        _pi_estimate = 4.0 * _pi_indicator.mean()
+        pi_convergence_errors.append(abs(_pi_estimate - np.pi))
+        pi_convergence_se.append(4.0 * _pi_indicator.std(ddof=1) / np.sqrt(_n))
+
+        _int1d_rng = np.random.default_rng(int1d_seed_value + _i)
+        _int1d_x = _int1d_rng.uniform(0.0, 2.0, size=int(_n))
+        _int1d_values = np.sqrt(4.0 - _int1d_x**2)
+        _int1d_estimate = 2.0 * _int1d_values.mean()
+        int1d_convergence_errors.append(abs(_int1d_estimate - np.pi))
+        int1d_convergence_se.append(2.0 * _int1d_values.std(ddof=1) / np.sqrt(_n))
+
+        _int2d_rng = np.random.default_rng(int2d_seed_value + _i)
+        _int2d_x = _int2d_rng.uniform(0.0, 1.0, size=int(_n))
+        _int2d_y = _int2d_rng.uniform(0.0, 1.0, size=int(_n))
+        _int2d_values = 9.0 * _int2d_x**2 * _int2d_y**2
+        _int2d_estimate = _int2d_values.mean()
+        int2d_convergence_errors.append(abs(_int2d_estimate - 1.0))
+        int2d_convergence_se.append(_int2d_values.std(ddof=1) / np.sqrt(_n))
+
+    pi_convergence_errors = np.array(pi_convergence_errors)
+    pi_convergence_se = np.array(pi_convergence_se)
+    int1d_convergence_errors = np.array(int1d_convergence_errors)
+    int1d_convergence_se = np.array(int1d_convergence_se)
+    int2d_convergence_errors = np.array(int2d_convergence_errors)
+    int2d_convergence_se = np.array(int2d_convergence_se)
+    return (
+        convergence_sizes,
+        int1d_convergence_errors,
+        int1d_convergence_se,
+        int2d_convergence_errors,
+        int2d_convergence_se,
+        pi_convergence_errors,
+        pi_convergence_se,
+    )
+
+
+@app.cell(hide_code=True)
+def _(
+    convergence_sizes,
+    int1d_convergence_errors,
+    int1d_convergence_se,
+    int2d_convergence_errors,
+    int2d_convergence_se,
+    np,
+    pi_convergence_errors,
+    pi_convergence_se,
+    plt,
+):
+    _fig, _axes = plt.subplots(1, 3, figsize=(13, 3.8), sharex=True)
+    _series = [
+        (r"$\pi$", pi_convergence_errors, pi_convergence_se),
+        ("1D", int1d_convergence_errors, int1d_convergence_se),
+        ("2D", int2d_convergence_errors, int2d_convergence_se),
+    ]
+
+    for _ax, (_title, _errors, _se) in zip(_axes, _series):
+        _ax.loglog(convergence_sizes, _errors, "o-", label="error absoluto")
+        _ax.loglog(convergence_sizes, _se, "s--", label="error estándar")
+        _ax.loglog(
+            convergence_sizes,
+            _se[0] * np.sqrt(convergence_sizes[0] / convergence_sizes),
+            ":",
+            label=r"$N^{-1/2}$",
+        )
+        _ax.set_title(_title)
+        _ax.set_xlabel(r"$N$")
+        _ax.grid(True, which="both")
+
+    _axes[0].set_ylabel("error")
+    _axes[-1].legend()
+    _fig.tight_layout()
+    _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        ## Interpretación
+
+        El método de Monte Carlo tiene error típico proporcional a
+        $N^{-1/2}$, independientemente de la dimensión del dominio. Esto es
+        lento en una dimensión, pero evita que el costo crezca como una malla
+        tensorial cuando $d$ aumenta.
+
+        La comparación conceptual es:
 
         $$
-        \sigma_{\hat\theta} \;\sim\; \frac{1}{\sqrt{N}}
+        \text{cuadratura en malla tensorial: } N^{-k/d},
+        \qquad
+        \text{Monte Carlo: } N^{-1/2}.
         $$
 
-        Esta es la ventaja central del método de Monte Carlo: la precisión
-        es independiente de la dimensión del problema. Métodos de
-        Newton–Cotes o Gauss–Legendre de orden $k$ en $d$ dimensiones
-        escalan como $1/N^{k/d}$, que se degrada rápidamente al subir la
-        dimensión.
+        Por eso el ejemplo de $\pi$ no muestra la principal ventaja de Monte
+        Carlo. Su valor aparece cuando la integral representa un promedio sobre
+        muchas variables.
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        ## Hacia muestreo por importancia
+
+        En los tres ejemplos anteriores muestreamos uniformemente. En problemas
+        físicos reales, el integrando suele estar concentrado en una región
+        pequeña del espacio de configuraciones. En el promedio canónico, esa
+        concentración aparece por el factor de Boltzmann
+        $e^{-\beta H(R)}$.
+
+        Si se muestrea uniformemente, muchas configuraciones contribuyen casi
+        nada. El siguiente paso conceptual es elegir una distribución de
+        muestreo más cercana a la región importante y compensar con pesos:
+
+        $$
+        \int p_{\rm real}(R)A(R)\,dR
+        =
+        \int p_{\rm sample}(R)
+        \frac{p_{\rm real}(R)}{p_{\rm sample}(R)}
+        A(R)\,dR.
+        $$
+
+        Cuando la distribución deseada no puede muestrearse directamente, los
+        métodos de cadena de Markov, como Metropolis, construyen una secuencia
+        de estados cuya distribución estacionaria es la distribución objetivo.
+        En ese caso aparece un nuevo problema: las muestras están
+        correlacionadas y la estimación del error debe tomar esa correlación en
+        cuenta.
         """
     )
     return
