@@ -22,7 +22,19 @@ def _():
     def md(text):
         return mo.md(dedent(text))
 
-    return build_dir, dedent, importlib, md, mo, notebook_dir, np, os, shutil, subprocess, sys
+    return (
+        build_dir,
+        dedent,
+        importlib,
+        md,
+        mo,
+        notebook_dir,
+        np,
+        os,
+        shutil,
+        subprocess,
+        sys,
+    )
 
 
 @app.cell(hide_code=True)
@@ -318,7 +330,7 @@ def _(md):
         end subroutine
         ```
 
-        `random_number` produce números uniformes en $[0,1)$. Las asignaciones
+        `random_number` genera números uniformes en $[0,1)$. Las asignaciones
         `x = 2.0 * x - 1.0` y `y = 2.0 * y - 1.0` llevan esos números al
         cuadrado $[-1,1]\times[-1,1]$. La variable `k` acumula el número de
         puntos aceptados, y `pi_estimate` recibe $4k/N$.
@@ -411,9 +423,7 @@ def _(mo):
     int1d_n = mo.ui.slider(
         start=100, stop=100000, step=100, value=10000, label="puntos"
     )
-    int1d_seed = mo.ui.number(
-        start=0, stop=1_000_000, step=1, value=7, label="semilla"
-    )
+    int1d_seed = mo.ui.number(start=0, stop=1_000_000, step=1, value=7, label="semilla")
     return int1d_n, int1d_seed
 
 
@@ -536,9 +546,9 @@ def _(int2d_fortran, int2d_n, int2d_n_value, int2d_seed, mo):
 def _(md):
     md(
         r"""
-        Esta versión local no reemplaza a `main.py`. Su objetivo es mostrar cómo
-        se escribe el mismo cálculo cuando el promedio de Monte Carlo se expresa
-        como un bucle explícito en Fortran y se expone a Python mediante `f2py`.
+        El objetivo de esta versión es mostrar cómo se escribe el mismo cálculo
+        cuando el promedio de Monte Carlo se expresa como un bucle explícito en
+        Fortran y se expone a Python mediante `f2py`.
 
         Para discutir el error estándar, el comportamiento $N^{-1/2}$ y la
         comparación con cuadratura en malla tensorial, usa el notebook principal.
