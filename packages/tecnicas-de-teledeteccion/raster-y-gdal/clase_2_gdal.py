@@ -1,12 +1,17 @@
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import numpy as np
 import osgeo.gdal
 import osgeo.gdal_array
 
-filepath = r"/workspaces/teledeteccion/LC08_L1TP_007068_20240427_20240427_02_RT_refl.tif"  # Ruta de la imagen
+notebook_dir = Path(__file__).resolve().parent
+filepath = notebook_dir / "LC08_L1TP_007068_20240427_20240427_02_RT_refl.tif"
+output_path = notebook_dir / "img_4.png"
+
 # l. Usando Libreria GDAL
 raster_b4 = osgeo.gdal.Open(
-    filepath
+    str(filepath)
 )  # Abrimos el archivo y almacenamos en una raviable raster
 print(type(raster_b4))  # chequeamos en tipo de la variable raster
 print(raster_b4.GetProjection())  # Proyeccion
@@ -32,7 +37,7 @@ print("[ MIN ] = ", band_4.GetMinimum())
 print("[ MAX ] = ", band_4.GetMaximum())
 array_4 = band_4.ReadAsArray()  # Convierte la Banda a un Array bidimensional
 array_4x = osgeo.gdal_array.LoadFile(
-    filepath
+    str(filepath)
 )  # Lectura Directa de un array usanda gdal_array
 print(array_4x.min())
 nodata = band_4.GetNoDataValue()  # Encuentra los valores NoData en la Banda
@@ -47,4 +52,4 @@ raster_b4 = None
 band_4 = None
 
 # save the image
-plt.imsave("img_4.png", array_4x[0, :, :])
+plt.imsave(output_path, array_4x[0, :, :])

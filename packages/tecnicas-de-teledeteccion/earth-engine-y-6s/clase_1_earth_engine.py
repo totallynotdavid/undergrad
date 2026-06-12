@@ -47,7 +47,8 @@ def _():
 
 @app.cell
 def _(Path, load_dotenv, os):
-    env_path = Path(__file__).resolve().parent / ".env"
+    notebook_course_dir = Path(__file__).resolve().parents[1]
+    env_path = notebook_course_dir / ".env"
     load_dotenv(env_path)
     project = os.environ.get("EE_PROJECT", "").strip()
     return env_path, project

@@ -19,6 +19,7 @@ members = [
     "introduccion-a-sismologia",
     "mecanica-estadistica",
     "tecnicas-de-teledeteccion",
+    "topicos-avanzados-tsunamis",
     "undergrad",
 ]
 
@@ -420,7 +421,7 @@ wheels = [
 [[package]]
 name = "dinamica-molecular"
 version = "0.1.0"
-source = { virtual = "dinamica-molecular" }
+source = { virtual = "packages/dinamica-molecular" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numba" },
@@ -503,7 +504,7 @@ wheels = [
 [[package]]
 name = "fisica-computacional"
 version = "0.1.0"
-source = { virtual = "física-computacional" }
+source = { virtual = "packages/fisica-computacional" }
 dependencies = [
     { name = "matplotlib" },
     { name = "meson" },
@@ -523,7 +524,7 @@ requires-dist = [
 [[package]]
 name = "fisica-general"
 version = "0.1.0"
-source = { virtual = "física-general" }
+source = { virtual = "packages/fisica-general" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -539,7 +540,7 @@ requires-dist = [
 [[package]]
 name = "fisica-moderna"
 version = "0.1.0"
-source = { virtual = "física-moderna" }
+source = { virtual = "packages/fisica-moderna" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -618,7 +619,7 @@ wheels = [
 [[package]]
 name = "fundamentos-de-riesgos-y-desastres"
 version = "0.1.0"
-source = { editable = "fundamentos-de-riesgos-y-desastres" }
+source = { editable = "packages/fundamentos-de-riesgos-y-desastres" }
 dependencies = [
     { name = "geopandas" },
     { name = "matplotlib" },
@@ -850,7 +851,7 @@ wheels = [
 [[package]]
 name = "inteligencia-artificial"
 version = "0.1.0"
-source = { virtual = "inteligencia-artificial" }
+source = { virtual = "packages/inteligencia-artificial" }
 dependencies = [
     { name = "pandas" },
     { name = "seaborn" },
@@ -865,7 +866,7 @@ requires-dist = [
 [[package]]
 name = "introduccion-a-sismologia"
 version = "0.1.0"
-source = { virtual = "introduccion-a-sismologia" }
+source = { virtual = "packages/introduccion-a-sismologia" }
 dependencies = [
     { name = "flask" },
 ]
@@ -1285,7 +1286,7 @@ wheels = [
 [[package]]
 name = "mecanica-estadistica"
 version = "0.1.0"
-source = { virtual = "mecánica-estadística" }
+source = { virtual = "packages/mecanica-estadistica" }
 dependencies = [
     { name = "matplotlib" },
     { name = "numba" },
@@ -2509,7 +2510,7 @@ wheels = [
 [[package]]
 name = "tecnicas-de-teledeteccion"
 version = "0.1.0"
-source = { virtual = "técnicas-de-teledetección" }
+source = { virtual = "packages/tecnicas-de-teledeteccion" }
 dependencies = [
     { name = "6s-bin" },
     { name = "earthengine-api" },
@@ -2581,6 +2582,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/51/db/03eaf4331631ef6b2
 wheels = [
     { url = "https://files.pythonhosted.org/packages/6a/43/8bd850ee71a191bf072e31302c73a66be413fecdd98fdcd111ecbcce13ca/tomlkit-0.15.0-py3-none-any.whl", hash = "sha256:4dbc8f0fc024412b57ced8757ac7461305126a648ff8c2c807fcb8e133a78738", size = 41328, upload-time = "2026-05-10T07:38:23.517Z" },
 ]
+
+[[package]]
+name = "topicos-avanzados-tsunamis"
+version = "0.1.0"
+source = { virtual = "packages/topicos-avanzados-tsunamis" }
 
 [[package]]
 name = "typing-extensions"
