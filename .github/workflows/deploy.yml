@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: astral-sh/setup-uv@a92cb430984b4b2b34c9c47e020cf035089958fa # v8.1.0
+      - uses: astral-sh/setup-uv@ca5ddd015e07666cb1f1340ad6171f5e7afffb3e # v8.2.0
 
       - uses: actions/setup-python@v6
         with:
@@ -53,7 +53,7 @@ jobs:
         run: bun run build
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: site/build
 
@@ -71,6 +71,6 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         with:
           artifact_name: github-pages
