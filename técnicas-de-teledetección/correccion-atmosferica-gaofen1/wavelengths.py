@@ -16,8 +16,7 @@
 # along with Py6S.  If not, see <http://www.gnu.org/licenses/>.
 
 import numpy as np
-
-#from .. import sixs_exceptions
+from Py6S import sixs_exceptions
 
 
 def Wavelength(start_wavelength, end_wavelength=None, filter=None):

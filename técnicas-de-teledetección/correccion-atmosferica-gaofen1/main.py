@@ -41,7 +41,6 @@ def _(mo):
 
 @app.cell
 def _():
-    import datetime
     import fnmatch
     import math
     import os
