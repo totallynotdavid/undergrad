@@ -1,11 +1,17 @@
-name: marimo
+name: pages
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - "física-general/péndulo-doble/main.py"
-      - "física-general/pyproject.toml"
+      - "packages/**"
+      - "**/*.py"
+      - "**/pyproject.toml"
+      - "notebooks.toml"
+      - "scripts/export_notebooks.py"
+      - "scripts/notebooks_manifest.py"
+      - "site/**"
+      - "mise.toml"
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/deploy.yml"
@@ -29,22 +35,27 @@ jobs:
         with:
           python-version: "3.13"
 
-      - run: uv sync --package fisica-general
+      - uses: jdx/mise-action@v3
 
-      - name: Check notebook
-        run: uv run --package fisica-general marimo check física-general/péndulo-doble/main.py
+      - name: Install site dependencies
+        run: bun install --cwd site --frozen-lockfile
 
-      - name: Export interactive app
-        run: |
-          uv run --package fisica-general marimo export html-wasm \
-            física-general/péndulo-doble/main.py \
-            -o _site \
-            --mode run
+      - name: Validate site manifest
+        run: uv run python scripts/export_notebooks.py validate
+
+      - name: Export notebooks
+        run: uv run python scripts/export_notebooks.py export --clean
+
+      - name: Build site
+        working-directory: site
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: bun run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: site/build
 
   deploy:
     if: github.event_name != 'pull_request'
