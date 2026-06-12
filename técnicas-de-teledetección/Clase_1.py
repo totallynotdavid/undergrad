@@ -41,6 +41,7 @@ def _():
 
     import ee
     from dotenv import load_dotenv
+
     return Path, ee, load_dotenv, os
 
 
@@ -73,7 +74,11 @@ def _(env_path, load_dotenv, os, project, project_form):
         candidate = str(project_form.value).strip()
         if candidate:
             current = env_path.read_text(encoding="utf-8") if env_path.exists() else ""
-            lines = [line for line in current.splitlines() if not line.startswith("EE_PROJECT=")]
+            lines = [
+                line
+                for line in current.splitlines()
+                if not line.startswith("EE_PROJECT=")
+            ]
             lines.append(f"EE_PROJECT={candidate}")
             env_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
             load_dotenv(env_path, override=True)
@@ -102,31 +107,31 @@ def _(ee, mo, project_form, project_resolved):
     ee.Initialize(project=project_resolved)
 
     # Print metadata for a DEM dataset.
-    print(ee.Image('USGS/SRTMGL1_003').getInfo())
+    print(ee.Image("USGS/SRTMGL1_003").getInfo())
     return (ee,)
 
 
 @app.cell
 def _(ee):
     # Import the MODIS land cover collection.
-    ee.ImageCollection('MODIS_061_MCD12Q1')
+    ee.ImageCollection("MODIS_061_MCD12Q1")
 
     # Import the MODIS land surface temperature collection.
-    lst = ee.ImageCollection('MODIS_061_MOD11A1')
+    lst = ee.ImageCollection("MODIS_061_MOD11A1")
 
     # Import the USGS ground elevation image.
-    ee.Image('USGS/SRTMGL1_003')
+    ee.Image("USGS/SRTMGL1_003")
     return (lst,)
 
 
 @app.cell
 def _(lst):
     # Initial date of interest (inclusive).
-    i_date = '2017-01-01'
-    f_date = '2020-01-01'
+    i_date = "2017-01-01"
+    f_date = "2020-01-01"
     # Final date of interest (exclusive).
     # Selection of appropriate bands and dates for LST.
-    lst.select('LST_Day_1km', 'QC_Day').filterDate(i_date, f_date)
+    lst.select("LST_Day_1km", "QC_Day").filterDate(i_date, f_date)
     return
 
 

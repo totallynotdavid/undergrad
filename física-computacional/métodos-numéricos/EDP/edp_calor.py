@@ -49,21 +49,23 @@ def _(mo):
 
 @app.cell
 def _(alpha, dt, dx, mo, nt, nx):
-    controls = mo.vstack([
-        mo.md("## Parámetros numéricos"),
-        alpha,
-        dt,
-        dx,
-        nx,
-        nt,
-    ])
+    controls = mo.vstack(
+        [
+            mo.md("## Parámetros numéricos"),
+            alpha,
+            dt,
+            dx,
+            nx,
+            nt,
+        ]
+    )
     controls
     return
 
 
 @app.cell
 def _(alpha, dt, dx):
-    gamma = alpha.value * dt.value / (dx.value ** 2)
+    gamma = alpha.value * dt.value / (dx.value**2)
     is_stable = gamma <= 0.5
     return gamma, is_stable
 
@@ -91,7 +93,7 @@ def _(alpha, dt, dx, np, nt, nx):
     T[:, 0] = 0.0
     T[:, -1] = 100.0
 
-    gamma_fd = alpha.value * dt.value / (dx.value ** 2)
+    gamma_fd = alpha.value * dt.value / (dx.value**2)
     for n_step in range(nt.value - 1):
         for i_pos in range(1, nx.value - 1):
             T[n_step + 1, i_pos] = T[n_step, i_pos] + gamma_fd * (
@@ -102,7 +104,9 @@ def _(alpha, dt, dx, np, nt, nx):
 
 @app.cell
 def _(mo, t):
-    frame = mo.ui.slider(0, len(t) - 1, value=min(45, len(t) - 1), step=1, label="Índice temporal n")
+    frame = mo.ui.slider(
+        0, len(t) - 1, value=min(45, len(t) - 1), step=1, label="Índice temporal n"
+    )
     return (frame,)
 
 

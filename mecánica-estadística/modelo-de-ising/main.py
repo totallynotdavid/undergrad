@@ -19,7 +19,8 @@ def _():
 
 @app.cell(hide_code=True)
 def _(cleandoc, mo):
-    mo.md(cleandoc(r"""
+    mo.md(
+        cleandoc(r"""
         # Modelo de Ising 3D: muestreo de Metropolis
 
         Hamiltoniano (sin campo externo):
@@ -34,7 +35,8 @@ def _(cleandoc, mo):
         $$
 
         En este notebook usamos unidades con $J=1$ y controlamos $\beta J$ directamente.
-    """))
+    """)
+    )
     return
 
 
@@ -48,8 +50,12 @@ def _(mo):
     snapshot_stride = mo.ui.slider(
         start=10, stop=400, step=10, value=50, label="Stride de snapshots"
     )
-    max_snapshots = mo.ui.slider(start=10, stop=200, step=10, value=80, label="Máx snapshots")
-    render_step = mo.ui.slider(start=1, stop=20, step=1, value=3, label="Submuestreo 3D")
+    max_snapshots = mo.ui.slider(
+        start=10, stop=200, step=10, value=80, label="Máx snapshots"
+    )
+    render_step = mo.ui.slider(
+        start=1, stop=20, step=1, value=3, label="Submuestreo 3D"
+    )
     return (
         L,
         betaJ,
@@ -96,7 +102,9 @@ def _(njit, np):
         return spins
 
     @njit
-    def delta_energy_periodic(spins: np.ndarray, i: int, j: int, k: int, J: float = 1.0) -> float:
+    def delta_energy_periodic(
+        spins: np.ndarray, i: int, j: int, k: int, J: float = 1.0
+    ) -> float:
         L = spins.shape[0]
         s = spins[i, j, k]
         nn_sum = (
@@ -117,15 +125,21 @@ def _(njit, np):
             for j in range(L):
                 for k in range(L):
                     s = spins[i, j, k]
-                    e -= J * s * (
-                        spins[(i + 1) % L, j, k]
-                        + spins[i, (j + 1) % L, k]
-                        + spins[i, j, (k + 1) % L]
+                    e -= (
+                        J
+                        * s
+                        * (
+                            spins[(i + 1) % L, j, k]
+                            + spins[i, (j + 1) % L, k]
+                            + spins[i, j, (k + 1) % L]
+                        )
                     )
         return e
 
     @njit
-    def run_ising_3d(L: int, betaJ: float, sweeps: int, snapshot_stride: int, max_snapshots: int):
+    def run_ising_3d(
+        L: int, betaJ: float, sweeps: int, snapshot_stride: int, max_snapshots: int
+    ):
         spins = initial_lattice(L)
         n_sites = L * L * L
 
@@ -188,7 +202,15 @@ def _(
     sweeps,
 ):
     np.random.seed(int(seed.value))
-    final_spins, energies, magnetizations, acceptances, snapshots_all, snapshot_steps_all, snapshot_count = run_ising_3d(
+    (
+        final_spins,
+        energies,
+        magnetizations,
+        acceptances,
+        snapshots_all,
+        snapshot_steps_all,
+        snapshot_count,
+    ) = run_ising_3d(
         int(L.value),
         float(betaJ.value),
         int(sweeps.value),
@@ -227,9 +249,9 @@ def _(burn, mo, stats):
     mo.md(f"""
     Burn-in aplicado: **{burn}** barridos.
 
-    - $\\langle E/N \\rangle$: **{stats['E_mean']:.4f} ± {stats['E_std']:.4f}**
-    - $\\langle |M|/N \\rangle$: **{stats['|M|_mean']:.4f} ± {stats['|M|_std']:.4f}**
-    - Aceptación media (post burn-in): **{stats['acc_mean']:.3f}**
+    - $\\langle E/N \\rangle$: **{stats["E_mean"]:.4f} ± {stats["E_std"]:.4f}**
+    - $\\langle |M|/N \\rangle$: **{stats["|M|_mean"]:.4f} ± {stats["|M|_std"]:.4f}**
+    - Aceptación media (post burn-in): **{stats["acc_mean"]:.3f}**
     """)
     return
 
@@ -309,7 +331,12 @@ def _(px, render_step, snapshot_steps, snapshots):
     )
     fig3d.update_traces(marker={"size": 4})
     fig3d.update_layout(
-        scene={"xaxis_title": "x", "yaxis_title": "y", "zaxis_title": "z", "aspectmode": "cube"},
+        scene={
+            "xaxis_title": "x",
+            "yaxis_title": "y",
+            "zaxis_title": "z",
+            "aspectmode": "cube",
+        },
         margin={"l": 0, "r": 0, "b": 0, "t": 45},
         height=560,
         legend_title_text="Spin",
@@ -319,12 +346,14 @@ def _(px, render_step, snapshot_steps, snapshots):
 
 @app.cell(hide_code=True)
 def _(cleandoc, mo):
-    mo.md(cleandoc(r"""
+    mo.md(
+        cleandoc(r"""
         Notas:
         - Se usan condiciones de frontera periódicas.
         - El tiempo de Monte Carlo está medido en barridos completos (un intento por sitio en promedio).
         - La celda de exportación (frames/video) se deja fuera del flujo principal de clase.
-    """))
+    """)
+    )
     return
 
 
