@@ -1,7 +1,3 @@
-.ruff_cache
-eventos_procesados
-archivos
-raw
-__pycache__
-*.pdf
-*.m
+raw/
+eventos_procesados/
+__pycache__/

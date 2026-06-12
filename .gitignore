@@ -1,17 +1,2 @@
-# generated files
-*.mod
-*.exe
-*.o
-*.out
-*.so
-
-# data/output files
-*.csv
-*.png
-
-node_modules
-
-# artifacts
-_build/
 __marimo__/
 __pycache__/
