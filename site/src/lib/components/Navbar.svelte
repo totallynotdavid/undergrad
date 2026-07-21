@@ -30,6 +30,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.75rem 1.25rem;
+		min-height: var(--navbar-height);
 		max-width: var(--layout-width);
 		margin: 0 auto;
 		padding: 0.7rem var(--gutter);
@@ -42,7 +43,7 @@
 	}
 	.topbar__brand:hover {
 		color: var(--content);
-		text-decoration: none;
+		text-decoration: underline;
 	}
 	.topbar__controls {
 		flex: 0 1 auto;

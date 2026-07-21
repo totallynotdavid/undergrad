@@ -49,6 +49,12 @@
   }
 }
 
+@media (max-width: 640px) {
+  :root {
+    --navbar-height: 6.75rem;
+  }
+}
+
 body {
   margin: 0;
   background: var(--page);
