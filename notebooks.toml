@@ -1,6 +1,6 @@
 [site]
-title = "Notebooks"
-description = "Material interactivo de cursos de física de pregrado."
+title = "Cuadernos"
+description = "Cuadernos de fisica computacional: metodos numericos, sistemas dinamicos, mecanica estadistica y teledeteccion."
 repository = "https://github.com/totallynotdavid/undergrad"
 branch = "master"
 
@@ -20,7 +20,7 @@ title = "Pendulos"
 id = "pendulo-doble"
 title = "Pendulo doble acoplado"
 file = "pendulo_doble.py"
-summary = "Modelo didactico de dos angulos acoplados con integracion explicita de Euler."
+summary = "Dos angulos acoplados integrados con Euler explicito, con la acumulacion de error que el metodo introduce."
 export = true
 
 [[courses]]
@@ -36,35 +36,35 @@ title = "Metodos numericos"
 id = "pendulo-simple"
 title = "Pendulo simple"
 file = "metodos-numericos/pendulos-y-osciladores/pendulo_simple.py"
-summary = "Integracion numerica y visualizacion de un pendulo simple."
+summary = "Oscilador no lineal integrado numericamente y su limite de pequenas oscilaciones."
 export = true
 
 [[courses.sections.notebooks]]
 id = "pendulo-doble"
 title = "Pendulo doble"
 file = "metodos-numericos/pendulos-y-osciladores/pendulo_doble.py"
-summary = "Integracion numerica y visualizacion de un pendulo doble."
+summary = "Sistema caotico de dos grados de libertad y su dependencia sensible de las condiciones iniciales."
 export = true
 
 [[courses.sections.notebooks]]
 id = "edp-calor"
 title = "EDP de calor en una dimension"
 file = "metodos-numericos/edp/edp_calor.py"
-summary = "Metodo explicito de diferencias finitas y condicion de estabilidad."
+summary = "Diferencias finitas explicitas para la ecuacion de calor 1D y su condicion de estabilidad."
 export = true
 
 [[courses.sections.notebooks]]
 id = "monte-carlo"
 title = "Integracion de Monte Carlo"
 file = "metodos-numericos/monte-carlo/main.py"
-summary = "Estimadores de Monte Carlo, error estadistico y comparacion con resultados locales en Fortran."
+summary = "Estimador de Monte Carlo, su error estadistico que decae como 1/sqrt(N), y contraste con una rutina local en Fortran."
 export = true
 
 [[courses.sections.notebooks]]
 id = "monte-carlo-fortran"
 title = "Monte Carlo con Fortran y f2py"
 file = "metodos-numericos/monte-carlo/fortran_f2py.py"
-summary = "Compilacion local de rutinas Fortran y extensiones nativas."
+summary = "El mismo estimador de Monte Carlo enlazado a una rutina Fortran con f2py, como extension nativa local."
 export = false
 
 [[courses]]
@@ -80,7 +80,7 @@ title = "Sistemas dinamicos"
 id = "atractor-de-lorenz"
 title = "Atractor de Lorenz"
 file = "atractor_de_lorenz.py"
-summary = "Integracion del sistema de Lorenz y visualizacion tridimensional."
+summary = "Sistema de Lorenz integrado en su regimen caotico y la geometria del atractor."
 export = true
 
 [[courses.sections]]
@@ -91,7 +91,7 @@ title = "Radiacion"
 id = "curva-de-planck"
 title = "Curva de Planck"
 file = "curva-de-planck/main.py"
-summary = "Requiere gfortran-13 para compilar y ejecutar el codigo Fortran."
+summary = "Ley de Planck y los limites de Rayleigh-Jeans y Wien, con el calculo en Fortran local."
 export = false
 
 [[courses]]
@@ -107,14 +107,14 @@ title = "Monte Carlo"
 id = "volumen-hiperesfera"
 title = "Volumen de la hiperesfera"
 file = "calcular_volumen_esfera_n_dimensiones.py"
-summary = "Estimacion Monte Carlo del volumen de una bola unitaria en n dimensiones con numba."
+summary = "Estimacion Monte Carlo del volumen de la bola unitaria en n dimensiones y su decaimiento con la dimension."
 export = false
 
 [[courses.sections.notebooks]]
 id = "modelo-de-ising"
 title = "Modelo de Ising 3D"
 file = "modelo_de_ising.py"
-summary = "Muestreo de Metropolis con rutinas locales aceleradas por numba."
+summary = "Algoritmo de Metropolis para el modelo de Ising 3D, con la magnetizacion y la transicion de fase."
 export = false
 
 [[courses]]
@@ -130,7 +130,7 @@ title = "Datos tabulares"
 id = "limpieza-datos-tabulares"
 title = "Limpieza de datos tabulares"
 file = "limpieza_datos_tabulares.py"
-summary = "Usa el dataset Titanic de seaborn; conviene fijar los datos antes de publicarlo en WASM."
+summary = "Limpieza y codificacion de variables sobre datos tabulares, con el dataset Titanic."
 export = false
 
 [[courses]]
@@ -146,14 +146,14 @@ title = "Earth Engine y 6S"
 id = "clase-0-py6s"
 title = "Clase 0: Py6S"
 file = "earth-engine-y-6s/clase_0_py6s.py"
-summary = "Requiere Py6S y el binario 6S."
+summary = "Transferencia radiativa atmosferica con el modelo 6S a traves de Py6S."
 export = false
 
 [[courses.sections.notebooks]]
 id = "clase-1-earth-engine"
 title = "Clase 1: Earth Engine"
 file = "earth-engine-y-6s/clase_1_earth_engine.py"
-summary = "Requiere credenciales y configuracion de Earth Engine."
+summary = "Acceso y procesamiento de imagenes satelitales con Google Earth Engine."
 export = false
 
 [[courses.sections]]
@@ -164,7 +164,7 @@ title = "Raster y GDAL"
 id = "clase-2-gdal"
 title = "Clase 2: GDAL"
 file = "raster-y-gdal/clase_2_gdal.py"
-summary = "Requiere un raster Landsat local y GDAL."
+summary = "Lectura y manipulacion de rasteres Landsat con GDAL."
 export = false
 
 [[courses.sections]]
@@ -175,7 +175,7 @@ title = "Correccion atmosferica"
 id = "correccion-atmosferica-gaofen1"
 title = "Correccion atmosferica GaoFen-1"
 file = "correccion-atmosferica-gaofen1/main.py"
-summary = "Requiere credenciales, raster local, Py6S, 6S y rasterio."
+summary = "Correccion atmosferica de imagenes GaoFen-1 con 6S y rasterio."
 export = false
 
 [[courses]]
@@ -191,5 +191,5 @@ title = "SIGRID"
 id = "huaicos-ancash"
 title = "Analisis de huaicos en Ancash"
 file = "sigrid/analisis_huaicos_ancash.py"
-summary = "Consulta datos remotos y usa geopandas; debe prepararse para navegador."
+summary = "Analisis geoespacial de huaicos en Ancash con geopandas sobre datos del SIGRID."
 export = false
