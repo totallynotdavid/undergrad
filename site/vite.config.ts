@@ -1,6 +1,6 @@
-import tailwindcss from "@tailwindcss/vite";
 import adapter from "@sveltejs/adapter-static";
 import { sveltekit } from "@sveltejs/kit/vite";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 const configuredBase = process.env.BASE_PATH ?? "";
@@ -26,7 +26,7 @@ export default defineConfig({
       paths: {
         base,
       },
-      experimental: { remoteFunctions: true, handleRenderingErrors: true },
+      experimental: { remoteFunctions: true },
     }),
   ],
 });
