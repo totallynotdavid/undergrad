@@ -36,7 +36,7 @@ export interface Site {
 }
 
 export const site: Site = {
-  "title": "Cuadernos",
+  "title": "Notebooks",
   "description": "Cuadernos de fisica computacional: metodos numericos, sistemas dinamicos, mecanica estadistica y teledeteccion.",
   "repository": "https://github.com/totallynotdavid/undergrad"
 };
