@@ -67,22 +67,46 @@ def export_notebooks(clean: bool) -> None:
                 notebook.path,
             ]
         )
-        run(
-            [
-                *MARIMO_RUN,
-                "--package",
-                notebook.package,
-                "marimo",
-                "export",
-                "html-wasm",
-                notebook.path,
-                "-o",
-                str(output_dir),
-                "--mode",
-                "run",
-                "-f",
-            ]
-        )
+        if notebook.mode == "results":
+            export_static_results(notebook, output_dir)
+        else:
+            export_interactive(notebook, output_dir)
+
+
+def export_interactive(notebook, output_dir: Path) -> None:
+    run(
+        [
+            *MARIMO_RUN,
+            "--package",
+            notebook.package,
+            "marimo",
+            "export",
+            "html-wasm",
+            notebook.path,
+            "-o",
+            str(output_dir),
+            "--mode",
+            "run",
+            "-f",
+        ]
+    )
+
+
+def export_static_results(notebook, output_dir: Path) -> None:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    run(
+        [
+            *MARIMO_RUN,
+            "--package",
+            notebook.package,
+            "marimo",
+            "export",
+            "html",
+            notebook.path,
+            "-o",
+            str(output_dir / "index.html"),
+        ]
+    )
 
 
 def parse_args() -> argparse.Namespace:
