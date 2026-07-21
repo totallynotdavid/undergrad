@@ -1,6 +1,6 @@
 <script lang="ts">
 	import NotebookCard from './NotebookCard.svelte';
-	import type { Course } from '$lib/catalog.generated';
+	import type { Course } from '#lib/catalog.generated';
 
 	let { course }: { course: Course } = $props();
 </script>

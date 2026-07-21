@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Course } from '$lib/catalog.generated';
-	import type { Filters } from '$lib/filters';
+	import type { Course } from '#lib/catalog.generated';
+	import type { Filters } from '#lib/filters';
 
 	let {
 		filters,

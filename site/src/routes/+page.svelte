@@ -3,18 +3,18 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 
-	import CourseGroup from '$lib/components/CourseGroup.svelte';
-	import Controls from '$lib/components/Controls.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import { site, courses } from '$lib/catalog.generated';
+	import CourseGroup from '#lib/components/CourseGroup.svelte';
+	import Controls from '#lib/components/Controls.svelte';
+	import Footer from '#lib/components/Footer.svelte';
+	import Navbar from '#lib/components/Navbar.svelte';
+	import { site, courses } from '#lib/catalog.generated';
 	import {
 		applyFilters,
 		EMPTY_FILTERS,
 		filtersToSearchParams,
 		parseFilters,
 		type Filters
-	} from '$lib/filters';
+	} from '#lib/filters';
 
 	// Read URL filters only after hydration so the prerendered HTML still matches.
 	let mounted = $state(false);
