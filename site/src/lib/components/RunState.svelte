@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { RunMode } from '$lib/catalog.generated';
-	import { runModeLabels, runModeTitles } from '$lib/runModes';
+	import type { RunMode } from '#lib/catalog.generated';
+	import { runModeLabels, runModeTitles } from '#lib/runModes';
 
 	let { mode }: { mode: RunMode } = $props();
 </script>

@@ -2,7 +2,7 @@
 	import { asset } from '$app/paths';
 	import type { Asset } from '$app/types';
 	import RunState from './RunState.svelte';
-	import type { Notebook } from '$lib/catalog.generated';
+	import type { Notebook } from '#lib/catalog.generated';
 
 	let { notebook }: { notebook: Notebook } = $props();
 
