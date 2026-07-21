@@ -16,6 +16,7 @@
   --accent: #584e62;
   --deemphasized: #f4f1f8;
   --line: #dadde1;
+  --field-border: #8a8a8a;
   --code-bg: #f6f7f8;
   --card-border: transparent;
 
@@ -42,6 +43,7 @@
     --accent: #c3b4d1;
     --deemphasized: #242526;
     --line: #38383b;
+    --field-border: #7a7a7a;
     --code-bg: #2b2b2e;
     --card-border: var(--line);
   }

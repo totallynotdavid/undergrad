@@ -26,6 +26,7 @@
 			placeholder="Lorenz, Ising, Monte Carlo..."
 			autocomplete="off"
 		/>
+		<kbd class="controls__hint" aria-hidden="true">/</kbd>
 	</div>
 	<div class="controls__field">
 		<label class="controls__label" for="nb-course">Curso</label>
@@ -47,17 +48,17 @@
 <style>
 	.controls {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
 		justify-content: flex-end;
 		gap: 0.6rem 0.75rem;
 	}
 	.controls__field {
 		display: flex;
+		min-width: 0;
 	}
 	.controls__field--search {
+		position: relative;
 		flex: 0 1 18rem;
-		min-width: 0;
 	}
 
 	@media (max-width: 640px) {
@@ -81,25 +82,62 @@
 	}
 	.controls__input {
 		width: 100%;
+		min-height: 2.5rem;
 		padding: 0.5rem 0.7rem;
 		background: var(--page);
-		border: 1px solid var(--line);
+		border: 1px solid var(--field-border);
 		border-radius: var(--radius);
 		font: 400 var(--text-body)/1.4 var(--font-base);
 		color: var(--content);
 		accent-color: var(--accent);
+	}
+	.controls__field--search .controls__input {
+		padding-right: 2rem;
 	}
 	.controls__input::placeholder {
 		color: var(--content-secondary);
 	}
 	.controls__input:focus-visible {
 		outline: 2px solid var(--accent);
-		outline-offset: 1px;
+		outline-offset: 2px;
 		border-color: var(--accent);
 	}
 	.controls__select {
+		max-width: 16rem;
+		overflow: hidden;
 		font-family: var(--font-mono);
 		font-size: var(--text-label);
+		text-overflow: ellipsis;
+		white-space: nowrap;
 		cursor: pointer;
+	}
+	.controls__hint {
+		position: absolute;
+		top: 50%;
+		right: 0.55rem;
+		transform: translateY(-50%);
+		padding: 0.05rem 0.35rem;
+		font: 500 0.75rem var(--font-mono);
+		color: var(--content-secondary);
+		background: var(--page);
+		border: 1px solid var(--field-border);
+		border-radius: var(--radius);
+		pointer-events: none;
+		transition: opacity 150ms ease-out;
+	}
+	.controls__input:focus + .controls__hint,
+	.controls__input:not(:placeholder-shown) + .controls__hint {
+		opacity: 0;
+	}
+
+	@media (pointer: coarse) {
+		.controls__input {
+			min-height: 44px;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.controls__hint {
+			transition: none;
+		}
 	}
 </style>
