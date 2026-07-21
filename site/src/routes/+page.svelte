@@ -24,7 +24,7 @@
 	});
 
 	const filters = $derived(
-		mounted ? parseFilters(page.url.searchParams) : EMPTY_FILTERS
+		mounted ? parseFilters(new URLSearchParams(page.url.search)) : EMPTY_FILTERS
 	);
 	const filtered = $derived(applyFilters(courses, filters));
 
