@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { base } from '$app/paths';
+	import { asset } from '$app/paths';
+	import type { Asset } from '$app/types';
 	import RunState from './RunState.svelte';
 	import type { Notebook } from '$lib/catalog.generated';
 
 	let { notebook }: { notebook: Notebook } = $props();
 
-	const href = $derived(notebook.export ? `${base}${notebook.assetPath}` : notebook.sourceUrl);
+	const href = $derived(
+		notebook.export ? asset(notebook.assetPath as Asset) : notebook.sourceUrl
+	);
 </script>
 
 <a class="card" {href} target="_blank" rel="external noopener">

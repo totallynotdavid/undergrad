@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import type { Snippet } from 'svelte';
 
 	let {
@@ -10,7 +10,7 @@
 
 <header class="topbar">
 	<div class="topbar__inner">
-		<a class="topbar__brand" href={base || '/'}>{title}</a>
+		<a class="topbar__brand" href={resolve('/')}>{title}</a>
 		{#if children}
 			<div class="topbar__controls">{@render children()}</div>
 		{/if}
