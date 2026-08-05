@@ -29,7 +29,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: astral-sh/setup-uv@ca5ddd015e07666cb1f1340ad6171f5e7afffb3e # v8.2.0
+      - uses: astral-sh/setup-uv@7cd5f7fd2eaeae38d760e45314eb32769f5ffe96 # v8.2.0
 
       - uses: actions/setup-python@v6
         with:
