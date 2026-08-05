@@ -25,5 +25,5 @@ lint = [
     "ruff>=0.15.17",
 ]
 notebooks = [
-    "marimo>=0.23.14",
+    "marimo>=0.23.16",
 ]
