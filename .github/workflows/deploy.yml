@@ -27,7 +27,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: astral-sh/setup-uv@b68407c192114b6e47cc45b98289832c3df00d5e # v.9.0.0
 
