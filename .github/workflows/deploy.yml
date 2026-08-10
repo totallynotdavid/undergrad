@@ -29,13 +29,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: astral-sh/setup-uv@ca5ddd015e07666cb1f1340ad6171f5e7afffb3e # v8.2.0
+      - uses: astral-sh/setup-uv@b68407c192114b6e47cc45b98289832c3df00d5e # v.9.0.0
 
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
 
-      - uses: jdx/mise-action@v3
+      - uses: jdx/mise-action@c75b4f602dfba4d05f0680ffec1baf3661e71d4b # v4.2.4
 
       - name: Install site dependencies
         run: bun install --cwd site --frozen-lockfile
