@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - uses: jdx/mise-action@c75b4f602dfba4d05f0680ffec1baf3661e71d4b # v4.2.4
+      - uses: jdx/mise-action@9d2b3112374f613543eb1ba717ada58f1b83bbec # v4.2.4
 
       - name: Install site dependencies
         run: bun install --cwd site --frozen-lockfile
