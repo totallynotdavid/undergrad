@@ -2,15 +2,15 @@
 name = "tecnicas-de-teledeteccion"
 version = "0.1.0"
 dependencies = [
-    "earthengine-api>=1.7.1",
-    "python-dotenv>=1.1.1",
+    "earthengine-api>=1.7.45",
+    "python-dotenv>=1.2.3",
     "py6s>=1.9.2",
     "6s-bin>=0.11.3",
-    "rasterio>=1.4.3",
+    "rasterio>=1.5.1",
     "earthpy>=0.9.4",
-    "setuptools>=69,<82",
-    "pandas>=2.3.3",
-    "pyproj>=3.7.1",
-    "matplotlib>=3.10.7",
-    "numpy>=2.2.6",
+    "setuptools>=84.0.0",
+    "pandas>=3.0.6",
+    "pyproj>=3.8.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.3",
 ]

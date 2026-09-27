@@ -6,17 +6,17 @@ app = marimo.App()
 
 @app.cell(hide_code=True)
 def _():
+    from textwrap import dedent
+
     import marimo as mo
 
-    return (mo,)
+    return dedent, mo
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from textwrap import dedent as _dedent
-
+def _(dedent, mo):
     mo.md(
-        _dedent(
+        dedent(
             """
     # Volumen de la hiperesfera en $n$ dimensiones
 
@@ -30,11 +30,9 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from textwrap import dedent as _dedent
-
+def _(dedent, mo):
     mo.md(
-        _dedent(
+        dedent(
             """
     ## Resultado analítico
 

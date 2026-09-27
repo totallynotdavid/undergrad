@@ -2,8 +2,8 @@
 name = "mecanica-estadistica"
 version = "0.1.0"
 dependencies = [
-    "matplotlib>=3.10.7",
-    "numpy>=2.2.6",
-    "numba>=0.62.1",
-    "plotly>=6.1.1",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.3",
+    "numba>=0.67.0",
+    "plotly>=7.1.0",
 ]
