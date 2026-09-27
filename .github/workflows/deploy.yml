@@ -3,7 +3,8 @@ name: pages
 on:
   workflow_dispatch:
   push:
-    paths:
+    branches: [master]
+    paths: &site-inputs
       - "packages/**"
       - "**/*.py"
       - "**/pyproject.toml"
@@ -15,9 +16,13 @@ on:
       - "pyproject.toml"
       - "uv.lock"
       - ".github/workflows/deploy.yml"
+  pull_request:
+    paths: *site-inputs
 
+# A pending run replaces the pending run of its group, so pull requests get
+# their own group and cannot displace a queued deploy of master.
 concurrency:
-  group: "pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
