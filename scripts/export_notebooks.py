@@ -16,7 +16,7 @@ from notebooks_manifest import (
 )
 
 TMP_ROOT = Path(tempfile.gettempdir()).resolve()
-MARIMO_RUN = ["uv", "run", "--locked", "--with", "marimo==0.23.9"]
+MARIMO_RUN = ["uv", "run", "--locked"]
 STATIC_NOTEBOOKS_DIR = SITE_DIR / "static" / "notebooks"
 
 

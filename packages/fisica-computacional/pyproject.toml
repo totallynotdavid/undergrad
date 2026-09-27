@@ -2,8 +2,8 @@
 name = "fisica-computacional"
 version = "0.1.0"
 dependencies = [
-    "matplotlib>=3.10.7",
-    "meson>=1.5",
-    "ninja>=1.11",
-    "numpy>=2.2.6",
+    "matplotlib>=3.11.2",
+    "meson>=1.12.1",
+    "ninja>=1.13.2",
+    "numpy>=2.5.3",
 ]

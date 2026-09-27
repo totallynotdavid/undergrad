@@ -6,17 +6,17 @@ app = marimo.App()
 
 @app.cell(hide_code=True)
 def _():
+    from textwrap import dedent
+
     import marimo as mo
 
-    return (mo,)
+    return dedent, mo
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from textwrap import dedent as _dedent
-
+def _(dedent, mo):
     mo.md(
-        _dedent(
+        dedent(
             r"""
 # Péndulo doble acoplado: integración de Euler
 
@@ -29,11 +29,9 @@ $(\theta_1,\theta_2)$ con integración explícita de Euler.
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    from textwrap import dedent as _dedent
-
+def _(dedent, mo):
     mo.md(
-        _dedent(
+        dedent(
             r"""
 ## Modelo usado
 

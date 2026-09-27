@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import json
 import re
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote
-
-import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "notebooks.toml"
