@@ -7,14 +7,14 @@
 	import Controls from '#lib/components/Controls.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import Navbar from '#lib/components/Navbar.svelte';
-	import { site, courses } from '#lib/catalog.generated';
+	import { site, courses } from '#lib/catalog.generated.js';
 	import {
 		applyFilters,
 		EMPTY_FILTERS,
 		filtersToSearchParams,
 		parseFilters,
 		type Filters
-	} from '#lib/filters';
+	} from '#lib/filters.js';
 
 	// Read URL filters only after hydration so the prerendered HTML still matches.
 	let mounted = $state(false);
@@ -32,9 +32,8 @@
 		const query = filtersToSearchParams(next).toString();
 
 		goto(query ? `?${query}` : location.pathname, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}
 

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { asset } from '$app/paths';
-	import type { Asset } from '$app/types';
+	import type { AssetPath } from '$app/types';
 	import RunState from './RunState.svelte';
-	import type { Notebook } from '#lib/catalog.generated';
+	import type { Notebook } from '#lib/catalog.generated.js';
 
 	let { notebook }: { notebook: Notebook } = $props();
 
 	const href = $derived(
-		notebook.export ? asset(notebook.assetPath as Asset) : notebook.sourceUrl
+		notebook.export ? asset(notebook.assetPath as AssetPath) : notebook.sourceUrl
 	);
 </script>
 
