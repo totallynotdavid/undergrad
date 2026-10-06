@@ -11,6 +11,7 @@ on:
       - "notebooks.toml"
       - "scripts/export_notebooks.py"
       - "scripts/notebooks_manifest.py"
+      - "scripts/check_notebooks.py"
       - "site/**"
       - "mise.toml"
       - "pyproject.toml"
@@ -43,6 +44,9 @@ jobs:
 
       - name: Validate site manifest
         run: uv run python scripts/export_notebooks.py validate
+
+      - name: Check every notebook
+        run: mise run check-notebooks
 
       - name: Export notebooks
         run: uv run python scripts/export_notebooks.py export --clean

@@ -3,3 +3,7 @@ bun = "1.4.2"
 python = "3.14"
 ruff = "0.16.9"
 uv = "0.12.19"
+
+[tasks.check-notebooks]
+description = "Check every notebook listed in notebooks.toml"
+run = "uv run python scripts/check_notebooks.py"
