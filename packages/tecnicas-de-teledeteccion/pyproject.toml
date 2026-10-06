@@ -14,3 +14,8 @@ dependencies = [
     "matplotlib>=3.11.2",
     "numpy>=2.5.3",
 ]
+
+[project.optional-dependencies]
+gdal = [
+    "gdal>=3.11.0",
+]
