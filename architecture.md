@@ -62,4 +62,4 @@ Each package `pyproject.toml` owns its course dependencies. The remote-sensing
 package declares the GDAL Python binding as its optional `gdal` extra. Native
 requirements and version compatibility are documented in
 [`docs/environment.md`](docs/environment.md). The repository installer covers
-the Fortran compiler only.
+the Fortran compiler and the native GDAL development packages.

@@ -569,9 +569,9 @@ requires-dist = [
 
 [[package]]
 name = "gdal"
-version = "3.13.3"
+version = "3.12.2"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/78/64/78639efe3f1df027f0028e1faf9719dae609b9fd02d4ffd6c2dd7a9a9757/gdal-3.13.3.tar.gz", hash = "sha256:af547af72d2a153d658c1deb2fe595eccb38c18f3d9d298882fbdeee9806a6d2", size = 940613, upload-time = "2026-08-18T09:32:21.609Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b7/73/52753654d259cae674b7d4f2167d421382d9aa2ee510f047338381ae175b/gdal-3.12.2.tar.gz", hash = "sha256:a5afa8e55a19b296a004a15d38fe3ad60cc380f1f090e2aab5d35331008c970f", size = 899232, upload-time = "2026-02-09T17:53:29.78Z" }
 
 [[package]]
 name = "geopandas"
@@ -1960,7 +1960,7 @@ requires-dist = [
     { name = "6s-bin", specifier = ">=0.11.3" },
     { name = "earthengine-api", specifier = ">=1.7.45" },
     { name = "earthpy", specifier = ">=0.9.4" },
-    { name = "gdal", marker = "extra == 'gdal'", specifier = ">=3.11.0" },
+    { name = "gdal", marker = "extra == 'gdal'", specifier = "==3.12.2" },
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "numpy", specifier = ">=2.5.3" },
     { name = "pandas", specifier = ">=3.0.6" },
