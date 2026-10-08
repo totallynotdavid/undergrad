@@ -56,6 +56,10 @@ workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 generates the catalog, checks and exports published notebooks, then builds that
 directory for GitHub Pages.
 
+[`docs/layout.md`](docs/layout.md) defines the folder map and site build
+boundary. `site/` contains only the frontend and generated site inputs. Course
+source, teaching material, documentation, and build tooling remain outside it.
+
 ## Course dependencies
 
 Each package `pyproject.toml` owns its course dependencies. The remote-sensing
