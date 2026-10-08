@@ -30,7 +30,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.6.3",
     "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
+    "oxlint": "^1.86.0",
     "svelte": "^5.57.1",
     "svelte-check": "^4.7.6",
     "tailwindcss": "^4.3.3",
