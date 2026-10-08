@@ -20,3 +20,6 @@ The [architecture](architecture.md) describes the package, catalog, export, and
 site boundaries. The [manual](docs/readme.md) covers notebook checks, optional
 native dependencies, and local site builds. Contributors should read
 [contributing.md](contributing.md) before changing a notebook or the site.
+
+The [repository layout](docs/layout.md) maps each top-level folder to its site,
+notebook-source, tooling, or documentation boundary.
