@@ -5,8 +5,6 @@ import sys
 
 from notebooks_manifest import ROOT, load_manifest, validate_manifest
 
-MARIMO_VERSION = "0.25.1"
-
 
 def main() -> int:
     _, notebooks = load_manifest()
@@ -15,9 +13,9 @@ def main() -> int:
 
     for notebook in notebooks:
         command = [
-            "uvx",
-            "--from",
-            f"marimo=={MARIMO_VERSION}",
+            "uv",
+            "run",
+            "--locked",
             "marimo",
             "check",
             notebook.path,
