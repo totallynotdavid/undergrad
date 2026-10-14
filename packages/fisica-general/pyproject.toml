@@ -3,5 +3,5 @@ name = "fisica-general"
 version = "0.1.0"
 dependencies = [
     "matplotlib>=3.11.2",
-    "numpy>=2.5.3",
+    "numpy>=2.5.4",
 ]
