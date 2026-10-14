@@ -1,8 +1,8 @@
 [tools]
-bun = "1.4.2"
+bun = "1.4.3"
 python = "3.14"
-ruff = "0.16.9"
-uv = "0.12.19"
+ruff = "0.17.0"
+uv = "0.13.1"
 
 [tasks.check-notebooks]
 description = "Check every notebook listed in notebooks.toml"
