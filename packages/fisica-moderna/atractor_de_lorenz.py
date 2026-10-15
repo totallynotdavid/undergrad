@@ -79,7 +79,7 @@ def _(plt, puntos):
     ax.set_xticks([])
     ax.set_yticks([])
     ax.set_zticks([])
-    ax.axis("off")
+    ax.set_axis_off()
     return (fig,)
 
 
