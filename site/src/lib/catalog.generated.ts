@@ -347,5 +347,27 @@ export const courses: Course[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "topicos-avanzados-tsunamis",
+    "title": "Topicos avanzados en tsunamis",
+    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/topicos-avanzados-tsunamis",
+    "sections": [
+      {
+        "id": "fuente-sismica",
+        "title": "Fuente sismica",
+        "notebooks": [
+          {
+            "title": "De la falla al tsunami",
+            "summary": "Deformacion vertical del fondo con el modelo de Okada para el terremoto de Pisco de 2007, validada contra Fortran, y condicion inicial del tsunami con el filtro de Kajiura.",
+            "slug": "topicos-avanzados-tsunamis/fuente-sismica/deformacion-tsunami",
+            "path": "packages/topicos-avanzados-tsunamis/deformacion_tsunami.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/topicos-avanzados-tsunamis/deformacion_tsunami.py",
+            "assetPath": "/notebooks/topicos-avanzados-tsunamis/fuente-sismica/deformacion-tsunami/"
+          }
+        ]
+      }
+    ]
   }
 ];
