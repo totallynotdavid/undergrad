@@ -9,8 +9,11 @@ description = "Test the notebook export script"
 run = "uv run --locked python -m unittest discover -s scripts"
 
 [tasks.test-notebooks]
-description = "Run the statistical mechanics notebooks and check their results"
-run = "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica"
+description = "Run the statistical mechanics and numerical methods notebooks and check their results"
+run = [
+  "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica",
+  "uv run --locked --package fisica-computacional python -m unittest discover -s packages/fisica-computacional",
+]
 
 [tasks.test-dinamica-molecular]
 description = "Test the molecular dynamics package"
