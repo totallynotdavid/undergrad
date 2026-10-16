@@ -1,11 +1,7 @@
 """Bathymetry and topography grids with their geographic coordinates.
 
-One reader replaces the MATLAB chain of the Topicos Avanzados en Tsunamis
-course (``extraer_etopo5.m``, ``extraer_topo.m``, ``gebco2mat.m``,
-``mat2vec.m`` and ``fix_latitud.m``). Those programs transposed the grid,
-mirrored it, flipped the sign of the elevation and rebuilt the coordinates by
-hand, and the ``xya.mat`` files they wrote did not match the data. Here the
-coordinates come from the header of the source file.
+The coordinates come from the header of the source file: its extent, its
+spacing and its registration.
 """
 
 from __future__ import annotations
@@ -63,8 +59,10 @@ def read_grid(path: str | Path) -> Grid:
     """Read a grid from a GEBCO ASCII file (``.asc``) or from a ``.npz``.
 
     A GEBCO file lists the rows from the north-west corner eastwards, so the
-    reader flips it to latitude increasing. Its header gives the extent and
-    spacing of a pixel-registered grid, whose points are the cell centres.
+    reader flips it to latitude increasing. Its header gives the extent and the
+    registration. In a grid-line registered file the extent is the position of
+    the first and last points; in a pixel-registered one it is the outer edge of
+    the cells, and the points are the cell centres.
     """
     path = Path(path)
     if path.suffix == ".npz":
@@ -96,10 +94,20 @@ def _read_gebco_ascii(path: Path) -> Grid:
 
     lon_min, lon_max = field("Minimum longitude"), field("Maximum longitude")
     lat_min, lat_max = field("Minimum latitude"), field("Maximum latitude")
+    registration = None
+    for line in header:
+        match = re.search(r"is (grid line|pixel) registered", line)
+        if match:
+            registration = match.group(1)
+    if registration is None:
+        raise ValueError(f"{path} does not state its registration in its header")
+
     rows, cols = values.shape
-    dlon = (lon_max - lon_min) / cols
-    dlat = (lat_max - lat_min) / rows
-    lon = lon_min + dlon * (np.arange(cols) + 0.5)
-    lat = lat_min + dlat * (np.arange(rows) + 0.5)
+    if registration == "grid line":
+        lon = np.linspace(lon_min, lon_max, cols)
+        lat = np.linspace(lat_min, lat_max, rows)
+    else:
+        lon = lon_min + (lon_max - lon_min) / cols * (np.arange(cols) + 0.5)
+        lat = lat_min + (lat_max - lat_min) / rows * (np.arange(rows) + 0.5)
     source = next((line for line in header if line.startswith("Data source")), "")
     return Grid(lon, lat, values[::-1], source.removeprefix("Data source").strip())
