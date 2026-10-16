@@ -100,15 +100,15 @@ title = "Monte Carlo"
 id = "volumen-hiperesfera"
 title = "Volumen de la hiperesfera"
 file = "calcular_volumen_esfera_n_dimensiones.py"
-summary = "Estimacion Monte Carlo del volumen de la bola unitaria en n dimensiones y su decaimiento con la dimension."
-export = false
+summary = "Monte Carlo por rechazo del volumen de la bola unitaria frente a la formula exacta, y por que la tasa de aceptacion se hunde al crecer la dimension."
+export = true
 
 [[courses.sections.notebooks]]
 id = "modelo-de-ising"
 title = "Modelo de Ising 3D"
 file = "modelo_de_ising.py"
-summary = "Algoritmo de Metropolis para el modelo de Ising 3D, con la magnetizacion y la transicion de fase."
-export = false
+summary = "Metropolis para el modelo de Ising 3D con varios tamanos de red: magnetizacion, energia, susceptibilidad, calor especifico y el cruce del cumulante de Binder que ubica la temperatura critica."
+export = true
 
 [[courses]]
 id = "inteligencia-artificial"
