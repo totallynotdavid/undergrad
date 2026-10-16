@@ -12,9 +12,9 @@ does not scan the repository root or course packages directly.
 | `site/`          | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports        |
 | `packages/`      | notebook source | Course packages, notebooks, supporting Python/Fortran/MATLAB source, data, and package dependencies |
 | `scripts/`       | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration        |
-| `.github/`       | tooling         | CI and GitHub Pages deployment workflows                                                            |
+| `.github/`       | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                                |
 | `.devcontainer/` | tooling         | Reproducible development-container configuration                                                    |
-| `docs/`          | other           | Contributor and operator documentation; it is not site content                                      |
+| `docs/`          | other           | Architecture, operator and third-party documentation; it is not site content                        |
 | `.ruff_cache/`   | other           | Ignored Ruff analysis cache; never part of a build input                                            |
 
 The table covers repository content and the generated cache that can appear at
@@ -24,13 +24,14 @@ part of this layout.
 
 ## Top-level files
 
-| File                                              | Kind    | Purpose                                                                  |
-| ------------------------------------------------- | ------- | ------------------------------------------------------------------------ |
-| `notebooks.toml`                                  | tooling | Catalog source: selects the notebook lessons and their publication modes |
-| `pyproject.toml`, `uv.lock`                       | tooling | Python workspace and locked dependency graph                             |
-| `mise.toml`                                       | tooling | Pinned developer tools and repository tasks                              |
-| `install.sh`                                      | tooling | Optional native dependency setup                                         |
-| `architecture.md`, `contributing.md`, `readme.md` | other   | Project, contributor, and user documentation                             |
+| File                        | Kind    | Purpose                                                         |
+| --------------------------- | ------- | --------------------------------------------------------------- |
+| `notebooks.toml`            | tooling | Catalog source: selects the notebook lessons the site publishes |
+| `pyproject.toml`, `uv.lock` | tooling | Python workspace and locked dependency graph                    |
+| `mise.toml`                 | tooling | Pinned developer tools and repository tasks                     |
+| `install.sh`                | tooling | Optional native dependency setup                                |
+| `readme.md`                 | other   | What the project is and where to start                          |
+| `LICENSE`                   | other   | Licence of the repository's own code                            |
 
 ## Build boundary
 
