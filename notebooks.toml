@@ -21,6 +21,34 @@ id = "metodos-numericos"
 title = "Metodos numericos"
 
 [[courses.sections.notebooks]]
+id = "punto-flotante"
+title = "Error de punto flotante"
+file = "metodos-numericos/errores-numericos/punto_flotante.py"
+summary = "Representacion binaria con float.hex, epsilon de maquina con numpy.finfo y las diferencias entre float32 y float64 al sumar, restar y acumular."
+export = true
+
+[[courses.sections.notebooks]]
+id = "derivacion-numerica"
+title = "Derivacion numerica"
+file = "metodos-numericos/derivacion-numerica/derivacion_numerica.py"
+summary = "Diferencias hacia adelante, hacia atras y centradas, el error contra h con su orden y el piso de redondeo, y la extrapolacion de Richardson."
+export = true
+
+[[courses.sections.notebooks]]
+id = "raices"
+title = "Solucion de ecuaciones no lineales"
+file = "metodos-numericos/solucion-ecuaciones-no-lineales/raices.py"
+summary = "Biseccion, falsa posicion y Newton con sus graficas de convergencia, el orden observado y el caso de la raiz multiple."
+export = true
+
+[[courses.sections.notebooks]]
+id = "interpolacion"
+title = "Interpolacion polinomial"
+file = "metodos-numericos/interpolacion/interpolacion.py"
+summary = "Lagrange, diferencias divididas de Newton y diferencias finitas, y el fenomeno de Runge con nodos equiespaciados y de Chebyshev."
+export = true
+
+[[courses.sections.notebooks]]
 id = "pendulo-simple"
 title = "Pendulo simple"
 file = "metodos-numericos/pendulos-y-osciladores/pendulo_simple.py"
