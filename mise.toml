@@ -8,6 +8,10 @@ uv = "0.13.1"
 description = "Test the notebook export script"
 run = "uv run --locked python -m unittest discover -s scripts"
 
+[tasks.test-notebooks]
+description = "Run the statistical mechanics notebooks and check their results"
+run = "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica"
+
 [tasks.check-notebooks]
 description = "Check every notebook listed in notebooks.toml"
 run = "uv run python scripts/check_notebooks.py"
