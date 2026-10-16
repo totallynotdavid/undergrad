@@ -147,7 +147,7 @@ id = "limpieza-datos-tabulares"
 title = "Limpieza de datos tabulares"
 file = "limpieza_datos_tabulares.py"
 summary = "Limpieza y codificacion de variables sobre datos tabulares, con el dataset Titanic."
-export = false
+export = true
 
 [[courses]]
 id = "tecnicas-de-teledeteccion"
@@ -163,7 +163,7 @@ id = "clase-0-py6s"
 title = "Clase 0: Py6S"
 file = "earth-engine-y-6s/clase_0_py6s.py"
 summary = "Transferencia radiativa atmosferica con el modelo 6S a traves de Py6S."
-export = false
+export = true
 
 [[courses.sections.notebooks]]
 id = "clase-1-earth-engine"
