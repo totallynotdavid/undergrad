@@ -289,5 +289,27 @@ export const courses: Course[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "dinamica-molecular",
+    "title": "Dinamica molecular",
+    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/dinamica-molecular",
+    "sections": [
+      {
+        "id": "simulacion",
+        "title": "Simulacion",
+        "notebooks": [
+          {
+            "title": "Argon liquido y cumulos de potasio",
+            "summary": "Lennard-Jones con velocity Verlet y condiciones periodicas: energia, temperatura, g(r), difusion, y un potencial de enlace fuerte para cumulos de K.",
+            "slug": "dinamica-molecular/simulacion/argon-y-potasio",
+            "path": "packages/dinamica-molecular/cuadernos/simulacion_argon.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/dinamica-molecular/cuadernos/simulacion_argon.py",
+            "assetPath": "/notebooks/dinamica-molecular/simulacion/argon-y-potasio/"
+          }
+        ]
+      }
+    ]
   }
 ];
