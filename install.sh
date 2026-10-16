@@ -14,7 +14,6 @@ if [[ -z "${GDAL_REQUIREMENT}" ]]; then
 fi
 
 PACKAGES=(
-  gfortran-13
   gdal-bin
   libgdal-dev
 )
@@ -26,8 +25,6 @@ fi
 $SUDO apt-get update
 $SUDO apt-get install -y "${PACKAGES[@]}"
 
-echo "Installed:"
-gfortran-13 --version | head -n 1
 if ! command -v gdal-config >/dev/null 2>&1; then
   echo "gdal-config is missing after installing libgdal-dev ${GDAL_REQUIREMENT}." >&2
   exit 1
