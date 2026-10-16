@@ -62,7 +62,9 @@ mise run test-scripts
 ```
 
 The statistical mechanics notebooks compute their results with numba at export
-time. Run them and check the numbers with:
+time. Those and the numerical methods notebooks (differentiation, root finding,
+interpolation and floating point) have tests that run each notebook and check
+its numbers:
 
 ```sh
 mise run test-notebooks

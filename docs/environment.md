@@ -15,10 +15,11 @@ Install the site dependencies separately:
 bun install --cwd site --frozen-lockfile
 ```
 
-The Fortran notebooks use a native compiler, and the GDAL raster notebook needs
-the native GDAL library and development headers. On Debian or Ubuntu,
-[`install.sh`](../install.sh) installs `gfortran-13`, `gdal-bin`, and
-`libgdal-dev`:
+The tsunami lab sources in `packages/topicos-avanzados-tsunamis/lab2` are
+Fortran and need a native compiler, and the GDAL raster notebook needs the
+native GDAL library and development headers. No notebook needs Fortran. On
+Debian or Ubuntu, [`install.sh`](../install.sh) installs `gfortran-13`,
+`gdal-bin`, and `libgdal-dev`:
 
 ```sh
 ./install.sh
