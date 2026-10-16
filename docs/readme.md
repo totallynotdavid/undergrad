@@ -7,3 +7,7 @@ notebook source, tooling, and documentation boundaries.
    tools.
 2. [Notebooks](notebooks.md): open, check, catalog, and export course notebooks.
 3. [Site](site.md): generate the catalog and build or serve the static site.
+4. [Architecture](architecture.md): the packages, catalog, export pipeline and
+   site, and which module owns each.
+5. [Third-party code](THIRD_PARTY.md): the vendored files that keep their own
+   licence terms.

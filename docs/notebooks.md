@@ -25,10 +25,9 @@ mise run check-notebooks
 
 Add a notebook to `notebooks.toml` under an existing course and section. For a
 new course, add the course package and its catalog entries. The `file` path is
-relative to the package directory. Set `export = true` to publish a notebook
-on the site. Set `export = false` to link its source instead. The default mode
-is `interactive` for published entries and `source` for local entries. A
-`results` mode publishes static HTML results.
+relative to the package directory. Set `export = true` to publish a notebook on
+the site as a read-only page of its results. Set `export = false` to link its
+source instead.
 
 After changing the catalog, validate it and regenerate the site data:
 
@@ -37,10 +36,19 @@ uv run python scripts/export_notebooks.py validate
 uv run python scripts/export_notebooks.py data
 ```
 
-The export command checks and publishes every entry with `export = true`:
+The export command checks every entry with `export = true`, runs it, and writes
+its results page. It stops with an error when a cell fails or the page is too
+large (see [architecture](architecture.md#export-pipeline)), and it writes no
+page for that notebook:
 
 ```sh
 uv run python scripts/export_notebooks.py export --clean
+```
+
+Test the export script itself with:
+
+```sh
+mise run test-scripts
 ```
 
 Native extensions and external services are local requirements. See
