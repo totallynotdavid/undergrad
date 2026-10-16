@@ -145,10 +145,9 @@ REDIRECT_PAGE = """\
 
 
 def write_redirect(redirect: Redirect, output_dir: Path) -> None:
-    """Write a static page that sends readers from a retired address to its target.
+    """Write a static page that sends a retired address to its target.
 
-    The link is relative so the page works under any base path the site is served
-    from.
+    Use a relative link so the page works under any site base path.
     """
     url = html.escape(posixpath.relpath(redirect.target, redirect.source) + "/")
     page_dir = output_dir / redirect.source
