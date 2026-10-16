@@ -210,7 +210,6 @@ def _(dedent, mansinha, mo, np, okada, pfalla, plt):
         _ax.set_xlabel("este (km)")
         _ax.set_ylabel("norte (km)")
 
-    # Perfil perpendicular al strike por el centro de la falla.
     _az = np.radians(_strike + 90.0)
     _s = np.linspace(-150e3, 250e3, 401)
     _cx = 0.5 * _L * np.sin(np.radians(_strike)) + 0.5 * _W * np.cos(
@@ -303,11 +302,12 @@ def _(dedent, mo):
 La guía del laboratorio 3 (`lab3.pdf`, tabla I) describe la fuente como
 ocho subfallas cuadradas de 45 km: cuatro a lo largo del strike y dos a lo largo
 del buzamiento, con strike 325°, dip 18° y rake 63°. Cada fila da la esquina
-superior de la subfalla, su profundidad (14,00 o 27,91 km) y su deslizamiento.
-`subfaults_from_inversion` convierte esa tabla a subfallas de Okada y trata la
-longitud de cada fila por separado: `fuji2oka.m` preguntaba `if xo < 0` sobre el
-vector completo, y por eso una tabla con longitudes de ambos signos se
-convertía igual para todas las filas.
+inferior izquierda de la subfuente, como la tabla de la guía, su profundidad
+(14,00 o 27,91 km) y su deslizamiento. `subfaults_from_inversion` convierte esa
+tabla a subfallas de Okada y trata la longitud geográfica de cada fila por
+separado: `fuji2oka.m` preguntaba `if xo < 0` sobre el vector completo, y por
+eso una tabla con longitudes geográficas de ambos signos se convertía igual para
+todas las filas.
 """
         )
     )
@@ -517,23 +517,25 @@ def _(condicion_inicial, contornos, grilla, np, plt, uplift):
 
 
 @app.cell(hide_code=True)
-def _(dedent, mo):
+def _(dedent, mo, subfallas):
+    azimut_perfil = (subfallas[0].strike + 90.0) % 360.0
     mo.md(
         dedent(
-            r"""
+            f"""
 ## 7. Perfil perpendicular a la falla
 
 El perfil pasa por el centro de la fuente en la dirección del buzamiento
-(azimut strike + 90° = 55°). Arriba, la batimetría con la línea de costa;
-abajo, la deformación del fondo y la condición inicial filtrada.
+(azimut strike + 90° = {azimut_perfil:.0f}°). Arriba, la batimetría con la línea
+de costa; abajo, la deformación del fondo y la condición inicial filtrada.
 """
         )
     )
-    return
+    return (azimut_perfil,)
 
 
 @app.cell(hide_code=True)
 def _(
+    azimut_perfil,
     condicion_inicial,
     contornos,
     este,
@@ -547,10 +549,9 @@ def _(
     uplift,
 ):
     _cx, _cy = local_xy(*np.mean([_c[:4] for _c in contornos], axis=(0, 1)), lon0, lat0)
-    _az = np.radians(55.0)
+    _az = np.radians(azimut_perfil)
     _s = np.arange(-120e3, 260e3, 500.0)
     _px, _py = _cx + _s * np.sin(_az), _cy + _s * np.cos(_az)
-    # Celda más cercana de cada punto del perfil.
     _i = np.abs(este[0][None, :] - _px[:, None]).argmin(axis=1)
     _j = np.abs(norte[:, 0][None, :] - _py[:, None]).argmin(axis=1)
     _dentro = (
@@ -585,7 +586,7 @@ def _(
     _c.plot(_s / 1e3, (condicion_inicial - uplift)[_j, _i] * 100, color="tab:red")
     _c.axhline(0, color="k", linewidth=0.5)
     _c.set_ylabel("Kajiura − fondo (cm)")
-    _c.set_xlabel("distancia al centro de la fuente, azimut 55° (km)")
+    _c.set_xlabel(f"distancia al centro de la fuente, azimut {azimut_perfil:.0f}° (km)")
     _costa = _s[np.flatnonzero(np.diff(np.sign(_z)))]
     for _ax in (_a, _b, _c):
         if len(_costa):
@@ -606,13 +607,14 @@ def _(condicion_inicial, dedent, grilla, mo, uplift):
 | deformación del fondo | {uplift[_mar].max():.2f} | {uplift[_mar].min():.2f} |
 | condición inicial filtrada | {condicion_inicial[_mar].max():.2f} | {condicion_inicial[_mar].min():.2f} |
 
-Con subfallas de 45 km y profundidades de pocos kilómetros, la longitud de onda
-de la deformación es mucho mayor que la profundidad ($kh \\ll 1$) y el filtro
-cambia muy poco el campo: la diferencia es de centímetros y se concentra en los
-bordes de la ruptura, donde el levantamiento cambia más rápido. El filtro
-pesa más con fuentes pequeñas o aguas profundas. Esta elevación es la condición inicial que un modelo de propagación
-(por ejemplo, aguas someras lineales) recibiría para seguir el tsunami hasta
-la costa.
+Con subfallas de 45 km y una profundidad del agua de pocos kilómetros sobre la
+fuente, la longitud de onda de la deformación es mucho mayor que la profundidad
+del agua ($kh \\ll 1$ con $h$ la profundidad del agua) y el filtro cambia muy
+poco el campo: la diferencia es de centímetros y se concentra en los bordes de
+la ruptura, donde el levantamiento cambia más rápido. El filtro pesa más con
+fuentes pequeñas o aguas profundas. Esta elevación es la condición inicial que
+un modelo de propagación (por ejemplo, aguas someras lineales) recibiría para
+seguir el tsunami hasta la costa.
 """
         )
     )
