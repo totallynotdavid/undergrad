@@ -70,6 +70,13 @@ its numbers:
 mise run test-notebooks
 ```
 
+The tsunami notebook imports the `tsunamis` module of its package. Test that
+module with:
+
+```sh
+mise run test-tsunamis
+```
+
 Native extensions and external services are local requirements. See
 [`environment.md`](environment.md) for GDAL and Fortran setup. A notebook that
 uses Earth Engine or local data must explain its required inputs in its visible
