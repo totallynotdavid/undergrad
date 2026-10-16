@@ -52,6 +52,9 @@ jobs:
       - name: Test the export script
         run: mise run test-scripts
 
+      - name: Test the molecular dynamics package
+        run: mise run test-dinamica-molecular
+
       - name: Export notebooks
         run: uv run python scripts/export_notebooks.py export --clean
 

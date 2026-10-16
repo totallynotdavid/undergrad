@@ -12,6 +12,10 @@ run = "uv run --locked python -m unittest discover -s scripts"
 description = "Run the statistical mechanics notebooks and check their results"
 run = "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica"
 
+[tasks.test-dinamica-molecular]
+description = "Test the molecular dynamics package"
+run = "uv run --locked --package dinamica-molecular python -m unittest discover -s packages/dinamica-molecular/tests"
+
 [tasks.check-notebooks]
 description = "Check every notebook listed in notebooks.toml"
 run = "uv run python scripts/check_notebooks.py"
