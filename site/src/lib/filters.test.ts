@@ -22,13 +22,13 @@ const courses: Course[] = [
             "Atractor de Lorenz",
             "Sistema caotico clasico",
             "a/lorenz.py",
-            "interactive",
+            true,
           ),
           nb(
             "Mapa logistico",
             "Bifurcaciones y periodo",
             "a/logistico.py",
-            "source",
+            false,
           ),
         ],
       },
@@ -43,31 +43,20 @@ const courses: Course[] = [
         id: "montecarlo",
         title: "Monte Carlo",
         notebooks: [
-          nb(
-            "Modelo de Ising",
-            "Metropolis en una red",
-            "b/ising.py",
-            "interactive",
-          ),
+          nb("Modelo de Ising", "Metropolis en una red", "b/ising.py", true),
         ],
       },
     ],
   },
 ];
 
-function nb(
-  title: string,
-  summary: string,
-  path: string,
-  mode: Course["sections"][number]["notebooks"][number]["mode"],
-) {
+function nb(title: string, summary: string, path: string, exported: boolean) {
   return {
     title,
     summary,
     slug: path,
     path,
-    export: mode !== "source",
-    mode,
+    export: exported,
     sourceUrl: "",
     assetPath: "",
   };
