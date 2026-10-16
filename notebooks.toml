@@ -73,7 +73,7 @@ title = "Sistemas dinamicos"
 id = "atractor-de-lorenz"
 title = "Atractor de Lorenz"
 file = "atractor_de_lorenz.py"
-summary = "Sistema de Lorenz integrado en su regimen caotico y la geometria del atractor."
+summary = "Sistema de Lorenz integrado con RK4: el atractor, su mayor exponente de Lyapunov, el mapa de maximos de z y la bifurcacion en rho."
 export = true
 
 [[courses.sections]]
@@ -84,8 +84,8 @@ title = "Radiacion"
 id = "curva-de-planck"
 title = "Curva de Planck"
 file = "curva-de-planck/main.py"
-summary = "Ley de Planck y los limites de Rayleigh-Jeans y Wien, con el calculo en Fortran local."
-export = false
+summary = "Ley de Planck con sus limites de Rayleigh-Jeans y Wien, el desplazamiento de Wien y la ley de Stefan-Boltzmann por integracion numerica."
+export = true
 
 [[courses]]
 id = "mecanica-estadistica"
