@@ -70,7 +70,6 @@ def replace_all(pattern: str, replacement: str, page: str, what: str) -> str:
 
 
 def apply_page_shell(page: str, notebook: Notebook) -> str:
-    """Give an exported page the catalog's language, title and description."""
     page = replace_all(r'<html lang="[^"]*"', '<html lang="es"', page, "html lang")
     page = replace_all(
         r"<title>[^<]*</title>",
@@ -145,10 +144,7 @@ REDIRECT_PAGE = """\
 
 
 def write_redirect(redirect: Redirect, output_dir: Path) -> None:
-    """Write a static page that sends a retired address to its target.
-
-    Use a relative link so the page works under any site base path.
-    """
+    # A relative link works under any site base path.
     url = html.escape(posixpath.relpath(redirect.target, redirect.source) + "/")
     page_dir = output_dir / redirect.source
     page_dir.mkdir(parents=True, exist_ok=True)

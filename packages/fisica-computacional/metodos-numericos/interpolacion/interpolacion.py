@@ -13,8 +13,6 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # Marimo renders figures at twice the requested density and displays them
-    # at 100 dpi. Keep 72 dpi to limit the exported page size.
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
@@ -260,7 +258,7 @@ def _(md):
 
 
 @app.cell
-def _(diferencias_divididas, md, newton, np):
+def _(md, newton, np):
     def binomial_generalizado(s, k):
         """s (s - 1) ... (s - k + 1) / k!"""
         resultado = 1.0

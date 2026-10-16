@@ -12,7 +12,6 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # Marimo embeds figures as PNGs at twice this resolution.
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
@@ -181,7 +180,7 @@ def _(formas, masas, modos, np, omega, rigidez):
         nombre: abs(trayectorias[nombre][:, :2].T - analitica(x0, t)).max()
         for nombre, x0 in casos.items()
     }
-    return PASOS, analitica, casos, errores, t, trayectorias
+    return PASOS, analitica, errores, t, trayectorias
 
 
 @app.cell
@@ -237,7 +236,7 @@ def _(md):
 
 
 @app.cell
-def _(casos, masas, modos, np, omega, plt, t, trayectorias):
+def _(masas, modos, np, omega, plt, t, trayectorias):
     _y = trayectorias[r"$x_1(0)=1,\ x_2(0)=0$"]
     _q = modos.T @ masas @ _y[:, :2].T
 
