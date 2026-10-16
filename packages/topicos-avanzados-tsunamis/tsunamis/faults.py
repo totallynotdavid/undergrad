@@ -37,11 +37,7 @@ class Scaling:
     width_km: float
     # Slip (m) from the moment, M0 = rigidity * length * width * slip.
     slip_m: float
-    # Slip (m) from the empirical relation of the paper.
-    empirical_slip_m: float
     moment_nm: float
-    # Magnitudes that give this length within one standard deviation (0.18).
-    magnitude_range: tuple[float, float]
 
 
 def papazachos_scaling(magnitude: float) -> Scaling:
@@ -52,13 +48,9 @@ def papazachos_scaling(magnitude: float) -> Scaling:
         )
     length = 10.0 ** (0.55 * magnitude - 2.19)
     width = 10.0 ** (0.31 * magnitude - 0.63)
-    empirical_slip = 10.0 ** (0.64 * magnitude - 2.78) / 100.0
     moment = 10.0 ** (1.5 * magnitude + 9.1)
     slip = moment / (RIGIDITY * length * 1000.0 * width * 1000.0)
-    spread = 0.18
-    low = (np.log10(length) - spread + 2.19) / 0.55
-    high = (np.log10(length) + spread + 2.19) / 0.55
-    return Scaling(magnitude, length, width, slip, empirical_slip, moment, (low, high))
+    return Scaling(magnitude, length, width, slip, moment)
 
 
 def metres_per_degree(lat: float) -> tuple[float, float]:
