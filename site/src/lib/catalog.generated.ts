@@ -47,6 +47,42 @@ export const courses: Course[] = [
         "title": "Metodos numericos",
         "notebooks": [
           {
+            "title": "Error de punto flotante",
+            "summary": "Representacion binaria con float.hex, epsilon de maquina con numpy.finfo y las diferencias entre float32 y float64 al sumar, restar y acumular.",
+            "slug": "fisica-computacional/metodos-numericos/punto-flotante",
+            "path": "packages/fisica-computacional/metodos-numericos/errores-numericos/punto_flotante.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/errores-numericos/punto_flotante.py",
+            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/punto-flotante/"
+          },
+          {
+            "title": "Derivacion numerica",
+            "summary": "Diferencias hacia adelante, hacia atras y centradas, el error contra h con su orden y el piso de redondeo, y la extrapolacion de Richardson.",
+            "slug": "fisica-computacional/metodos-numericos/derivacion-numerica",
+            "path": "packages/fisica-computacional/metodos-numericos/derivacion-numerica/derivacion_numerica.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/derivacion-numerica/derivacion_numerica.py",
+            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/derivacion-numerica/"
+          },
+          {
+            "title": "Solucion de ecuaciones no lineales",
+            "summary": "Biseccion, falsa posicion y Newton con sus graficas de convergencia, el orden observado y el caso de la raiz multiple.",
+            "slug": "fisica-computacional/metodos-numericos/raices",
+            "path": "packages/fisica-computacional/metodos-numericos/solucion-ecuaciones-no-lineales/raices.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/solucion-ecuaciones-no-lineales/raices.py",
+            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/raices/"
+          },
+          {
+            "title": "Interpolacion polinomial",
+            "summary": "Lagrange, diferencias divididas de Newton y diferencias finitas, y el fenomeno de Runge con nodos equiespaciados y de Chebyshev.",
+            "slug": "fisica-computacional/metodos-numericos/interpolacion",
+            "path": "packages/fisica-computacional/metodos-numericos/interpolacion/interpolacion.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/interpolacion/interpolacion.py",
+            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/interpolacion/"
+          },
+          {
             "title": "Pendulo simple",
             "summary": "Periodo exacto con la integral eliptica completa frente a pequenas oscilaciones, y deriva de la energia con velocity Verlet y RK4.",
             "slug": "fisica-computacional/metodos-numericos/pendulo-simple",
