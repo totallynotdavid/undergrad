@@ -16,6 +16,7 @@ Vitest. Run the complete repository checks with:
 uv run ruff check .
 mise run check-notebooks
 mise run test-scripts
+mise run test-dinamica-molecular
 bun run --cwd site check
 bun run --cwd site lint
 bun run --cwd site test
