@@ -38,28 +38,6 @@ export const site: Site = {
 
 export const courses: Course[] = [
   {
-    "id": "fisica-general",
-    "title": "Fisica general",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fisica-general",
-    "sections": [
-      {
-        "id": "pendulos",
-        "title": "Pendulos",
-        "notebooks": [
-          {
-            "title": "Pendulo doble acoplado",
-            "summary": "Dos angulos acoplados integrados con Euler explicito, con la acumulacion de error que el metodo introduce.",
-            "slug": "fisica-general/pendulos/pendulo-doble",
-            "path": "packages/fisica-general/pendulo_doble.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-general/pendulo_doble.py",
-            "assetPath": "/notebooks/fisica-general/pendulos/pendulo-doble/"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "id": "fisica-computacional",
     "title": "Fisica computacional",
     "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fisica-computacional",
@@ -70,7 +48,7 @@ export const courses: Course[] = [
         "notebooks": [
           {
             "title": "Pendulo simple",
-            "summary": "Oscilador no lineal integrado numericamente y su limite de pequenas oscilaciones.",
+            "summary": "Periodo exacto con la integral eliptica completa frente a pequenas oscilaciones, y deriva de la energia con velocity Verlet y RK4.",
             "slug": "fisica-computacional/metodos-numericos/pendulo-simple",
             "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_simple.py",
             "export": true,
@@ -79,7 +57,7 @@ export const courses: Course[] = [
           },
           {
             "title": "Pendulo doble",
-            "summary": "Sistema caotico de dos grados de libertad y su dependencia sensible de las condiciones iniciales.",
+            "summary": "Pendulo doble caotico con Euler y RK4, deriva de la energia de cada metodo y exponente de Lyapunov desde dos trayectorias cercanas.",
             "slug": "fisica-computacional/metodos-numericos/pendulo-doble",
             "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_doble.py",
             "export": true,
@@ -87,8 +65,17 @@ export const courses: Course[] = [
             "assetPath": "/notebooks/fisica-computacional/metodos-numericos/pendulo-doble/"
           },
           {
+            "title": "Dos masas y tres resortes",
+            "summary": "Modos normales por descomposicion en valores propios y la serie temporal RK4 que los muestra.",
+            "slug": "fisica-computacional/metodos-numericos/tres-resortes",
+            "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/tres_resortes.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/tres_resortes.py",
+            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/tres-resortes/"
+          },
+          {
             "title": "EDP de calor en una dimension",
-            "summary": "Diferencias finitas explicitas para la ecuacion de calor 1D y su condicion de estabilidad.",
+            "summary": "Ecuacion de calor 1D con diferencias finitas: esquema explicito con r = 0.4, 0.5 y 0.6 (inestable), Crank-Nicolson y la solucion de Fourier.",
             "slug": "fisica-computacional/metodos-numericos/edp-calor",
             "path": "packages/fisica-computacional/metodos-numericos/edp/edp_calor.py",
             "export": true,
@@ -97,7 +84,7 @@ export const courses: Course[] = [
           },
           {
             "title": "Integracion de Monte Carlo",
-            "summary": "Estimador de Monte Carlo, su error estadistico que decae como 1/sqrt(N), y contraste con una rutina local en Fortran.",
+            "summary": "Estimador de Monte Carlo con NumPy, su error que decae como 1/sqrt(N) y reduccion de varianza por muestreo por importancia.",
             "slug": "fisica-computacional/metodos-numericos/monte-carlo",
             "path": "packages/fisica-computacional/metodos-numericos/monte-carlo/main.py",
             "export": true,
