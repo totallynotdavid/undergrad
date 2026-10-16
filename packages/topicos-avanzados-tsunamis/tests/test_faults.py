@@ -15,7 +15,6 @@ from tsunamis.faults import (
 class Scaling(unittest.TestCase):
     def test_magnitude_8(self):
         s = papazachos_scaling(8.0)
-        # 10**(0.55 * 8 - 2.19) and 10**(0.31 * 8 - 0.63), by hand.
         self.assertAlmostEqual(s.length_km, 162.18, places=2)
         self.assertAlmostEqual(s.width_km, 70.79, places=2)
         # M0 = 10**(1.5 * 8 + 9.1) N m shared over the rupture area at 40 GPa.
@@ -135,8 +134,8 @@ class Geometry(unittest.TestCase):
 
 class Inversion(unittest.TestCase):
     def test_each_longitude_is_wrapped_on_its_own(self):
-        # fuji2oka.m tested "xo < 0" on the whole vector, which is true or false
-        # for every row at once. Rows with both conventions must give one value.
+        # Each row may use either longitude convention, so wrapping must be
+        # applied independently to preserve every subfault's location.
         table = np.array(
             [
                 [-76.3, -14.75, 2.3, 45e3, 45e3, 325, 18, 63, 14e3],
