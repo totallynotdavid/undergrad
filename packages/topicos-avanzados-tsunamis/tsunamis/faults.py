@@ -32,8 +32,7 @@ FLATTENING = 1.0 / 298.257223563
 # Average rigidity (N/m^2) of falla.m.
 RIGIDITY = 4.0e10
 
-# Magnitude range of the relations for subduction regions, 6.7 < M < 9.2.
-# falla.m accepted anything from 6.5.
+# Magnitude range of the relations for subduction regions: 6.7 <= M <= 9.2.
 MIN_MAGNITUDE = 6.7
 MAX_MAGNITUDE = 9.2
 
