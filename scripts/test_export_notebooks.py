@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import dataclasses
+import re
 import tempfile
 import unittest
 from pathlib import Path
 from textwrap import dedent
+from urllib.parse import urljoin
 
 import export_notebooks
-from notebooks_manifest import Notebook
+from notebooks_manifest import Notebook, Redirect, redirect_errors
 
 NOTEBOOK = dedent(
     """\
@@ -61,8 +64,8 @@ def catalog_entry(path: Path) -> Notebook:
         title="Titulo <de> prueba",
         summary="Resumen de prueba",
         path=str(path),
-        package="fisica-general",
-        package_dir="packages/fisica-general",
+        package="fisica-computacional",
+        package_dir="packages/fisica-computacional",
         slug="curso/seccion/prueba",
         export=True,
     )
@@ -119,6 +122,69 @@ class ExportResultsTest(unittest.TestCase):
 
         with self.assertRaises(SystemExit):
             export_notebooks.apply_page_shell("<html><body></body></html>", notebook)
+
+
+class RedirectTest(unittest.TestCase):
+    def notebooks(self, *slugs: str, export: bool = True) -> list[Notebook]:
+        return [
+            dataclasses.replace(catalog_entry(Path(slug)), slug=slug, export=export)
+            for slug in slugs
+        ]
+
+    def test_redirect_page_resolves_to_the_new_page_under_any_base_path(self):
+        redirect = Redirect(source="curso/viejo/pagina", target="curso/nuevo/pagina")
+
+        with tempfile.TemporaryDirectory() as directory:
+            export_notebooks.write_redirect(redirect, Path(directory))
+            page = (Path(directory) / redirect.source / "index.html").read_text(
+                encoding="utf-8"
+            )
+
+        url = re.search(r'http-equiv="refresh" content="0; url=([^"]+)"', page)
+        self.assertIsNotNone(url)
+        for base in ("https://sitio.test", "https://sitio.test/undergrad"):
+            old_page = f"{base}/notebooks/{redirect.source}/"
+            self.assertEqual(
+                urljoin(old_page, url.group(1)), f"{base}/notebooks/{redirect.target}/"
+            )
+        self.assertIn(f'<a href="{url.group(1)}">', page)
+
+    def test_a_valid_redirect_passes_validation(self):
+        errors = redirect_errors(
+            self.notebooks("curso/nuevo/pagina"),
+            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")],
+        )
+
+        self.assertEqual(errors, [])
+
+    def test_a_redirect_must_point_to_an_exported_notebook(self):
+        errors = redirect_errors(
+            self.notebooks("curso/nuevo/pagina", export=False),
+            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")],
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn("not an exported notebook", errors[0])
+
+    def test_a_redirect_cannot_replace_or_sit_above_or_inside_a_notebook_page(self):
+        pages = self.notebooks("curso/nuevo/pagina")
+        for source in ("curso/nuevo/pagina", "curso/nuevo", "curso/nuevo/pagina/x"):
+            with self.subTest(source=source):
+                errors = redirect_errors(
+                    pages, [Redirect(source, "curso/nuevo/pagina")]
+                )
+
+                self.assertEqual(len(errors), 1)
+                self.assertIn("collides", errors[0])
+
+    def test_two_redirects_cannot_share_an_address(self):
+        errors = redirect_errors(
+            self.notebooks("curso/nuevo/pagina"),
+            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")] * 2,
+        )
+
+        self.assertEqual(len(errors), 1)
+        self.assertIn("Duplicate", errors[0])
 
 
 if __name__ == "__main__":
