@@ -14,7 +14,7 @@ not scan the repository root or course packages directly.
 | `scripts/`       | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
 | `.github/`       | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
 | `.devcontainer/` | tooling         | Reproducible development-container configuration                                             |
-| `docs/`          | other           | Architecture, operator and third-party documentation; it is not site content                 |
+| `docs/`          | other           | Architecture and operator documentation; it is not site content                              |
 | `.ruff_cache/`   | other           | Ignored Ruff analysis cache; never part of a build input                                     |
 
 The table covers repository content and the generated cache that can appear at
