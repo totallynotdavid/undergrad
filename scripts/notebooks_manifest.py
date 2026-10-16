@@ -144,8 +144,7 @@ def redirect_errors(notebooks: list[Notebook], redirects: list[Redirect]) -> lis
         if not SLUG_PATTERN.fullmatch(redirect.source):
             errors.append(f"Invalid redirect source: {redirect.source}")
 
-        # A redirect page is an index.html in a folder, so it cannot share a
-        # folder with a notebook page or sit above or below one.
+        # A redirect is a folder index, so it cannot overlap a notebook route.
         for slug in slugs:
             if (
                 slug == redirect.source
