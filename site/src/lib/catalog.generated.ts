@@ -156,21 +156,21 @@ export const courses: Course[] = [
         "notebooks": [
           {
             "title": "Volumen de la hiperesfera",
-            "summary": "Estimacion Monte Carlo del volumen de la bola unitaria en n dimensiones y su decaimiento con la dimension.",
+            "summary": "Monte Carlo por rechazo del volumen de la bola unitaria frente a la formula exacta, y por que la tasa de aceptacion se hunde al crecer la dimension.",
             "slug": "mecanica-estadistica/monte-carlo/volumen-hiperesfera",
             "path": "packages/mecanica-estadistica/calcular_volumen_esfera_n_dimensiones.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/mecanica-estadistica/calcular_volumen_esfera_n_dimensiones.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/mecanica-estadistica/monte-carlo/volumen-hiperesfera/"
           },
           {
             "title": "Modelo de Ising 3D",
-            "summary": "Algoritmo de Metropolis para el modelo de Ising 3D, con la magnetizacion y la transicion de fase.",
+            "summary": "Metropolis para el modelo de Ising 3D con varios tamanos de red: magnetizacion, energia, susceptibilidad, calor especifico y el cruce del cumulante de Binder que ubica la temperatura critica.",
             "slug": "mecanica-estadistica/monte-carlo/modelo-de-ising",
             "path": "packages/mecanica-estadistica/modelo_de_ising.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/mecanica-estadistica/modelo_de_ising.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/mecanica-estadistica/monte-carlo/modelo-de-ising/"
           }
         ]
       }
