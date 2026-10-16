@@ -17,6 +17,8 @@ uv run ruff check .
 mise run check-notebooks
 mise run test-scripts
 mise run test-dinamica-molecular
+mise run test-tsunamis
+mise run test-notebooks
 bun run --cwd site check
 bun run --cwd site lint
 bun run --cwd site test
