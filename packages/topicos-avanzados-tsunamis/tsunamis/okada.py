@@ -1,15 +1,7 @@
 """Vertical seafloor deformation of rectangular faults after Okada (1985).
 
-Port to vectorised NumPy of ``def_oka.f``, the Fortran program of the
-Topicos Avanzados en Tsunamis course.
-
-Credits of the original program: seismic deformation model, computation based
-on the theory of Okada (1985), coded by Koshimura Shunichi on 18 August 2000.
-Modified by C. Jimenez on 30 Jul 2014 (output format), 03 Sep 2020 (axes
-rotation) and 22 Mar 2022 (allocatable arrays).
-
-Only the vertical component is computed, which is the one the program wrote to
-``deform_a.grd``.
+Only the vertical component is computed. The evaluation is vectorised over the
+points.
 
 Geometry. A fault is a rectangle that dips towards azimuth ``strike + 90``.
 Its origin is the surface projection of the corner of the upper edge at the
@@ -25,7 +17,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-# P and S wave speeds (m/s) of the crust in def_oka.f.
+# P and S wave speeds (m/s) of the crust model.
 VP = 4.82e3
 VS = 2.78e3
 
@@ -71,7 +63,7 @@ def vertical_displacement(
     ``east`` and ``north`` are arrays of the same shape, or broadcastable to
     one. The result is the sum of the contribution of every fault. Points are
     evaluated at the free surface. ``ratio`` is mu / (lambda + mu); it defaults
-    to the value of the crust model of ``def_oka.f``.
+    to the value of the crust model (``VP``, ``VS``).
     """
     ratio = rigidity_ratio() if ratio is None else ratio
     east, north = np.broadcast_arrays(

@@ -1,19 +1,10 @@
 """Fault geometry and source parameters for the Okada model.
 
-Ports of three MATLAB programs of the Topicos Avanzados en Tsunamis course:
-
-* ``falla.m`` (Cesar Jimenez, 2010): rupture size from the scaling relations of
-  Papazachos et al. (2004) for dip-slip faults in subduction regions (their
-  relations 11 to 14), :func:`papazachos_scaling`.
-* ``fault_plane_n.m`` (Cesar Jimenez, 2016; the lab 1 and lab 2 copies differ
-  only in constants): subfaults of a multiple fault, :func:`fault_plane`.
-* ``fuji2oka.m`` (Cesar Jimenez, 2011, updated 2016): conversion of the result
-  of a slip inversion into subfaults, :func:`subfaults_from_inversion`.
-
-Reference: Papazachos, B. C., Scordilis, E. M., Panagiotopoulos, D. G.,
-Papazachos, C. B. and Karakaisis, G. F. (2004). Global relations between
-seismic fault parameters and moment magnitude of earthquakes. Bull. Geol. Soc.
-Greece 36, 1482-1489.
+* :func:`papazachos_scaling`: rupture size from the moment magnitude, with the
+  empirical relations for dip-slip faults in subduction regions.
+* :func:`fault_plane`: the subfaults of a multiple fault.
+* :func:`subfaults_from_inversion`: conversion of the result of a slip
+  inversion into subfaults.
 """
 
 from __future__ import annotations
@@ -29,7 +20,7 @@ from tsunamis.okada import Subfault
 EQUATORIAL_RADIUS = 6378137.0
 FLATTENING = 1.0 / 298.257223563
 
-# Average rigidity (N/m^2) of falla.m.
+# Average rigidity (N/m^2) of the crust.
 RIGIDITY = 4.0e10
 
 # Magnitude range of the relations for subduction regions: 6.7 <= M <= 9.2.
@@ -214,7 +205,7 @@ def fault_plane(
 
 
 class InversionFormat(Enum):
-    """Layouts of the result files of a slip inversion that ``fuji2oka.m`` reads."""
+    """Layouts of the result files of a slip inversion."""
 
     FUJI = 1
     CALTECH = 2

@@ -15,7 +15,7 @@ import numpy as np
 
 from tsunamis.okada import Subfault, vertical_displacement
 
-# Window and cell size set in the PARAMETER statements of def_oka.f.
+# Window (1-based, inclusive) and cell size (m) of the legacy run.
 IDS, IDE, JDS, JDE = 153, 637, 844, 1396
 DX = 926.6244
 
