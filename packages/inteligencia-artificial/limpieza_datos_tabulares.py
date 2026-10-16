@@ -11,7 +11,7 @@ def _():
     import marimo as mo
     import pandas as pd
 
-    TITANIC_PATH = Path(__file__).resolve().parent / "titanic.csv"
+    TITANIC_PATH = Path(__file__).resolve().parent / "titanic3.csv"
     return TITANIC_PATH, mo, pd
 
 
@@ -23,25 +23,26 @@ def _(mo):
     Objetivo: construir un flujo básico de limpieza con un dataset real (`titanic`),
     identificando columnas redundantes y manejando valores faltantes.
 
-    Los datos son los 891 pasajeros del conjunto de entrenamiento de la
-    competencia [Titanic](https://www.kaggle.com/c/titanic/data) de Kaggle, en la
-    versión que distribuye el repositorio
-    [seaborn-data](https://github.com/mwaskom/seaborn-data). Se leen del archivo
-    `titanic.csv`, junto a este cuaderno, sin descargar nada.
+    Los datos son la versión `titanic3` del Departamento de Bioestadística de la
+    Universidad de Vanderbilt: los pasajeros del Titanic, sin la tripulación,
+    reunidos por Thomas Cason a partir de la Encyclopedia Titanica. Datos
+    obtenidos de [hbiostat.org/data](https://hbiostat.org/data/), cortesía del
+    Departamento de Bioestadística de la Universidad de Vanderbilt. Se leen del
+    archivo `titanic3.csv`, junto a este cuaderno, sin descargar nada.
     """)
     return
 
 
 @app.cell
 def _(TITANIC_PATH, pd):
-    titanic = pd.read_csv(TITANIC_PATH)
-    return (titanic,)
+    df_raw = pd.read_csv(TITANIC_PATH)
+    return (df_raw,)
 
 
 @app.cell
-def _(mo, titanic):
+def _(df_raw, mo):
     mo.md(f"""
-    Registros: **{len(titanic)}** | Columnas: **{titanic.shape[1]}**
+    Registros: **{len(df_raw)}** | Columnas: **{df_raw.shape[1]}**
     """)
     return
 
@@ -55,10 +56,9 @@ def _(mo):
 
 
 @app.cell
-def _(pd, titanic):
-    df_raw = pd.DataFrame(titanic)
+def _(df_raw):
     df_raw.head(10)
-    return (df_raw,)
+    return
 
 
 @app.cell
@@ -80,15 +80,22 @@ def _(mo):
     mo.md("""
     ## 3) Selección de columnas
 
-    En esta sesión retiramos columnas redundantes o poco útiles para el ejercicio:
-    `class`, `who`, `adult_male`, `deck`, `alive`, `embarked`.
+    En esta sesión retiramos las columnas que no sirven para el ejercicio:
+
+    - `name`, `ticket` y `home.dest` identifican al pasajero y no describen su
+      viaje de forma comparable.
+    - `cabin` falta en la mayoría de los pasajeros.
+    - `boat` y `body` registran lo que ocurrió después del naufragio: el bote
+      salvavidas en el que subió un sobreviviente y el número del cuerpo
+      recuperado. Revelan el resultado que se quiere predecir, así que un modelo
+      no debe verlas.
     """)
     return
 
 
 @app.cell
 def _(df_raw):
-    columns_to_drop = ["class", "who", "adult_male", "deck", "alive", "embarked"]
+    columns_to_drop = ["name", "ticket", "home.dest", "cabin", "boat", "body"]
     df_reduced = df_raw.drop(columns=columns_to_drop)
     df_reduced.head(10)
     return (df_reduced,)
