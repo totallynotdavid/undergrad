@@ -7,8 +7,8 @@ from notebooks_manifest import ROOT, load_manifest, validate_manifest
 
 
 def main() -> int:
-    _, notebooks = load_manifest()
-    validate_manifest(notebooks)
+    _, notebooks, redirects = load_manifest()
+    validate_manifest(notebooks, redirects)
     failures = 0
 
     for notebook in notebooks:
