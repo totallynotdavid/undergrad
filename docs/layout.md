@@ -2,20 +2,20 @@
 
 The repository has one site boundary. `site/` contains the frontend and its
 generated static inputs. Course material stays in `packages/` and enters the
-site only through the explicit notebook export command. The SvelteKit build
-does not scan the repository root or course packages directly.
+site only through the explicit notebook export command. The SvelteKit build does
+not scan the repository root or course packages directly.
 
 ## Top-level folders
 
-| Folder           | Kind            | What belongs there                                                                                  |
-| ---------------- | --------------- | --------------------------------------------------------------------------------------------------- |
-| `site/`          | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports        |
-| `packages/`      | notebook source | Course packages, notebooks, supporting Python/Fortran/MATLAB source, data, and package dependencies |
-| `scripts/`       | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration        |
-| `.github/`       | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                                |
-| `.devcontainer/` | tooling         | Reproducible development-container configuration                                                    |
-| `docs/`          | other           | Architecture, operator and third-party documentation; it is not site content                        |
-| `.ruff_cache/`   | other           | Ignored Ruff analysis cache; never part of a build input                                            |
+| Folder           | Kind            | What belongs there                                                                           |
+| ---------------- | --------------- | -------------------------------------------------------------------------------------------- |
+| `site/`          | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports |
+| `packages/`      | notebook source | Course packages, notebooks, supporting Python/Fortran source, data, and package dependencies |
+| `scripts/`       | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
+| `.github/`       | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
+| `.devcontainer/` | tooling         | Reproducible development-container configuration                                             |
+| `docs/`          | other           | Architecture, operator and third-party documentation; it is not site content                 |
+| `.ruff_cache/`   | other           | Ignored Ruff analysis cache; never part of a build input                                     |
 
 The table covers repository content and the generated cache that can appear at
 the repository root. Git metadata, virtual environments, and agent credentials
@@ -50,5 +50,5 @@ site/src/ + site/static/ ──────────────────�
 `site/static/notebooks/`, `site/build/`, `site/.svelte-kit/`, and
 `site/node_modules/` are ignored generated or installed content. Do not place
 course source, research notes, native build output, or documentation under
-`site/`. Add those files to `packages/` or the appropriate
-tooling/documentation folder instead.
+`site/`. Add those files to `packages/` or the appropriate tooling/documentation
+folder instead.
