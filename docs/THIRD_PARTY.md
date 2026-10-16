@@ -25,7 +25,6 @@ text.
 | [`dib_fuente.m`](../packages/topicos-avanzados-tsunamis/lab2/dib_fuente.m)                                                                                         | "Copyleft: Cesar Jimenez", 2011 |
 | [`falla.m`](../packages/topicos-avanzados-tsunamis/lab2/falla.m)                                                                                                   | "Copyleft: Cesar Jimenez", 2010 |
 | [`fuji2oka.m`](../packages/topicos-avanzados-tsunamis/lab3/fuji2oka.m)                                                                                             | "Copyleft: Cesar Jimenez", 2011 |
-| [`grafsac.m`](../packages/introduccion-a-sismologia/lab3/grafsac.m) and [its `archivos/` copy](../packages/introduccion-a-sismologia/lab3/archivos/grafsac.m)      | "Copyleft Cesar Jimenez 2011"   |
 
 ## Python
 
