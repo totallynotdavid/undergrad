@@ -186,3 +186,19 @@ title = "Analisis de huaicos en Ancash"
 file = "sigrid/analisis_huaicos_ancash.py"
 summary = "Analisis geoespacial de huaicos en Ancash con geopandas sobre datos del SIGRID."
 export = false
+
+[[courses]]
+id = "introduccion-a-sismologia"
+title = "Introduccion a la sismologia"
+package = "introduccion-a-sismologia"
+
+[[courses.sections]]
+id = "procesamiento-de-senales"
+title = "Procesamiento de senales"
+
+[[courses.sections.notebooks]]
+id = "procesamiento-sac"
+title = "Procesamiento de registros SAC con ObsPy"
+file = "lab3/procesamiento_sac.py"
+summary = "Registros del terremoto de Pisco 2007: seccion sismica por distancia, espectros y picado de la onda P con STA/LTA."
+export = true
