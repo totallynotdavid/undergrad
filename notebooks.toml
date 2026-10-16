@@ -60,13 +60,6 @@ file = "metodos-numericos/monte-carlo/main.py"
 summary = "Estimador de Monte Carlo, su error estadistico que decae como 1/sqrt(N), y contraste con una rutina local en Fortran."
 export = true
 
-[[courses.sections.notebooks]]
-id = "monte-carlo-fortran"
-title = "Monte Carlo con Fortran y f2py"
-file = "metodos-numericos/monte-carlo/fortran_f2py.py"
-summary = "El mismo estimador de Monte Carlo enlazado a una rutina Fortran con f2py, como extension nativa local."
-export = false
-
 [[courses]]
 id = "fisica-moderna"
 title = "Fisica moderna"

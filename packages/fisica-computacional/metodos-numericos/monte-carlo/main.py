@@ -12,6 +12,10 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
+    # marimo embeds each figure as a PNG rendered at twice this resolution and
+    # shows it at the size it would have at 100 dpi. 72 keeps the page small.
+    plt.rcParams["figure.dpi"] = 72
+
     def md(text):
         return mo.md(dedent(text))
 
@@ -24,17 +28,7 @@ def _(md):
         r"""
         # Integración de Monte Carlo
 
-        La versión interactiva de este notebook usa Python y NumPy (WASM). Las rutinas en Fortran se incluyen como referencia y solo se ejecutan localmente.
-    
-        GitHub Pages no puede compilar Fortran ni cargar extensiones nativas (.so) generadas con f2py. Para ejecutar el notebook localmente con Fortran y f2py:
-
-        ```bash
-        git clone https://github.com/totallynotdavid/undergrad
-        cd undergrad
-        ./install.sh
-        uv run --package fisica-computacional marimo edit \
-          packages/fisica-computacional/metodos-numericos/monte-carlo/fortran_f2py.py
-        ```
+        Este notebook usa Python y NumPy. Las rutinas en Fortran se incluyen como referencia y no se ejecutan aquí; las tablas citan los resultados de una ejecución local.
         """
     )
     return
@@ -449,7 +443,7 @@ def _(md):
         end subroutine
         ```
 
-        Una ejecución local de `fortran_f2py.py` dio:
+        Una ejecución local de la rutina Fortran compilada con f2py dio:
 
         | implementación | $N$ | estimación | error absoluto |
         |---|---:|---:|---:|
@@ -613,7 +607,7 @@ def _(md):
         end subroutine
         ```
 
-        Una ejecución local de `fortran_f2py.py` dio:
+        Una ejecución local de la rutina Fortran compilada con f2py dio:
 
         | implementación | $N$ | estimación | error absoluto |
         |---|---:|---:|---:|
@@ -783,7 +777,7 @@ def _(md):
         end subroutine
         ```
 
-        Una ejecución local de `fortran_f2py.py` dio:
+        Una ejecución local de la rutina Fortran compilada con f2py dio:
 
         | implementación | $N$ | estimación | error absoluto |
         |---|---:|---:|---:|
