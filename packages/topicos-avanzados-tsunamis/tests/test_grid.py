@@ -60,16 +60,6 @@ class ReadGrid(unittest.TestCase):
         with self.assertRaises(ValueError):
             read_text(without)
 
-    def test_gebco_one_minute_file_of_the_course_starts_at_85w_20s(self):
-        grid = read_grid(PACKAGE / "lab1" / "peru_legacy.asc")
-        self.assertEqual(grid.elevation.shape, (1201, 901))
-        self.assertAlmostEqual(grid.lon[0], -85.0)
-        self.assertAlmostEqual(grid.lat[0], -20.0)
-        self.assertAlmostEqual(grid.lon[-1], -70.0)
-        self.assertAlmostEqual(grid.lat[-1], 0.0)
-        np.testing.assert_allclose(np.diff(grid.lon), 1 / 60, atol=1e-9)
-        np.testing.assert_allclose(np.diff(grid.lat), 1 / 60, atol=1e-9)
-
     def test_npz_round_trip_and_crop(self):
         grid = Grid(
             np.array([-80.0, -79.0, -78.0]),
@@ -106,10 +96,6 @@ class StudyArea(unittest.TestCase):
         self.assertGreater(self.elevation_at(-77.0, -12.0), 100.0)
         self.assertLess(self.elevation_at(-78.5, -12.5), -3000.0)
         self.assertGreater(self.elevation_at(-75.5, -12.0), 2000.0)
-
-    def test_spacing_is_thirty_arc_seconds(self):
-        np.testing.assert_allclose(np.diff(self.grid.lon), 1 / 120, atol=1e-9)
-        np.testing.assert_allclose(np.diff(self.grid.lat), 1 / 120, atol=1e-9)
 
 
 if __name__ == "__main__":

@@ -149,42 +149,26 @@ class RedirectTest(unittest.TestCase):
             )
         self.assertIn(f'<a href="{url.group(1)}">', page)
 
-    def test_a_valid_redirect_passes_validation(self):
-        errors = redirect_errors(
-            self.notebooks("curso/nuevo/pagina"),
-            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")],
-        )
+    def test_redirect_validation(self):
+        new = "curso/nuevo/pagina"
+        old = Redirect("curso/viejo/pagina", new)
+        cases = {
+            "valid": (True, [old], None),
+            "target is not exported": (False, [old], "not an exported notebook"),
+            "replaces a page": (True, [Redirect(new, new)], "collides"),
+            "sits above a page": (True, [Redirect("curso/nuevo", new)], "collides"),
+            "sits inside a page": (True, [Redirect(f"{new}/x", new)], "collides"),
+            "duplicate address": (True, [old, old], "Duplicate"),
+        }
+        for name, (export, redirects, message) in cases.items():
+            with self.subTest(name):
+                errors = redirect_errors(self.notebooks(new, export=export), redirects)
 
-        self.assertEqual(errors, [])
-
-    def test_a_redirect_must_point_to_an_exported_notebook(self):
-        errors = redirect_errors(
-            self.notebooks("curso/nuevo/pagina", export=False),
-            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")],
-        )
-
-        self.assertEqual(len(errors), 1)
-        self.assertIn("not an exported notebook", errors[0])
-
-    def test_a_redirect_cannot_replace_or_sit_above_or_inside_a_notebook_page(self):
-        pages = self.notebooks("curso/nuevo/pagina")
-        for source in ("curso/nuevo/pagina", "curso/nuevo", "curso/nuevo/pagina/x"):
-            with self.subTest(source=source):
-                errors = redirect_errors(
-                    pages, [Redirect(source, "curso/nuevo/pagina")]
-                )
-
-                self.assertEqual(len(errors), 1)
-                self.assertIn("collides", errors[0])
-
-    def test_two_redirects_cannot_share_an_address(self):
-        errors = redirect_errors(
-            self.notebooks("curso/nuevo/pagina"),
-            [Redirect("curso/viejo/pagina", "curso/nuevo/pagina")] * 2,
-        )
-
-        self.assertEqual(len(errors), 1)
-        self.assertIn("Duplicate", errors[0])
+                if message is None:
+                    self.assertEqual(errors, [])
+                else:
+                    self.assertEqual(len(errors), 1)
+                    self.assertIn(message, errors[0])
 
 
 if __name__ == "__main__":
