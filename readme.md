@@ -28,5 +28,3 @@ The [repository layout](docs/layout.md) maps each top-level folder to its site,
 notebook-source, tooling, or documentation boundary.
 
 The code written for this repository is under the [MIT license](LICENSE).
-[THIRD_PARTY.md](docs/THIRD_PARTY.md) lists the files that come from other
-authors and keep their own terms.
