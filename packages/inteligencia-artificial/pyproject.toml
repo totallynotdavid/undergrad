@@ -3,5 +3,4 @@ name = "inteligencia-artificial"
 version = "0.1.0"
 dependencies = [
     "pandas>=3.0.6",
-    "seaborn>=0.13.2",
 ]

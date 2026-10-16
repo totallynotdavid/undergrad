@@ -26,6 +26,12 @@ text.
 | [`falla.m`](../packages/topicos-avanzados-tsunamis/lab2/falla.m)                                                                                                   | "Copyleft: Cesar Jimenez", 2010 |
 | [`fuji2oka.m`](../packages/topicos-avanzados-tsunamis/lab3/fuji2oka.m)                                                                                             | "Copyleft: Cesar Jimenez", 2011 |
 
+## Data
+
+| File                                                             | Origin                                                                                                                                                                                 | Terms                                                                                  |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| [`titanic.csv`](../packages/inteligencia-artificial/titanic.csv) | Copy of `titanic.csv` from [seaborn-data](https://github.com/mwaskom/seaborn-data), derived from the [Kaggle Titanic competition](https://www.kaggle.com/c/titanic/data) training set. | No licence in the seaborn-data repository. The Kaggle competition terms were not read. |
+
 ## Python
 
 | File                                                                                                    | Origin                                                                                                                      | Terms                                                                                      |
