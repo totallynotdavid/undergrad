@@ -119,7 +119,7 @@ export const courses: Course[] = [
         "notebooks": [
           {
             "title": "Atractor de Lorenz",
-            "summary": "Sistema de Lorenz integrado en su regimen caotico y la geometria del atractor.",
+            "summary": "Sistema de Lorenz integrado con RK4: el atractor, su mayor exponente de Lyapunov, el mapa de maximos de z y la bifurcacion en rho.",
             "slug": "fisica-moderna/sistemas-dinamicos/atractor-de-lorenz",
             "path": "packages/fisica-moderna/atractor_de_lorenz.py",
             "export": true,
@@ -134,12 +134,12 @@ export const courses: Course[] = [
         "notebooks": [
           {
             "title": "Curva de Planck",
-            "summary": "Ley de Planck y los limites de Rayleigh-Jeans y Wien, con el calculo en Fortran local.",
+            "summary": "Ley de Planck con sus limites de Rayleigh-Jeans y Wien, el desplazamiento de Wien y la ley de Stefan-Boltzmann por integracion numerica.",
             "slug": "fisica-moderna/radiacion/curva-de-planck",
             "path": "packages/fisica-moderna/curva-de-planck/main.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-moderna/curva-de-planck/main.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/fisica-moderna/radiacion/curva-de-planck/"
           }
         ]
       }
