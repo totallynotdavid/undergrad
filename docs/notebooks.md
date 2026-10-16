@@ -55,6 +55,11 @@ page for that notebook:
 uv run python scripts/export_notebooks.py export --clean
 ```
 
+marimo renders each figure at twice its matplotlib `figure.dpi` and shows it at
+the size it would have at 100 dpi. Notebooks that publish many figures lower
+`plt.rcParams["figure.dpi"]` (to 72, or 70 for the tsunami notebook) so the page
+stays under the size limit.
+
 Test the export script itself with:
 
 ```sh
@@ -78,6 +83,6 @@ mise run test-tsunamis
 ```
 
 Native extensions and external services are local requirements. See
-[`environment.md`](environment.md) for GDAL and Fortran setup. A notebook that
-uses Earth Engine or local data must explain its required inputs in its visible
-marimo cells.
+[`environment.md`](environment.md) for GDAL setup. A notebook that uses Earth
+Engine or local data must explain its required inputs in its visible marimo
+cells.
