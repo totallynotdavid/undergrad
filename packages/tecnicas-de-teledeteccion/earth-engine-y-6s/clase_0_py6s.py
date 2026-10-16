@@ -16,14 +16,12 @@ def _():
     import pandas as pd
     from Py6S import AeroProfile, AtmosProfile, GroundReflectance, SixS, Wavelength
 
-    # El paquete `6s-bin` trae el ejecutable de 6S ya compilado. Su módulo
-    # Python no se importa en Python 3.14, así que se ubica el ejecutable sin
-    # importarlo.
+    # Python 3.14 no puede importar `6s-bin`, así que se localiza su ejecutable.
     _sixs_bin = importlib.util.find_spec("sixs_bin")
     SIXS_PATH = Path(_sixs_bin.submodule_search_locations[0]) / "sixsV1.1"
 
-    # Py6S escribe la entrada de cada corrida en un archivo temporal y lo borra
-    # al terminar. Se guarda junto al cuaderno y no en el directorio del sistema.
+    # Py6S borra la entrada temporal al terminar cada corrida. Usa el directorio
+    # del cuaderno para no escribir en el directorio temporal del sistema.
     tempfile.tempdir = str(Path(__file__).resolve().parent)
 
     BANDS_UM = {
@@ -83,7 +81,6 @@ def _(
     OZONE_CM_ATM = 0.25
 
     def run_6s(wavelength_um, aod=0.2, water=2.5, solar_z=40.0):
-        """Ejecuta 6S para una combinación y devuelve sus salidas."""
         s = SixS(str(SIXS_PATH))
         s.wavelength = Wavelength(wavelength_um)
         s.aero_profile = AeroProfile.PredefinedType(AeroProfile.Continental)
@@ -96,7 +93,7 @@ def _(
         s.geometry.solar_a = 0.0
         s.geometry.view_z = 0.0
         s.geometry.view_a = 0.0
-        # La fecha fija la distancia Tierra-Sol del escenario.
+        # Mantener la fecha fija mantiene constante la distancia Tierra-Sol.
         s.geometry.month = 7
         s.geometry.day = 14
         s.run()
