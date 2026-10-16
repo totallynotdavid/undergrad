@@ -4,6 +4,10 @@ python = "3.14"
 ruff = "0.17.0"
 uv = "0.13.1"
 
+[tasks.test-scripts]
+description = "Test the notebook export script"
+run = "uv run --locked python -m unittest discover -s scripts"
+
 [tasks.check-notebooks]
 description = "Check every notebook listed in notebooks.toml"
 run = "uv run python scripts/check_notebooks.py"
