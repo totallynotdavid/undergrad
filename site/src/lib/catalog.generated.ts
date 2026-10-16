@@ -213,9 +213,9 @@ export const courses: Course[] = [
             "summary": "Limpieza y codificacion de variables sobre datos tabulares, con el dataset Titanic.",
             "slug": "inteligencia-artificial/datos-tabulares/limpieza-datos-tabulares",
             "path": "packages/inteligencia-artificial/limpieza_datos_tabulares.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/inteligencia-artificial/limpieza_datos_tabulares.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/inteligencia-artificial/datos-tabulares/limpieza-datos-tabulares/"
           }
         ]
       }
@@ -235,9 +235,9 @@ export const courses: Course[] = [
             "summary": "Transferencia radiativa atmosferica con el modelo 6S a traves de Py6S.",
             "slug": "tecnicas-de-teledeteccion/earth-engine-y-6s/clase-0-py6s",
             "path": "packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_0_py6s.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_0_py6s.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/tecnicas-de-teledeteccion/earth-engine-y-6s/clase-0-py6s/"
           },
           {
             "title": "Clase 1: Earth Engine",
