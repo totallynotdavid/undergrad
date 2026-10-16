@@ -51,6 +51,13 @@ Test the export script itself with:
 mise run test-scripts
 ```
 
+The statistical mechanics notebooks compute their results with numba at export
+time. Run them and check the numbers with:
+
+```sh
+mise run test-notebooks
+```
+
 Native extensions and external services are local requirements. See
 [`environment.md`](environment.md) for GDAL and Fortran setup. A notebook that
 uses Earth Engine or local data must explain its required inputs in its visible
