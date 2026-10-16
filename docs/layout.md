@@ -7,15 +7,14 @@ not scan the repository root or course packages directly.
 
 ## Top-level folders
 
-| Folder           | Kind            | What belongs there                                                                           |
-| ---------------- | --------------- | -------------------------------------------------------------------------------------------- |
-| `site/`          | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports |
-| `packages/`      | notebook source | Course packages, notebooks, supporting Python/Fortran source, data, and package dependencies |
-| `scripts/`       | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
-| `.github/`       | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
-| `.devcontainer/` | tooling         | Reproducible development-container configuration                                             |
-| `docs/`          | other           | Architecture and operator documentation; it is not site content                              |
-| `.ruff_cache/`   | other           | Ignored Ruff analysis cache; never part of a build input                                     |
+| Folder         | Kind            | What belongs there                                                                           |
+| -------------- | --------------- | -------------------------------------------------------------------------------------------- |
+| `site/`        | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports |
+| `packages/`    | notebook source | Course packages, notebooks, supporting Python source, data, and package dependencies         |
+| `scripts/`     | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
+| `.github/`     | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
+| `docs/`        | other           | Architecture and operator documentation; it is not site content                              |
+| `.ruff_cache/` | other           | Ignored Ruff analysis cache; never part of a build input                                     |
 
 The table covers repository content and the generated cache that can appear at
 the repository root. Git metadata, virtual environments, and agent credentials
@@ -29,7 +28,7 @@ part of this layout.
 | `notebooks.toml`            | tooling | Catalog source: selects the notebook lessons the site publishes |
 | `pyproject.toml`, `uv.lock` | tooling | Python workspace and locked dependency graph                    |
 | `mise.toml`                 | tooling | Pinned developer tools and repository tasks                     |
-| `install.sh`                | tooling | Optional native dependency setup                                |
+| `install.sh`                | tooling | Optional GDAL native dependency setup                           |
 | `readme.md`                 | other   | What the project is and where to start                          |
 | `LICENSE`                   | other   | Licence of the repository's own code                            |
 
