@@ -24,6 +24,14 @@ class SiteConfig:
 
 
 @dataclass(frozen=True)
+class Redirect:
+    """A retired page address that sends readers to the notebook that replaced it."""
+
+    source: str
+    target: str
+
+
+@dataclass(frozen=True)
 class Notebook:
     course_id: str
     course: str
@@ -38,7 +46,7 @@ class Notebook:
     export: bool
 
 
-def load_manifest() -> tuple[SiteConfig, list[Notebook]]:
+def load_manifest() -> tuple[SiteConfig, list[Notebook], list[Redirect]]:
     with MANIFEST.open("rb") as file:
         data = tomllib.load(file)
 
@@ -51,7 +59,11 @@ def load_manifest() -> tuple[SiteConfig, list[Notebook]]:
     )
     root = data.get("defaults", {}).get("root", "notebooks").strip("/")
     notebooks = expand_notebooks(root, data.get("courses", []))
-    return site, notebooks
+    redirects = [
+        Redirect(source=entry["from"].strip("/"), target=entry["to"].strip("/"))
+        for entry in data.get("redirects", [])
+    ]
+    return site, notebooks, redirects
 
 
 def expand_notebooks(root: str, courses: list[dict]) -> list[Notebook]:
@@ -83,7 +95,9 @@ def expand_notebooks(root: str, courses: list[dict]) -> list[Notebook]:
     return notebooks
 
 
-def validate_manifest(notebooks: list[Notebook]) -> None:
+def validate_manifest(
+    notebooks: list[Notebook], redirects: list[Redirect] | None = None
+) -> None:
     slugs: set[str] = set()
     paths: set[str] = set()
     errors: list[str] = []
@@ -110,8 +124,43 @@ def validate_manifest(notebooks: list[Notebook]) -> None:
         if notebook.export and not notebook.package:
             errors.append(f"Missing package for exported notebook: {notebook.path}")
 
+    errors.extend(redirect_errors(notebooks, redirects or []))
+
     if errors:
         raise SystemExit("\n".join(errors))
+
+
+def redirect_errors(notebooks: list[Notebook], redirects: list[Redirect]) -> list[str]:
+    exported = {notebook.slug for notebook in notebooks if notebook.export}
+    slugs = {notebook.slug for notebook in notebooks}
+    sources: set[str] = set()
+    errors: list[str] = []
+
+    for redirect in redirects:
+        if redirect.source in sources:
+            errors.append(f"Duplicate redirect: {redirect.source}")
+        sources.add(redirect.source)
+
+        if not SLUG_PATTERN.fullmatch(redirect.source):
+            errors.append(f"Invalid redirect source: {redirect.source}")
+
+        # A redirect page is an index.html in a folder, so it cannot share a
+        # folder with a notebook page or sit above or below one.
+        for slug in slugs:
+            if (
+                slug == redirect.source
+                or slug.startswith(redirect.source + "/")
+                or redirect.source.startswith(slug + "/")
+            ):
+                errors.append(f"Redirect {redirect.source} collides with page {slug}")
+
+        if redirect.target not in exported:
+            errors.append(
+                f"Redirect {redirect.source} points to {redirect.target}, "
+                "which is not an exported notebook"
+            )
+
+    return errors
 
 
 def ts_header() -> str:

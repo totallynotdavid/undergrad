@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import posixpath
 import re
 import shutil
 import subprocess
@@ -13,6 +14,7 @@ from notebooks_manifest import (
     ROOT,
     SITE_DIR,
     Notebook,
+    Redirect,
     load_manifest,
     validate_manifest,
     write_frontend_data,
@@ -126,9 +128,39 @@ def export_results(notebook: Notebook, output_dir: Path) -> None:
     page_path.write_text(page, encoding="utf-8")
 
 
+REDIRECT_PAGE = """\
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pagina movida</title>
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="refresh" content="0; url={url}" />
+  </head>
+  <body>
+    <p>Esta pagina se movio. <a href="{url}">Ir a la nueva direccion</a>.</p>
+  </body>
+</html>
+"""
+
+
+def write_redirect(redirect: Redirect, output_dir: Path) -> None:
+    """Write a static page that sends readers from a retired address to its target.
+
+    The link is relative so the page works under any base path the site is served
+    from.
+    """
+    url = html.escape(posixpath.relpath(redirect.target, redirect.source) + "/")
+    page_dir = output_dir / redirect.source
+    page_dir.mkdir(parents=True, exist_ok=True)
+    (page_dir / "index.html").write_text(
+        REDIRECT_PAGE.format(url=url), encoding="utf-8"
+    )
+
+
 def export_notebooks(clean: bool) -> None:
-    site, notebooks = load_manifest()
-    validate_manifest(notebooks)
+    site, notebooks, redirects = load_manifest()
+    validate_manifest(notebooks, redirects)
     write_frontend_data(site, notebooks)
 
     if clean:
@@ -153,6 +185,9 @@ def export_notebooks(clean: bool) -> None:
             raise SystemExit(f"Check failed for {notebook.path}")
         export_results(notebook, STATIC_NOTEBOOKS_DIR / notebook.slug)
 
+    for redirect in redirects:
+        write_redirect(redirect, STATIC_NOTEBOOKS_DIR)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -173,8 +208,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    site, notebooks = load_manifest()
-    validate_manifest(notebooks)
+    site, notebooks, redirects = load_manifest()
+    validate_manifest(notebooks, redirects)
 
     if args.command == "validate":
         return 0
