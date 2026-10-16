@@ -29,6 +29,16 @@ relative to the package directory. Set `export = true` to publish a notebook on
 the site as a read-only page of its results. Set `export = false` to link its
 source instead.
 
+When a published page moves or merges into another, remove its entry and add a
+`[[redirects]]` table so the old address keeps working. `from` is the old slug
+and `to` is the slug of an exported notebook:
+
+```toml
+[[redirects]]
+from = "curso/seccion/pagina-vieja"
+to = "curso/seccion/pagina-nueva"
+```
+
 After changing the catalog, validate it and regenerate the site data:
 
 ```sh

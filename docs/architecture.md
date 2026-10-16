@@ -29,6 +29,11 @@ fails the command, and its page is not written. So does a page over 1,000,000
 bytes (`MAX_PAGE_BYTES`), because marimo embeds every figure in the page as a
 base64 PNG. Lower the figure resolution or plot fewer points to fit.
 
+Each `[[redirects]]` entry in the catalog becomes a small static page at the old
+slug. It refreshes to the new page through a relative link, so it works under
+any base path. Validation rejects a redirect whose target is not an exported
+notebook, and one that duplicates or shares a folder with another page.
+
 The export rewrites the page shell that marimo generates: the catalog title and
 summary replace the title and description, the language is `es`, and marimo's
 favicon, manifest, touch icon and two decorative image preloads are removed. The
