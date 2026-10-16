@@ -1,10 +1,8 @@
 """Vertical deformation after Mansinha and Smylie (1971), for cross-checking.
 
-Port to vectorised NumPy of ``deform.f`` of the Topicos Avanzados en Tsunamis
-course, based on the dislocation model of L. Mansinha and D. E. Smylie and
-modified by Cesar Jimenez (2022). It evaluates the same rectangular fault as
-:mod:`tsunamis.okada` with the closed form of Mansinha and Smylie, so the two
-models can be compared. The model assumes a Poisson solid.
+It evaluates the same rectangular fault as :mod:`tsunamis.okada` with the
+closed form of Mansinha and Smylie, so the two models can be compared. The
+model assumes a Poisson solid.
 """
 
 from __future__ import annotations
