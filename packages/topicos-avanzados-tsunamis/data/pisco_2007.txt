@@ -1,0 +1,11 @@
+# Fuente sismica del terremoto de Pisco 2007: 8 subfuentes cuadradas de 45 km.
+# Tabla I de lab3.pdf (esquina de cada subfuente, strike 325, dip 18, rake 63).
+# Columnas: lon lat slip(m) largo(m) ancho(m) strike dip rake profundidad(m)
+-76.300 -14.750 2.3 45000 45000 325 18 63 14000
+-75.983 -14.533 5.7 45000 45000 325 18 63 27910
+-76.533 -14.417 0.8 45000 45000 325 18 63 14000
+-76.217 -14.200 7.0 45000 45000 325 18 63 27910
+-76.767 -14.083 1.7 45000 45000 325 18 63 14000
+-76.450 -13.867 3.1 45000 45000 325 18 63 27910
+-77.000 -13.758 4.1 45000 45000 325 18 63 14000
+-76.683 -13.533 0.1 45000 45000 325 18 63 27910

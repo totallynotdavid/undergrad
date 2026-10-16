@@ -1,4 +1,14 @@
 [project]
 name = "topicos-avanzados-tsunamis"
 version = "0.1.0"
-dependencies = []
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tsunamis"]
