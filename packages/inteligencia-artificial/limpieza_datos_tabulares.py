@@ -6,11 +6,13 @@ app = marimo.App()
 
 @app.cell
 def _():
+    from pathlib import Path
+
     import marimo as mo
     import pandas as pd
-    import seaborn as sns
 
-    return mo, pd, sns
+    TITANIC_PATH = Path(__file__).resolve().parent / "titanic.csv"
+    return TITANIC_PATH, mo, pd
 
 
 @app.cell
@@ -20,13 +22,19 @@ def _(mo):
 
     Objetivo: construir un flujo básico de limpieza con un dataset real (`titanic`),
     identificando columnas redundantes y manejando valores faltantes.
+
+    Los datos son los 891 pasajeros del conjunto de entrenamiento de la
+    competencia [Titanic](https://www.kaggle.com/c/titanic/data) de Kaggle, en la
+    versión que distribuye el repositorio
+    [seaborn-data](https://github.com/mwaskom/seaborn-data). Se leen del archivo
+    `titanic.csv`, junto a este cuaderno, sin descargar nada.
     """)
     return
 
 
 @app.cell
-def _(sns):
-    titanic = sns.load_dataset("titanic")
+def _(TITANIC_PATH, pd):
+    titanic = pd.read_csv(TITANIC_PATH)
     return (titanic,)
 
 
@@ -54,10 +62,16 @@ def _(pd, titanic):
 
 
 @app.cell
-def _(df_raw, mo):
-    missing_counts = df_raw.isna().sum().sort_values(ascending=False)
-    mo.md("## 2) Valores faltantes por columna")
-    missing_counts
+def _(mo):
+    mo.md("""
+    ## 2) Valores faltantes por columna
+    """)
+    return
+
+
+@app.cell
+def _(df_raw):
+    df_raw.isna().sum().sort_values(ascending=False)
     return
 
 
