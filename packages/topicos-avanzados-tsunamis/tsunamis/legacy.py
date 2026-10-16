@@ -64,4 +64,4 @@ def run_def_oka(
                 slip,
             )
         )
-    return vertical_displacement(i * dx + 0 * j, j * dx + 0 * i, faults)
+    return vertical_displacement(i * dx, j * dx, faults)

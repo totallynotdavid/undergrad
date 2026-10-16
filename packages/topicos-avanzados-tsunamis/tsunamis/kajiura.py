@@ -4,8 +4,7 @@ The sea surface does not copy a sudden seafloor uplift. Linear potential theory
 for an incompressible ocean of depth ``h`` gives an initial elevation whose
 Fourier transform is the transform of the uplift divided by ``cosh(k h)``,
 with ``k`` the wavenumber. Wavelengths much longer than the
-depth pass unchanged; short ones are suppressed. The course replaced this step
-with a Laplacian filter in ``dib_fuente.m``.
+depth pass unchanged; short ones are suppressed.
 
 Where the depth varies, :func:`kajiura_filter` filters the field once per depth
 level and interpolates between levels with the local depth. Abbate et al.
