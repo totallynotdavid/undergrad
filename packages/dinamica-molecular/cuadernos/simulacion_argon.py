@@ -13,8 +13,6 @@ def _():
     import numpy as np
     from dinamica_molecular import analisis, animacion, lennard_jones, tight_binding
 
-    # Las figuras viajan en la página como PNG: resolución baja y series
-    # diezmadas mantienen la página por debajo del límite de tamaño.
     plt.rcParams["figure.dpi"] = 72
 
     return analisis, animacion, base64, lennard_jones, mo, np, plt, tight_binding
@@ -63,7 +61,6 @@ def _(lennard_jones, np):
     N = pos0.shape[0]
     vel0 = lennard_jones.velocidades_maxwell(N, T_OBJETIVO, np.random.default_rng(1))
 
-    # Equilibrado con reescalado de velocidades; la producción es microcanónica.
     equilibrado = lennard_jones.integrar(
         pos0,
         vel0,
@@ -260,7 +257,7 @@ def _(mo):
 
 
 @app.cell
-def _(analisis, corrida, np, plt):
+def _(analisis, corrida, plt):
     _msd = analisis.desplazamiento_cuadratico_medio(corrida.posiciones)
     tiempo_msd = corrida.tiempo_cuadros[: _msd.size]
     VENTANA = (1.0, float(tiempo_msd[-1]))
@@ -318,7 +315,6 @@ def _(mo):
 def _(LADO, animacion, base64, corrida, mo):
     _cuadros = corrida.posiciones[::13][:30]
     gif = animacion.gif_trayectoria(_cuadros, LADO, pixeles=200)
-    # Con el tipo MIME explícito el navegador no tiene que adivinar que es un GIF.
     mo.image(
         "data:image/gif;base64," + base64.b64encode(gif).decode("ascii"),
         width=200,

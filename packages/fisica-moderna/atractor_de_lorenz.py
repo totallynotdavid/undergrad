@@ -189,7 +189,6 @@ def _(DT, integrar, np, parametros, rk4):
 
     rng = np.random.default_rng(0)
     semillas = rng.uniform([-15.0, -20.0, 5.0], [15.0, 20.0, 40.0], size=(32, 3)).T
-    # Evolucionamos los estados 30 unidades de tiempo antes de medir la separación.
     en_atractor = integrar(semillas, DT, 3000, parametros)[-1]
 
     def lyapunov(a, p, dt=DT):
@@ -395,7 +394,7 @@ def _(DT, beta, np, rk4, sigma):
 
 
 @app.cell
-def _(beta, mo, plt, rho_maximos, sigma, z_maximos):
+def _(beta, plt, rho_maximos, sigma, z_maximos):
     fig_bif, ax_bif = plt.subplots(figsize=(9, 5))
     ax_bif.plot(rho_maximos, z_maximos, ",", color="k")
     ax_bif.axvline(28.0, color="C0", linewidth=0.8, label=r"$\rho = 28$")

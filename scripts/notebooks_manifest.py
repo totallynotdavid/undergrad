@@ -25,8 +25,6 @@ class SiteConfig:
 
 @dataclass(frozen=True)
 class Redirect:
-    """A retired page address that sends readers to the notebook that replaced it."""
-
     source: str
     target: str
 

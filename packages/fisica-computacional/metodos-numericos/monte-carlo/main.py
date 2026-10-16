@@ -12,8 +12,6 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # marimo embeds each figure as a PNG rendered at twice this resolution and
-    # shows it at the size it would have at 100 dpi. 72 keeps the page small.
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
@@ -266,14 +264,11 @@ def _(importancia, np, varianza_teorica):
             for a in EXPONENTES
         ]
     )
-    sigma_teorica = np.sqrt(varianza_teorica(EXPONENTES) / N_IMPORTANCIA)
-    return EXPONENTES, N_IMPORTANCIA, sigma_medida, sigma_teorica
+    return EXPONENTES, N_IMPORTANCIA, sigma_medida
 
 
 @app.cell
-def _(
-    EXPONENTES, N_IMPORTANCIA, np, plt, sigma_medida, sigma_teorica, varianza_teorica
-):
+def _(EXPONENTES, N_IMPORTANCIA, np, plt, sigma_medida, varianza_teorica):
     _a_fino = np.linspace(0.0, 4.0, 200)
     _fig, _ax = plt.subplots(figsize=(7, 4.5))
     _ax.semilogy(
@@ -298,7 +293,7 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(EXPONENTES, md, sigma_medida, sigma_teorica):
+def _(EXPONENTES, md, sigma_medida):
     _idx = {float(a): i for i, a in enumerate(EXPONENTES)}
     _uniforme = sigma_medida[_idx[0.0]]
     _unidad = sigma_medida[_idx[1.0]]

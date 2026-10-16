@@ -12,7 +12,6 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # Marimo embeds figures as PNGs at twice this resolution.
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):

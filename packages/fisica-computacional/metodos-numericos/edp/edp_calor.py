@@ -12,7 +12,6 @@ def _():
     import matplotlib.pyplot as plt
     import numpy as np
 
-    # Marimo embeds figures as PNGs at twice this resolution.
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
@@ -268,7 +267,7 @@ def _(R_EXPLICITOS, cn, error_en_el_tiempo, explicitos, plt):
 
 
 @app.cell(hide_code=True)
-def _(R_EXPLICITOS, T_FINAL, ALFA, cn, dx, error_en_el_tiempo, explicitos, md, np):
+def _(R_EXPLICITOS, T_FINAL, ALFA, cn, dx, error_en_el_tiempo, explicitos, md):
     _filas = []
     for _nombre, _r, (_t, _T) in [
         *[("explícito", _r, explicitos[_r]) for _r in R_EXPLICITOS],

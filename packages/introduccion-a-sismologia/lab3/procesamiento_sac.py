@@ -95,7 +95,7 @@ def _(etiqueta, mo, origen_principal, otro_evento, otro_origen, principal, traza
 
 
 @app.cell(hide_code=True)
-def _(etiqueta, mo, trazas):
+def _(mo, trazas):
     _escalas = [float(tr.stats.sac.scale) for tr in trazas]
     _sensores = sorted({tr.stats.sac.kinst.strip().title() for tr in trazas})
     mo.md(f"""
@@ -243,7 +243,6 @@ def _(TauPyModel, classic_sta_lta, np, tiempo_desde_origen, trazas):
         }
 
     def picks_de_cabecera(tr):
-        # Tiempos de los picks guardados en la cabecera, desde el origen.
         sac = tr.stats.sac
         return {c: sac[c] - sac.o for c in CAMPOS_PICK if c in sac}
 

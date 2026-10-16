@@ -167,7 +167,6 @@ def _(aciertos_acumulados, np, tasa_exacta, volumen_exacto):
 @app.cell
 def _(DIMENSIONES, exacto, math, np):
     n_pico = int(DIMENSIONES[np.argmax(exacto)])
-    # Calcula también el máximo del volumen con n continuo.
     _n_fino = np.linspace(1.0, 10.0, 90001)
     _v_fino = np.exp(
         _n_fino / 2.0 * math.log(math.pi)
@@ -217,7 +216,6 @@ def _(
     exacto,
     n_pico,
     n_pico_continuo,
-    np,
     plt,
     sigma,
     tasa,
