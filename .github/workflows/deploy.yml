@@ -55,6 +55,9 @@ jobs:
       - name: Test the molecular dynamics package
         run: mise run test-dinamica-molecular
 
+      - name: Test the tsunami code
+        run: mise run test-tsunamis
+
       - name: Export notebooks
         run: uv run python scripts/export_notebooks.py export --clean
 
