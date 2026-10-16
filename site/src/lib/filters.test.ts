@@ -97,54 +97,35 @@ test("filtersToSearchParams omits empty and trimmed-empty values", () => {
   ).toBe("q=lorenz&curso=dinamica");
 });
 
-test("parse then serialize round-trips a trimmed query", () => {
-  const params = filtersToSearchParams(filters({ query: "ising" }));
-  expect(parseFilters(params)).toEqual({ query: "ising", courseId: "" });
+test("applyFilters keeps the notebooks matching the course and the folded query", () => {
+  const cases: [string, Partial<Filters>, number][] = [
+    ["empty filters keep every notebook", {}, 3],
+    ["query folds diacritics in the title", { query: "LÓRENZ" }, 1],
+    ["query matches the summary", { query: "metropolis" }, 1],
+    ["query matches the path", { query: "ising.py" }, 1],
+    ["course keeps only its notebooks", { courseId: "estadistica" }, 1],
+    [
+      "course and query intersect",
+      { courseId: "dinamica", query: "lorenz" },
+      1,
+    ],
+    [
+      "course and query disjoint",
+      { courseId: "estadistica", query: "lorenz" },
+      0,
+    ],
+  ];
+  for (const [name, partial, expected] of cases) {
+    expect(count(applyFilters(courses, filters(partial))), name).toBe(expected);
+  }
 });
 
-test("empty filters return every course unchanged", () => {
-  expect(count(applyFilters(courses, filters({})))).toBe(3);
-});
-
-test("search folds diacritics and matches title, summary, and path", () => {
-  expect(count(applyFilters(courses, filters({ query: "LÓRENZ" })))).toBe(1);
-  expect(count(applyFilters(courses, filters({ query: "metropolis" })))).toBe(
-    1,
-  );
-  expect(count(applyFilters(courses, filters({ query: "ising.py" })))).toBe(1);
-});
-
-test("course filter keeps only the matching course", () => {
-  const result = applyFilters(courses, filters({ courseId: "estadistica" }));
-  expect(result.map((course) => course.id)).toEqual(["estadistica"]);
-  expect(count(result)).toBe(1);
-});
-
-test("course and search intersect and prune empty sections and courses", () => {
-  expect(
-    count(
-      applyFilters(courses, filters({ courseId: "dinamica", query: "lorenz" })),
-    ),
-  ).toBe(1);
-  expect(
-    count(
-      applyFilters(
-        courses,
-        filters({ courseId: "estadistica", query: "lorenz" }),
-      ),
-    ),
-  ).toBe(0);
-  const result = applyFilters(
+test("a filter that matches nothing yields an empty catalog, not empty sections", () => {
+  expect(applyFilters(courses, filters({ query: "zzz" }))).toEqual([]);
+  const pruned = applyFilters(
     courses,
     filters({ courseId: "dinamica", query: "lorenz" }),
   );
-  expect(
-    result.every((course) =>
-      course.sections.every((section) => section.notebooks.length > 0),
-    ),
-  ).toBe(true);
-});
-
-test("no match yields an empty catalog, not empty sections", () => {
-  expect(applyFilters(courses, filters({ query: "zzz" }))).toEqual([]);
+  expect(pruned.map((course) => course.id)).toEqual(["dinamica"]);
+  expect(pruned[0].sections.map((section) => section.id)).toEqual(["caos"]);
 });

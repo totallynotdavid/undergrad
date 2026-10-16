@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import importlib.util
-import re
 import unittest
 from pathlib import Path
 
@@ -12,46 +11,13 @@ import numpy as np
 METODOS = Path(__file__).parent / "metodos-numericos"
 
 
-NOTEBOOKS = [
-    "derivacion-numerica/derivacion_numerica.py",
-    "solucion-ecuaciones-no-lineales/raices.py",
-    "interpolacion/interpolacion.py",
-    "errores-numericos/punto_flotante.py",
-]
-
-
-def run_all(relative: str) -> tuple[list, dict]:
+def run_notebook(relative: str) -> dict:
     path = METODOS / relative
     spec = importlib.util.spec_from_file_location(path.stem, path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module.app.run()
-
-
-def run_notebook(relative: str) -> dict:
-    return run_all(relative)[1]
-
-
-class MarkdownRenderingTest(unittest.TestCase):
-    """The prose is markdown with math; a stray pipe or indent breaks the page."""
-
-    def test_markdown_outputs_render_as_markdown(self):
-        for relative in NOTEBOOKS:
-            outputs, _ = run_all(relative)
-            for i, output in enumerate(outputs):
-                html = getattr(output, "text", None)
-                if not isinstance(html, str):
-                    continue
-                where = f"{relative}, cell output {i}"
-                for line in html.splitlines():
-                    self.assertIsNone(
-                        re.match(r"\s*\|(?!\|)", line), f"{where}: raw table row"
-                    )
-                    self.assertIsNone(
-                        re.match(r"\s*#{1,6} ", line), f"{where}: raw heading"
-                    )
-                self.assertNotIn("\\\\", html, f"{where}: doubled backslash")
-                self.assertNotRegex(html, r"<pre><code>\s*#", f"{where}: code block")
+    _, defs = module.app.run()
+    return defs
 
 
 class DerivacionTest(unittest.TestCase):

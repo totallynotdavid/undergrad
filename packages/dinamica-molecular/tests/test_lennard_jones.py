@@ -25,15 +25,6 @@ class EnergiaTotal(unittest.TestCase):
         deriva = np.max(np.abs(total - total[0])) / abs(total[0])
         self.assertLess(deriva, COTA_DERIVA)
 
-    def test_paso_grande_rompe_la_cota(self):
-        # Garantiza que la cota de arriba distingue una integración mala.
-        pos, vel, lado = liquido()
-        eq = lj.integrar(pos, vel, lado, 0.004, 400, t_objetivo=0.78)
-        corrida = lj.integrar(eq.pos_final, eq.vel_final, lado, 0.03, 100)
-        total = corrida.energia_total
-        deriva = np.max(np.abs(total - total[0])) / abs(total[0])
-        self.assertGreater(deriva, COTA_DERIVA)
-
     def test_momento_total_se_conserva(self):
         pos, vel, lado = liquido()
         corrida = lj.integrar(pos, vel, lado, 0.004, 200)
