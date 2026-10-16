@@ -241,3 +241,19 @@ title = "Argon liquido y cumulos de potasio"
 file = "cuadernos/simulacion_argon.py"
 summary = "Lennard-Jones con velocity Verlet y condiciones periodicas: energia, temperatura, g(r), difusion, y un potencial de enlace fuerte para cumulos de K."
 export = true
+
+[[courses]]
+id = "topicos-avanzados-tsunamis"
+title = "Topicos avanzados en tsunamis"
+package = "topicos-avanzados-tsunamis"
+
+[[courses.sections]]
+id = "fuente-sismica"
+title = "Fuente sismica"
+
+[[courses.sections.notebooks]]
+id = "deformacion-tsunami"
+title = "De la falla al tsunami"
+file = "deformacion_tsunami.py"
+summary = "Deformacion vertical del fondo con el modelo de Okada para el terremoto de Pisco de 2007, validada contra Fortran, y condicion inicial del tsunami con el filtro de Kajiura."
+export = true
