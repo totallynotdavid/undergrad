@@ -5,4 +5,12 @@ dependencies = [
     "numba>=0.68.0",
     "matplotlib>=3.11.2",
     "numpy>=2.5.4",
+    "pillow>=12.0.0",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dinamica_molecular"]
