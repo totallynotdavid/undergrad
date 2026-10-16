@@ -17,7 +17,7 @@
 		<p class="card__summary">{notebook.summary}</p>
 	</div>
 	<div class="card__foot">
-		<RunState mode={notebook.mode} />
+		<RunState exported={notebook.export} />
 		<span class="card__path" title={notebook.path}>{notebook.path}</span>
 	</div>
 </a>
