@@ -11,10 +11,23 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
-    import plotly.express as px
-    from numba import njit
+    import plotly.graph_objects as go
 
-    return cleandoc, mo, njit, np, plt, px
+    return cleandoc, go, mo, np, plt
+
+
+@app.cell
+def _():
+    try:
+        from numba import njit
+    except ImportError as exc:
+        raise ImportError(
+            "Este cuaderno necesita numba para ejecutar el muestreo de "
+            "Metropolis en tiempo razonable. Instálalo con "
+            "`uv sync --package mecanica-estadistica`."
+        ) from exc
+
+    return (njit,)
 
 
 @app.cell(hide_code=True)
@@ -23,7 +36,7 @@ def _(cleandoc, mo):
         cleandoc(r"""
         # Modelo de Ising 3D: muestreo de Metropolis
 
-        Hamiltoniano (sin campo externo):
+        Hamiltoniano (sin campo externo), con $J=1$ y $k_B=1$:
         $$
         H(\sigma) = -J\sum_{\langle i,j \rangle} s_i s_j,
         \qquad s_i \in \{-1,+1\}
@@ -34,57 +47,21 @@ def _(cleandoc, mo):
         P_{\text{aceptar}} = \min\left(1, e^{-\beta \Delta E}\right)
         $$
 
-        En este notebook usamos unidades con $J=1$ y controlamos $\beta J$ directamente.
+        Los resultados de esta página se calculan al exportar el cuaderno. Para
+        cada tamaño $L$ se simula una red cúbica de $L^3$ espines con condiciones
+        de frontera periódicas, a muchas temperaturas, y se estiman las
+        cantidades que siguen (con $N=L^3$ y $m=\sum_i s_i/N$):
+
+        $$
+        \langle |m| \rangle,\qquad
+        \langle e \rangle,\qquad
+        \chi = \beta N\left(\langle m^2\rangle - \langle |m|\rangle^2\right),\qquad
+        C = \beta^2 N\left(\langle e^2\rangle - \langle e\rangle^2\right),
+        $$
+        $$
+        U_4 = 1 - \frac{\langle m^4\rangle}{3\langle m^2\rangle^2}.
+        $$
     """)
-    )
-    return
-
-
-@app.cell
-def _(mo):
-    L = mo.ui.slider(start=4, stop=20, step=1, value=10, label="L")
-    betaJ = mo.ui.slider(start=0.05, stop=0.80, step=0.01, value=0.22, label="betaJ")
-    sweeps = mo.ui.slider(start=50, stop=4000, step=50, value=1200, label="Barridos")
-    burn_in = mo.ui.slider(start=0, stop=3000, step=50, value=300, label="Burn-in")
-    seed = mo.ui.number(value=7, label="Semilla", start=0, step=1)
-    snapshot_stride = mo.ui.slider(
-        start=10, stop=400, step=10, value=50, label="Stride de snapshots"
-    )
-    max_snapshots = mo.ui.slider(
-        start=10, stop=200, step=10, value=80, label="Máx snapshots"
-    )
-    render_step = mo.ui.slider(
-        start=1, stop=20, step=1, value=3, label="Submuestreo 3D"
-    )
-    return (
-        L,
-        betaJ,
-        burn_in,
-        max_snapshots,
-        render_step,
-        seed,
-        snapshot_stride,
-        sweeps,
-    )
-
-
-@app.cell(hide_code=True)
-def _(
-    L,
-    betaJ,
-    burn_in,
-    max_snapshots,
-    mo,
-    render_step,
-    seed,
-    snapshot_stride,
-    sweeps,
-):
-    mo.vstack(
-        [
-            mo.hstack([L, betaJ, sweeps, burn_in, seed], justify="start"),
-            mo.hstack([snapshot_stride, max_snapshots, render_step], justify="start"),
-        ]
     )
     return
 
@@ -92,245 +69,359 @@ def _(
 @app.cell
 def _(njit, np):
     @njit
-    def initial_lattice(L: int) -> np.ndarray:
+    def simular(L: int, beta: float, barridos: int, semilla: int):
+        """Metropolis secuencial desde la red ordenada.
+
+        Un barrido visita los N sitios una vez, en orden. Devuelve e = E/N y
+        m = M/N después de cada barrido, y la red final.
+        """
+        np.random.seed(semilla)
         spins = np.ones((L, L, L), dtype=np.int8)
-        for i in range(L):
-            for j in range(L):
-                for k in range(L):
-                    if np.random.random() < 0.5:
-                        spins[i, j, k] = -1
-        return spins
+        n_sitios = L * L * L
+        # Vecinos con frontera periódica, sin módulo dentro del bucle.
+        mas = (np.arange(L) + 1) % L
+        menos = (np.arange(L) - 1) % L
+        # dE solo toma los valores 4, 8, 12 cuando el cambio es desfavorable.
+        boltzmann = np.exp(-beta * np.array([0.0, 4.0, 8.0, 12.0]))
 
-    @njit
-    def delta_energy_periodic(
-        spins: np.ndarray, i: int, j: int, k: int, J: float = 1.0
-    ) -> float:
-        L = spins.shape[0]
-        s = spins[i, j, k]
-        nn_sum = (
-            spins[(i + 1) % L, j, k]
-            + spins[(i - 1) % L, j, k]
-            + spins[i, (j + 1) % L, k]
-            + spins[i, (j - 1) % L, k]
-            + spins[i, j, (k + 1) % L]
-            + spins[i, j, (k - 1) % L]
-        )
-        return 2.0 * J * s * nn_sum
+        energia = -3 * n_sitios
+        magnetizacion = n_sitios
+        e = np.empty(barridos, dtype=np.float64)
+        m = np.empty(barridos, dtype=np.float64)
 
-    @njit
-    def total_energy_periodic(spins: np.ndarray, J: float = 1.0) -> float:
-        L = spins.shape[0]
-        e = 0.0
-        for i in range(L):
-            for j in range(L):
-                for k in range(L):
-                    s = spins[i, j, k]
-                    e -= (
-                        J
-                        * s
-                        * (
-                            spins[(i + 1) % L, j, k]
-                            + spins[i, (j + 1) % L, k]
-                            + spins[i, j, (k + 1) % L]
+        for t in range(barridos):
+            for i in range(L):
+                for j in range(L):
+                    for k in range(L):
+                        s = spins[i, j, k]
+                        vecinos = (
+                            spins[mas[i], j, k]
+                            + spins[menos[i], j, k]
+                            + spins[i, mas[j], k]
+                            + spins[i, menos[j], k]
+                            + spins[i, j, mas[k]]
+                            + spins[i, j, menos[k]]
                         )
-                    )
-        return e
+                        dE = 2 * s * vecinos
+                        if dE <= 0 or np.random.random() < boltzmann[dE // 4]:
+                            spins[i, j, k] = -s
+                            energia += dE
+                            magnetizacion -= 2 * s
+            e[t] = energia / n_sitios
+            m[t] = magnetizacion / n_sitios
+
+        return e, m, spins
 
     @njit
-    def run_ising_3d(
-        L: int, betaJ: float, sweeps: int, snapshot_stride: int, max_snapshots: int
+    def barrer_temperaturas(
+        L: int, temperaturas: np.ndarray, replicas: int, barridos: int, semilla: int
     ):
-        spins = initial_lattice(L)
-        n_sites = L * L * L
+        n_t = temperaturas.shape[0]
+        e = np.empty((n_t, replicas, barridos), dtype=np.float64)
+        m = np.empty((n_t, replicas, barridos), dtype=np.float64)
+        for a in range(n_t):
+            for r in range(replicas):
+                e[a, r], m[a, r], _ = simular(
+                    L, 1.0 / temperaturas[a], barridos, semilla + 1000 * a + r
+                )
+        return e, m
 
-        energy = total_energy_periodic(spins)
-        magnet = spins.sum()
+    return barrer_temperaturas, simular
 
-        energies = np.empty(sweeps, dtype=np.float64)
-        magnetizations = np.empty(sweeps, dtype=np.float64)
-        acceptances = np.empty(sweeps, dtype=np.float64)
-        snapshots = np.empty((max_snapshots, L, L, L), dtype=np.int8)
-        snapshot_steps = np.empty(max_snapshots, dtype=np.int64)
-        snapshot_count = 0
 
-        for t in range(sweeps):
-            accepted = 0
-            for _ in range(n_sites):
-                i = np.random.randint(0, L)
-                j = np.random.randint(0, L)
-                k = np.random.randint(0, L)
+@app.cell
+def _(np):
+    TAMANOS = (4, 6, 8, 10, 12)
+    REPLICAS = 6
+    BARRIDOS = 4000
+    DESCARTE = 800
+    SEMILLA = 7
 
-                dE = delta_energy_periodic(spins, i, j, k)
-                if dE <= 0.0 or np.random.random() < np.exp(-betaJ * dE):
-                    old_s = spins[i, j, k]
-                    spins[i, j, k] = -old_s
-                    energy += dE
-                    magnet += -2 * old_s
-                    accepted += 1
-
-            energies[t] = energy / n_sites
-            magnetizations[t] = magnet / n_sites
-            acceptances[t] = accepted / n_sites
-            if t % snapshot_stride == 0 and snapshot_count < max_snapshots:
-                snapshots[snapshot_count] = spins
-                snapshot_steps[snapshot_count] = t
-                snapshot_count += 1
-
-        return (
-            spins,
-            energies,
-            magnetizations,
-            acceptances,
-            snapshots,
-            snapshot_steps,
-            snapshot_count,
-        )
-
-    return (run_ising_3d,)
+    # Rejilla fina alrededor de la temperatura crítica esperada (~4.5).
+    TEMPERATURAS = np.round(
+        np.concatenate([[3.0, 3.4, 3.8], np.arange(4.1, 4.95, 0.1), [5.3, 5.8]]), 2
+    )
+    # Intervalo de temperaturas donde se ajusta el cruce de U4.
+    AJUSTE = (4.2, 4.8)
+    # Referencias: la primera es el valor del cuaderno; la segunda, Hasenbusch.
+    BETA_NOTEBOOK = 0.2217
+    BETA_HASENBUSCH = 0.22165463
+    U4_HASENBUSCH = 1.0 - 1.60357 / 3.0
+    return (
+        AJUSTE,
+        BARRIDOS,
+        BETA_HASENBUSCH,
+        BETA_NOTEBOOK,
+        DESCARTE,
+        REPLICAS,
+        SEMILLA,
+        TAMANOS,
+        TEMPERATURAS,
+        U4_HASENBUSCH,
+    )
 
 
 @app.cell
 def _(
-    L,
-    betaJ,
-    burn_in,
-    max_snapshots,
+    BARRIDOS,
+    DESCARTE,
+    REPLICAS,
+    SEMILLA,
+    TAMANOS,
+    TEMPERATURAS,
+    barrer_temperaturas,
     np,
-    run_ising_3d,
-    seed,
-    snapshot_stride,
-    sweeps,
 ):
-    np.random.seed(int(seed.value))
-    (
-        final_spins,
-        energies,
-        magnetizations,
-        acceptances,
-        snapshots_all,
-        snapshot_steps_all,
-        snapshot_count,
-    ) = run_ising_3d(
-        int(L.value),
-        float(betaJ.value),
-        int(sweeps.value),
-        int(snapshot_stride.value),
-        int(max_snapshots.value),
-    )
-    snapshots = snapshots_all[:snapshot_count]
-    snapshot_steps = snapshot_steps_all[:snapshot_count]
+    def momentos_por_replica(L: int):
+        """Observables (n_T, replicas) para el tamaño L, con burn-in descartado."""
+        e, m = barrer_temperaturas(L, TEMPERATURAS, REPLICAS, BARRIDOS, SEMILLA)
+        e = e[:, :, DESCARTE:]
+        m = m[:, :, DESCARTE:]
+        n = L**3
+        beta = (1.0 / TEMPERATURAS)[:, None]
+        m_abs = np.abs(m).mean(axis=2)
+        m2 = (m**2).mean(axis=2)
+        m4 = (m**4).mean(axis=2)
+        return {
+            "|m|": m_abs,
+            "e": e.mean(axis=2),
+            "chi": beta * n * (m2 - m_abs**2),
+            "C": beta**2 * n * e.var(axis=2),
+            "U4": 1.0 - m4 / (3.0 * m2**2),
+        }
 
-    burn = min(int(burn_in.value), len(energies) - 1)
-    energies_eq = energies[burn:]
-    magnetizations_eq = magnetizations[burn:]
-    acceptance_eq = acceptances[burn:]
+    observables = {L: momentos_por_replica(L) for L in TAMANOS}
+    return (observables,)
 
-    stats = {
-        "E_mean": float(np.mean(energies_eq)),
-        "E_std": float(np.std(energies_eq)),
-        "|M|_mean": float(np.mean(np.abs(magnetizations_eq))),
-        "|M|_std": float(np.std(np.abs(magnetizations_eq))),
-        "acc_mean": float(np.mean(acceptance_eq)),
-    }
-    return (
-        acceptances,
-        burn,
-        energies,
-        final_spins,
-        magnetizations,
-        snapshot_steps,
-        snapshots,
-        stats,
-    )
+
+@app.cell
+def _(AJUSTE, TAMANOS, TEMPERATURAS, np, observables):
+    def cruce(u_pequena: np.ndarray, u_grande: np.ndarray) -> float:
+        """Cero de la recta que ajusta U4(L grande) - U4(L pequeña) cerca de Tc."""
+        ventana = (TEMPERATURAS >= AJUSTE[0]) & (TEMPERATURAS <= AJUSTE[1])
+        pendiente, ordenada = np.polyfit(
+            TEMPERATURAS[ventana], (u_grande - u_pequena)[ventana], 1
+        )
+        return float(-ordenada / pendiente)
+
+    rng = np.random.default_rng(0)
+    cruces = {}
+    for _chico, _grande in zip(TAMANOS[:-1], TAMANOS[1:]):
+        _u_c = observables[_chico]["U4"]
+        _u_g = observables[_grande]["U4"]
+        _estimado = cruce(_u_c.mean(axis=1), _u_g.mean(axis=1))
+        # Bootstrap sobre las réplicas independientes.
+        _remuestras = []
+        for _ in range(400):
+            _idx_c = rng.integers(0, _u_c.shape[1], _u_c.shape[1])
+            _idx_g = rng.integers(0, _u_g.shape[1], _u_g.shape[1])
+            _remuestras.append(
+                cruce(_u_c[:, _idx_c].mean(axis=1), _u_g[:, _idx_g].mean(axis=1))
+            )
+        cruces[(_chico, _grande)] = (_estimado, float(np.std(_remuestras)))
+    return (cruces,)
 
 
 @app.cell(hide_code=True)
-def _(burn, mo, stats):
-    mo.md(f"""
-    Burn-in aplicado: **{burn}** barridos.
+def _(
+    AJUSTE,
+    BARRIDOS,
+    BETA_HASENBUSCH,
+    BETA_NOTEBOOK,
+    DESCARTE,
+    REPLICAS,
+    TAMANOS,
+    cleandoc,
+    cruces,
+    mo,
+):
+    # Las filas llevan la misma sangría que el resto del texto para que
+    # cleandoc la quite de todas las líneas.
+    _filas = "\n        ".join(
+        f"| {a} y {b} | {t:.3f} ± {err:.3f} | {1 / t:.4f} ± {err / t**2:.4f} |"
+        for (a, b), (t, err) in cruces.items()
+    )
+    mo.md(
+        cleandoc(
+            f"""
+        ## Resultados de la simulación
 
-    - $\\langle E/N \\rangle$: **{stats["E_mean"]:.4f} ± {stats["E_std"]:.4f}**
-    - $\\langle |M|/N \\rangle$: **{stats["|M|_mean"]:.4f} ± {stats["|M|_std"]:.4f}**
-    - Aceptación media (post burn-in): **{stats["acc_mean"]:.3f}**
-    """)
+        Parámetros: $L \\in \\{{{", ".join(str(L) for L in TAMANOS)}\\}}$,
+        {REPLICAS} réplicas independientes por temperatura, {BARRIDOS} barridos
+        por réplica y {DESCARTE} barridos de termalización descartados. Cada
+        réplica parte de la red ordenada. Las barras de error son la desviación
+        estándar de la media entre réplicas.
+
+        ### Cruce del cumulante de Binder
+
+        Para $T>T_c$ el cumulante $U_4$ decrece con $L$ y para $T<T_c$ crece, de
+        modo que las curvas de dos tamaños se cortan cerca de $T_c$. Cada cruce
+        es el cero de una recta ajustada a $U_4(L_2)-U_4(L_1)$ en
+        ${AJUSTE[0]}\\le T\\le {AJUSTE[1]}$. La incertidumbre es un bootstrap
+        sobre las réplicas.
+
+        | Tamaños | $T_\\times$ | $\\beta_\\times = 1/T_\\times$ |
+        | --- | --- | --- |
+        {_filas}
+
+        Referencias: la aproximación $\\beta_c \\approx {BETA_NOTEBOOK}$
+        ($T_c \\approx {1 / BETA_NOTEBOOK:.3f}$) y
+        $\\beta_c = {BETA_HASENBUSCH}(8)$ de Hasenbusch
+        (Phys. Rev. B 82, 174433, 2010), es decir
+        $T_c = {1 / BETA_HASENBUSCH:.4f}$.
+        """
+        )
+    )
     return
 
 
 @app.cell
-def _(acceptances, burn, energies, magnetizations, np, plt):
-    t = np.arange(len(energies))
+def _(
+    BETA_HASENBUSCH,
+    BETA_NOTEBOOK,
+    TAMANOS,
+    TEMPERATURAS,
+    U4_HASENBUSCH,
+    np,
+    observables,
+    plt,
+):
+    _paneles = [
+        ("|m|", r"$\langle |m| \rangle$"),
+        ("e", r"$\langle e \rangle = \langle E/N \rangle$"),
+        ("chi", r"$\chi$"),
+        ("C", r"$C$"),
+        ("U4", r"$U_4$"),
+    ]
+    _colores = plt.cm.viridis(np.linspace(0.0, 0.9, len(TAMANOS)))
 
-    _fig, axes = plt.subplots(3, 1, figsize=(10, 9), sharex=True)
+    _fig, _ejes = plt.subplots(2, 3, figsize=(12, 7), sharex=True)
+    _ejes = _ejes.ravel()
+    for _eje, (_clave, _etiqueta) in zip(_ejes, _paneles):
+        for _L, _color in zip(TAMANOS, _colores):
+            _datos = observables[_L][_clave]
+            _eje.errorbar(
+                TEMPERATURAS,
+                _datos.mean(axis=1),
+                yerr=_datos.std(axis=1, ddof=1) / np.sqrt(_datos.shape[1]),
+                marker="o",
+                ms=3,
+                lw=1,
+                capsize=2,
+                color=_color,
+                label=f"L={_L}",
+            )
+        _eje.axvline(1 / BETA_HASENBUSCH, color="k", ls="--", lw=1)
+        _eje.axvline(1 / BETA_NOTEBOOK, color="tab:red", ls=":", lw=1)
+        _eje.set_ylabel(_etiqueta)
+        _eje.grid(alpha=0.3)
+        _eje.set_xlabel("$T$ ($J/k_B$)")
+    _ejes[4].axhline(U4_HASENBUSCH, color="tab:orange", lw=1)
+    _ejes[0].legend()
 
-    axes[0].plot(t, energies, lw=1.2)
-    axes[0].axvline(burn, color="k", ls="--", lw=1)
-    axes[0].set_ylabel("E/N")
-    axes[0].grid(alpha=0.3)
-
-    axes[1].plot(t, magnetizations, lw=1.2)
-    axes[1].axvline(burn, color="k", ls="--", lw=1)
-    axes[1].set_ylabel("M/N")
-    axes[1].grid(alpha=0.3)
-
-    axes[2].plot(t, acceptances, lw=1.2)
-    axes[2].axvline(burn, color="k", ls="--", lw=1)
-    axes[2].set_ylabel("Aceptación")
-    axes[2].set_xlabel("Barrido")
-    axes[2].grid(alpha=0.3)
+    _zoom = _ejes[5]
+    _ventana = (TEMPERATURAS >= 4.0) & (TEMPERATURAS <= 5.0)
+    for _L, _color in zip(TAMANOS, _colores):
+        _datos = observables[_L]["U4"]
+        _zoom.errorbar(
+            TEMPERATURAS[_ventana],
+            _datos.mean(axis=1)[_ventana],
+            yerr=(_datos.std(axis=1, ddof=1) / np.sqrt(_datos.shape[1]))[_ventana],
+            marker="o",
+            ms=3,
+            lw=1,
+            capsize=2,
+            color=_color,
+            label=f"L={_L}",
+        )
+    _zoom.axvline(1 / BETA_HASENBUSCH, color="k", ls="--", lw=1, label="Hasenbusch")
+    _zoom.axvline(1 / BETA_NOTEBOOK, color="tab:red", ls=":", lw=1, label="0.2217")
+    _zoom.axhline(U4_HASENBUSCH, color="tab:orange", lw=1, label="$U_4^*$")
+    _zoom.set_ylabel(r"$U_4$ (ampliación)")
+    _zoom.set_xlabel("$T$ ($J/k_B$)")
+    _zoom.grid(alpha=0.3)
+    _zoom.legend(fontsize=8)
 
     _fig.tight_layout()
-    plt.show()
+    _fig
     return
 
 
-@app.cell
-def _(final_spins, plt):
-    lattice_size = final_spins.shape[0]
-    k = lattice_size // 2
+@app.cell(hide_code=True)
+def _(BETA_HASENBUSCH, U4_HASENBUSCH, cleandoc, cruces, mo):
+    _t_min = min(t for t, _ in cruces.values())
+    _t_max = max(t for t, _ in cruces.values())
+    mo.md(
+        cleandoc(
+            rf"""
+        Líneas verticales: $T_c=1/\beta_c$ con el $\beta_c$ de Hasenbusch
+        (discontinua negra) y con $\beta_c\approx 0.2217$ (punteada roja). La
+        línea naranja es $U_4^*=1-1.60357/3 = {U4_HASENBUSCH:.4f}$, el valor
+        universal del cumulante en $T_c$ que sale de $U_4^*=1.60357(1)$ en la
+        forma $\langle m^4\rangle/\langle m^2\rangle^2$ de Hasenbusch.
 
-    _fig, ax = plt.subplots(figsize=(5, 5))
-    im = ax.imshow(final_spins[:, :, k], cmap="bwr", vmin=-1, vmax=1, origin="lower")
-    ax.set_title(f"Corte z={k} de la configuración final")
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-    plt.show()
-    return
-
-
-@app.cell
-def _(px, render_step, snapshot_steps, snapshots):
-    stride = int(render_step.value)
-    records = []
-    for frame_idx in range(len(snapshots)):
-        sampled = snapshots[frame_idx][::stride, ::stride, ::stride]
-        x, y, z = sampled.nonzero()
-        spins = sampled[x, y, z]
-        sweep = int(snapshot_steps[frame_idx])
-        for idx in range(len(x)):
-            records.append(
-                {
-                    "x": int(x[idx]),
-                    "y": int(y[idx]),
-                    "z": int(z[idx]),
-                    "spin": "up" if spins[idx] > 0 else "down",
-                    "sweep": sweep,
-                }
-            )
-
-    fig3d = px.scatter_3d(
-        records,
-        x="x",
-        y="y",
-        z="z",
-        color="spin",
-        animation_frame="sweep",
-        color_discrete_map={"up": "crimson", "down": "royalblue"},
-        opacity=0.85,
-        title="Configuración 3D por barrido",
+        - $\langle |m| \rangle$ pasa de $\approx 1$ a $\approx 0$. La transición se
+          afila al crecer $L$.
+        - $\chi$ y $C$ tienen un máximo cerca de $T_c$ que crece con $L$. En
+          volumen finito ninguno diverge.
+        - Los cruces de $U_4$ caen entre ${_t_min:.2f}$ y ${_t_max:.2f}$, por
+          debajo de $T_c={1 / BETA_HASENBUSCH:.3f}$, y $U_4$ en $T_c$ queda por
+          encima de $U_4^*$ para todo $L$ simulado. Es el efecto de las
+          correcciones a la escala de tamaño finito: cerca de $T_c$,
+          $U_4$ difiere de $U_4^*$ en un término $\propto L^{{-\omega}}$.
+          Hasenbusch halla $\omega=0.832(6)$ y, para el modelo de Ising de
+          espín 1/2, una amplitud negativa para la razón de momentos, que
+          equivale a un $U_4$ por encima de $U_4^*$. Con $L\le 12$ y pocas
+          réplicas, los cruces quedan entre
+          ${1 / BETA_HASENBUSCH - _t_max:.2f}$ y
+          ${1 / BETA_HASENBUSCH - _t_min:.2f}$ por debajo de $T_c$, y los de los
+          tamaños mayores tienen una incertidumbre estadística más grande.
+        """
+        )
     )
-    fig3d.update_traces(marker={"size": 4})
+    return
+
+
+@app.cell
+def _(np, simular):
+    L_VISTA = 8
+    TEMPERATURAS_VISTA = (3.0, 4.0, 4.5, 5.0, 7.0)
+
+    def red_en_equilibrio(temperatura: float) -> np.ndarray:
+        return simular(L_VISTA, 1.0 / temperatura, 1500, 11)[2]
+
+    redes = {T: red_en_equilibrio(T) for T in TEMPERATURAS_VISTA}
+    return L_VISTA, TEMPERATURAS_VISTA, redes
+
+
+@app.cell
+def _(L_VISTA, TEMPERATURAS_VISTA, go, np, redes):
+    _x, _y, _z = np.indices((L_VISTA,) * 3).reshape(3, -1)
+
+    def _traza(T: float, signo: int, nombre: str, color: str):
+        _sel = redes[T].ravel() == signo
+        return go.Scatter3d(
+            x=_x[_sel],
+            y=_y[_sel],
+            z=_z[_sel],
+            mode="markers",
+            name=nombre,
+            marker={"size": 5, "color": color, "opacity": 0.85},
+        )
+
+    def _cuadro(T: float):
+        return [
+            _traza(T, 1, "up", "crimson"),
+            _traza(T, -1, "down", "royalblue"),
+        ]
+
+    _primero = TEMPERATURAS_VISTA[0]
+    fig3d = go.Figure(
+        data=_cuadro(_primero),
+        frames=[go.Frame(data=_cuadro(T), name=f"{T:g}") for T in TEMPERATURAS_VISTA],
+    )
     fig3d.update_layout(
+        title=f"Configuración 3D en equilibrio (L={L_VISTA}) para distintas T",
         scene={
             "xaxis_title": "x",
             "yaxis_title": "y",
@@ -340,19 +431,60 @@ def _(px, render_step, snapshot_steps, snapshots):
         margin={"l": 0, "r": 0, "b": 0, "t": 45},
         height=560,
         legend_title_text="Spin",
+        updatemenus=[
+            {
+                "type": "buttons",
+                "showactive": False,
+                "x": 0.02,
+                "y": 0.02,
+                "buttons": [
+                    {
+                        "label": "Reproducir",
+                        "method": "animate",
+                        "args": [None, {"frame": {"duration": 1200, "redraw": True}}],
+                    }
+                ],
+            }
+        ],
+        sliders=[
+            {
+                "currentvalue": {"prefix": "T = "},
+                "steps": [
+                    {
+                        "label": f"{T:g}",
+                        "method": "animate",
+                        "args": [
+                            [f"{T:g}"],
+                            {"mode": "immediate", "frame": {"redraw": True}},
+                        ],
+                    }
+                    for T in TEMPERATURAS_VISTA
+                ],
+            }
+        ],
     )
+    fig3d
     return
 
 
 @app.cell(hide_code=True)
-def _(cleandoc, mo):
+def _(L_VISTA, cleandoc, mo):
     mo.md(
-        cleandoc(r"""
+        cleandoc(
+            f"""
+        Cada cuadro es una red de $L={L_VISTA}$ después de 1500 barridos a la
+        temperatura indicada en el deslizador. Por debajo de $T_c\\approx 4.51$
+        domina un solo signo, cerca de $T_c$ aparecen dominios de ambos signos y
+        por encima los espines son casi independientes.
+
         Notas:
         - Se usan condiciones de frontera periódicas.
-        - El tiempo de Monte Carlo está medido en barridos completos (un intento por sitio en promedio).
-        - La celda de exportación (frames/video) se deja fuera del flujo principal de clase.
-    """)
+        - El tiempo de Monte Carlo se mide en barridos completos: un intento de
+          cambio por sitio, recorriendo la red en orden.
+        - Con $L\\le 12$ las curvas tienen efectos de tamaño finito marcados. La
+          comparación con $T_c$ del límite termodinámico es cualitativa.
+        """
+        )
     )
     return
 
