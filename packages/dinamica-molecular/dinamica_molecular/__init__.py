@@ -1,8 +1,5 @@
-import k_p__potencial
-import simulacion_3d
+"""Dinámica molecular con velocity Verlet: Lennard-Jones y enlace fuerte (K)."""
 
-__version__ = "1.0.0"
+from . import analisis, animacion, lennard_jones, tight_binding
 
-print("Dinamica Molecular v{}".format(__version__))
-k_p__potencial()
-simulacion_3d()
+__all__ = ["analisis", "animacion", "lennard_jones", "tight_binding"]
