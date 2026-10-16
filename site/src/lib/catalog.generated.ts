@@ -280,5 +280,27 @@ export const courses: Course[] = [
         ]
       }
     ]
+  },
+  {
+    "id": "introduccion-a-sismologia",
+    "title": "Introduccion a la sismologia",
+    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/introduccion-a-sismologia",
+    "sections": [
+      {
+        "id": "procesamiento-de-senales",
+        "title": "Procesamiento de senales",
+        "notebooks": [
+          {
+            "title": "Procesamiento de registros SAC con ObsPy",
+            "summary": "Registros del terremoto de Pisco 2007: seccion sismica por distancia, espectros y picado de la onda P con STA/LTA.",
+            "slug": "introduccion-a-sismologia/procesamiento-de-senales/procesamiento-sac",
+            "path": "packages/introduccion-a-sismologia/lab3/procesamiento_sac.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/introduccion-a-sismologia/lab3/procesamiento_sac.py",
+            "assetPath": "/notebooks/introduccion-a-sismologia/procesamiento-de-senales/procesamiento-sac/"
+          }
+        ]
+      }
+    ]
   }
 ];
