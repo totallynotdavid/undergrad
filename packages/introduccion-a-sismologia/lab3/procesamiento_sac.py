@@ -16,7 +16,7 @@ def _():
     from obspy.signal.trigger import classic_sta_lta
     from obspy.taup import TauPyModel
 
-    # SAC guarda delta en coma flotante simple. ObsPy lo redondea y avisa.
+    # ObsPy redondea el delta de precisión simple de SAC y emite esta advertencia.
     warnings.filterwarnings("ignore", message="Sample spacing read from SAC file")
 
     DATOS = Path(__file__).resolve().parent / "archivos"
