@@ -8,15 +8,7 @@
     "prepare": "svelte-kit sync || echo ''",
     "dev": "vite dev",
     "preview": "vite preview",
-    "build": "vite build",
-    "build:pages": "bun run export:notebooks && vite build",
-    "data": "uv run python ../scripts/export_notebooks.py data",
-    "export:notebooks": "uv run python ../scripts/export_notebooks.py export --clean",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "oxlint",
-    "fmt": "oxfmt",
-    "test": "vitest run"
+    "build": "vite build"
   },
   "dependencies": {
     "@fontsource-variable/red-hat-mono": "^5.3.0",
