@@ -181,7 +181,9 @@ def _(DIMENSIONES, N_MUESTRAS, dedent, estimado, exacto, mo, n_pico, aciertos, t
     # Las filas llevan la misma sangría que el texto para que dedent la quite.
     _filas = "\n    ".join(
         f"| {n} | {ex:.6f} | {est:.6f} | {int(h)} | {p:.3e} |"
-        for n, ex, est, h, p in zip(DIMENSIONES, exacto, estimado, aciertos, tasa)
+        for n, ex, est, h, p in zip(
+            DIMENSIONES, exacto, estimado, aciertos, tasa, strict=True
+        )
         if n in (2, 3, 4, 5, 6, 8, 10, 12, 15, 20)
     )
     mo.md(
@@ -294,7 +296,7 @@ def _(DIMENSIONES, N_MUESTRAS, aciertos, dedent, mo, tasa):
     _sin_aciertos = ", ".join(str(int(n)) for n in DIMENSIONES[aciertos == 0])
     _filas = "\n    ".join(
         f"| {n} | {p:.3e} | {(1 - p) / (p * 0.01**2):.3e} |"
-        for n, p in zip(DIMENSIONES, tasa)
+        for n, p in zip(DIMENSIONES, tasa, strict=True)
         if n in (2, 5, 10, 15, 20)
     )
     mo.md(

@@ -148,7 +148,7 @@ def _(T0, md, np, periodo_exacto, periodo_numerico, periodo_serie):
     _serie = periodo_serie(_theta0)
     _filas = [
         f"| {d} | {e:.5f} | {n:.5f} | {100 * abs(T0 - e) / e:.2f} | {100 * abs(s - e) / e:.3f} |"
-        for d, e, n, s in zip(amplitudes_deg, _exacto, _numerico, _serie)
+        for d, e, n, s in zip(amplitudes_deg, _exacto, _numerico, _serie, strict=True)
     ]
     md(
         "\n".join(

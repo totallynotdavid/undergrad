@@ -156,7 +156,7 @@ def _(X0, adelante, adelante_3, centrada, derivada_exacta, f, np):
 
     def pendiente(nombre, h_max, h_min):
         """Pendiente de log e contra log h en h_min <= h <= h_max."""
-        _m = (H <= h_max) & (H >= h_min)
+        _m = (h_max >= H) & (h_min <= H)
         return np.polyfit(np.log10(H[_m]), np.log10(errores[nombre][_m]), 1)[0]
 
     pendientes = {

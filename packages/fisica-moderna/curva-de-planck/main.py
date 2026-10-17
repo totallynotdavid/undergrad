@@ -266,7 +266,7 @@ def _(C, H, K, mo, np, planck):
 
     pasos = []
     for _T in (2000, 6000, 10000, 14000):
-        _lam_max = maximo(lambda lam: planck(lam, _T), 10.0, 20000.0)
+        _lam_max = maximo(lambda lam, T=_T: planck(lam, T), 10.0, 20000.0)
         pasos.append(
             f"| {_T} | {_lam_max:.2f} | {b_wien_mk / _T * 1e9:.2f} "
             f"| {planck(_lam_max, _T):.4g} |"

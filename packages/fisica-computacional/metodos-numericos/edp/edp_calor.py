@@ -178,10 +178,10 @@ def _(explicito):
 @app.cell
 def _(R_EXPLICITOS, ALFA, dx, explicitos, fourier, plt, x):
     _fig, _ax = plt.subplots(1, 3, figsize=(13, 4), sharey=True)
-    for _a, _r in zip(_ax, R_EXPLICITOS):
+    for _a, _r in zip(_ax, R_EXPLICITOS, strict=True):
         _t, _T = explicitos[_r]
         for _instante in (0.1, 0.3, 0.6, 1.5):
-            _k = int(round(_instante / (_t[1] - _t[0])))
+            _k = round(_instante / (_t[1] - _t[0]))
             (_linea,) = _a.plot(x, _T[_k], "o-", ms=3, lw=1, label=f"t={_t[_k]:.2f}")
             _a.plot(x, fourier(_t[_k]), "k", lw=0.8)
         _a.set_ylim(-20, 120)
@@ -302,10 +302,10 @@ def _(cn, explicitos, fourier, plt, x):
     _ax.plot(x, fourier(_instante), "k", lw=1.5, label="Fourier")
     for _r in (0.6, 5.0):
         _t, _T = cn[_r]
-        _k = int(round(_instante / (_t[1] - _t[0])))
+        _k = round(_instante / (_t[1] - _t[0]))
         _ax.plot(x, _T[_k], "o-", ms=3, lw=1, label=f"Crank–Nicolson, r={_r}")
     _t, _T = explicitos[0.4]
-    _k = int(round(_instante / (_t[1] - _t[0])))
+    _k = round(_instante / (_t[1] - _t[0]))
     _ax.plot(x, _T[_k], "s--", ms=3, lw=1, label="explícito, r=0.4")
     _ax.set_xlabel("x")
     _ax.set_ylabel("T(x, t)")

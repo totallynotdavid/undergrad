@@ -168,7 +168,7 @@ def _(estimador, np, problemas):
 @app.cell
 def _(TAMANOS, error_estandar, pendientes, plt, rms):
     _fig, _ax = plt.subplots(1, 3, figsize=(13, 4), sharex=True)
-    for _a, _nombre in zip(_ax, rms):
+    for _a, _nombre in zip(_ax, rms, strict=True):
         _a.loglog(TAMANOS, rms[_nombre], "o-", label="RMS de 200 corridas")
         _a.loglog(TAMANOS, error_estandar[_nombre], "s--", label="error estándar")
         _a.loglog(

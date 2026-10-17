@@ -59,7 +59,7 @@ def Wavelength(start_wavelength, end_wavelength=None, filter=None):
                 start_wavelength[1], start_wavelength[2], start_wavelength[3]
             )
         else:
-            wv_type = "%d (Chosen Band)\n" % (-1 * wv_id)
+            wv_type = f"{int(-1 * wv_id)} (Chosen Band)\n"
             data = None
             min_wv = start_wavelength[1]
             max_wv = start_wavelength[2]
@@ -72,14 +72,12 @@ def Wavelength(start_wavelength, end_wavelength=None, filter=None):
             ):
                 raise sixs_exceptions.ParameterError(
                     "wavelength",
-                    "Wavelength must be between %f and %f"
-                    % (
-                        PredefinedWavelengths.MIN_ALLOWABLE_WAVELENGTH,
-                        PredefinedWavelengths.MAX_ALLOWABLE_WAVELENGTH,
-                    ),
-                )
+                    "Wavelength must be between "
+                    f"{PredefinedWavelengths.MIN_ALLOWABLE_WAVELENGTH:f} and "
+                    f"{PredefinedWavelengths.MAX_ALLOWABLE_WAVELENGTH:f}",
+                ) from None
             wv_type = "-1"
-            data = "%f" % start_wavelength
+            data = f"{start_wavelength:f}"
             min_wv = start_wavelength
             max_wv = start_wavelength
         else:
@@ -91,18 +89,16 @@ def Wavelength(start_wavelength, end_wavelength=None, filter=None):
             ):
                 raise sixs_exceptions.ParameterError(
                     "wavelength",
-                    "Wavelength must be between %f and %f"
-                    % (
-                        PredefinedWavelengths.MIN_ALLOWABLE_WAVELENGTH,
-                        PredefinedWavelengths.MAX_ALLOWABLE_WAVELENGTH,
-                    ),
-                )
+                    "Wavelength must be between "
+                    f"{PredefinedWavelengths.MIN_ALLOWABLE_WAVELENGTH:f} and "
+                    f"{PredefinedWavelengths.MAX_ALLOWABLE_WAVELENGTH:f}",
+                ) from None
             min_wv = start_wavelength
             max_wv = end_wavelength
             if filter is None:
                 # They haven't given a filter, so assume filter is constant at 1
                 wv_type = "0 constant filter function"
-                data = "%f %f" % (start_wavelength, end_wavelength)
+                data = f"{start_wavelength:f} {end_wavelength:f}"
             else:
                 # Filter has been given, so we must use it.
                 # We check filter has been given at 2.5nm intervals
@@ -113,23 +109,12 @@ def Wavelength(start_wavelength, end_wavelength=None, filter=None):
                     raise sixs_exceptions.ParameterError(
                         "wavelength",
                         "You must provide a filter value at 2.5nm (0.0025um) intervals, including both the start and end wavelengths.",
-                    )
+                    ) from None
                 wv_type = "1 User's defined filtered function"
-                data = """%f %f
-    %s""" % (
-                    start_wavelength,
-                    end_wavelength,
-                    " ".join(map(str, filter)),
-                )
+                values = " ".join(map(str, filter))
+                data = f"{start_wavelength:f} {end_wavelength:f}\n    {values}"
 
-    if data is None:
-        return_string = wv_type
-    else:
-        return_string = """%s
-%s\n""" % (
-            wv_type,
-            data,
-        )
+    return_string = wv_type if data is None else f"{wv_type}\n{data}\n"
 
     return (return_string, min_wv, max_wv)
 
