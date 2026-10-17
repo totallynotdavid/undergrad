@@ -33,20 +33,17 @@ export function applyFilters(courses: Course[], filters: Filters): Course[] {
   const needle = fold(filters.query.trim());
   return courses
     .filter((course) => !filters.courseId || course.id === filters.courseId)
-    .map((course) => ({
-      ...course,
-      sections: course.sections
-        .map((section) => ({
-          ...section,
-          notebooks: section.notebooks.filter(
-            (notebook) =>
-              !needle ||
-              fold(
-                `${notebook.title} ${notebook.summary} ${notebook.path}`,
-              ).includes(needle),
-          ),
-        }))
-        .filter((section) => section.notebooks.length > 0),
-    }))
-    .filter((course) => course.sections.length > 0);
+    .flatMap((course) => {
+      const sections = course.sections.flatMap((section) => {
+        const notebooks = section.notebooks.filter(
+          (notebook) =>
+            !needle ||
+            fold(
+              `${notebook.title} ${notebook.summary} ${notebook.path}`,
+            ).includes(needle),
+        );
+        return notebooks.length > 0 ? [{ ...section, notebooks }] : [];
+      });
+      return sections.length > 0 ? [{ ...course, sections }] : [];
+    });
 }
