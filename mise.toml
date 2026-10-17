@@ -1,28 +1,100 @@
 [tools]
 bun = "1.4.3"
-python = "3.14"
-ruff = "0.17.0"
+python = "3.14.8"
 uv = "0.13.1"
 
-[tasks.test-scripts]
+[tasks.install]
+description = "Install the Python workspace and the site dependencies from their lockfiles"
+run = [
+  "uv sync --locked --all-packages --all-groups",
+  "bun install --cwd site --frozen-lockfile",
+]
+
+[tasks.lint]
+description = "Check Python, site code, notebooks and formatting without writing"
+depends = ["lint:*"]
+
+[tasks."lint:py"]
+description = "Check Python code with Ruff"
+run = [
+  "uv run --locked ruff check --no-fix .",
+  "uv run --locked ruff format --check .",
+]
+
+[tasks."lint:web"]
+description = "Check the site code with Oxlint"
+dir = "site"
+run = "bunx oxlint --deny-warnings"
+
+[tasks."lint:fmt"]
+description = "Check Markdown, JSON, YAML and site source formatting with Oxfmt"
+run = "site/node_modules/.bin/oxfmt --check"
+
+[tasks."lint:catalog"]
+description = "Check that the generated site catalog matches notebooks.toml"
+run = "uv run --locked python scripts/export_notebooks.py data --check"
+
+[tasks."lint:notebooks"]
+description = "Validate notebooks.toml and run marimo check on every listed notebook"
+run = "uv run --locked python scripts/check_notebooks.py"
+
+[tasks.fix]
+description = "Apply safe lint fixes and format Python, site code and documents"
+run = [
+  "uv run --locked ruff check --fix .",
+  "uv run --locked ruff format .",
+  "cd site && bunx oxlint --fix",
+  "site/node_modules/.bin/oxfmt",
+]
+
+[tasks.typecheck]
+description = "Type-check the site with svelte-check"
+dir = "site"
+run = [
+  "bunx svelte-kit sync",
+  "bunx svelte-check --tsconfig ./tsconfig.json",
+]
+
+[tasks.test]
+description = "Run every test suite"
+depends = ["test:*"]
+
+[tasks."test:scripts"]
 description = "Test the notebook export script"
 run = "uv run --locked python -m unittest discover -s scripts"
 
-[tasks.test-notebooks]
+[tasks."test:notebooks"]
 description = "Run the statistical mechanics and numerical methods notebooks and check their results"
 run = [
   "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica",
   "uv run --locked --package fisica-computacional python -m unittest discover -s packages/fisica-computacional",
 ]
 
-[tasks.test-dinamica-molecular]
+[tasks."test:dinamica-molecular"]
 description = "Test the molecular dynamics package"
 run = "uv run --locked --package dinamica-molecular python -m unittest discover -s packages/dinamica-molecular/tests"
 
-[tasks.test-tsunamis]
+[tasks."test:tsunamis"]
 description = "Test the tsunami deformation code"
 run = "uv run --locked --package topicos-avanzados-tsunamis python -m unittest discover -s packages/topicos-avanzados-tsunamis/tests"
 
-[tasks.check-notebooks]
-description = "Check every notebook listed in notebooks.toml"
-run = "uv run python scripts/check_notebooks.py"
+[tasks."test:web"]
+description = "Test the site with Vitest"
+dir = "site"
+run = "bunx vitest run"
+
+[tasks.data]
+description = "Regenerate the site catalog data from notebooks.toml"
+run = "uv run --locked python scripts/export_notebooks.py data"
+
+[tasks.build]
+description = "Export the notebooks and build the static site into site/build"
+wait_for = ["typecheck", "test"]
+run = [
+  "uv run --locked python scripts/export_notebooks.py export --clean",
+  "bun run --cwd site build",
+]
+
+[tasks.check]
+description = "Run lint, typecheck, test and build; the entry point for CI and for a contributor before a push"
+depends = ["lint", "typecheck", "test", "build"]
