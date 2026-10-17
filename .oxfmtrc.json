@@ -1,5 +1,5 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "$schema": "./site/node_modules/oxfmt/configuration_schema.json",
   "useTabs": false,
   "tabWidth": 2,
   "printWidth": 80,
@@ -15,5 +15,9 @@
   "experimentalSortImports": {
     "newlinesBetween": true
   },
-  "ignorePatterns": ["src/lib/catalog.generated.ts"]
+  "ignorePatterns": [
+    "**/*.toml",
+    "**/*.geojson",
+    "site/src/lib/catalog.generated.ts"
+  ]
 }
