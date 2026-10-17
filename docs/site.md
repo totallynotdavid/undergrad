@@ -1,19 +1,20 @@
 # Site
 
 The site is a prerendered SvelteKit application in [`site/`](../site/). The
-catalog generator writes the course and notebook data before the site build.
-Before a site build, follow the catalog validation, data generation, and export
-workflow in [`notebooks.md`](notebooks.md).
+catalog generator writes the course and notebook data to a committed file that
+the site build reads. Before a site build, follow the catalog validation, data
+generation, and export workflow in [`notebooks.md`](notebooks.md).
 
-Install the site dependencies and build it:
+Install the dependencies (see [`environment.md`](environment.md)), then export
+the notebooks and build the site:
 
 ```sh
-bun install --cwd site --frozen-lockfile
-bun run --cwd site build
+mise run build
 ```
 
-The build writes the static site to `site/build`. After generating the catalog
-data and exported notebook assets as described in
+The build writes the static site to `site/build`. Check the site's code with
+`mise run lint:web`, `mise run typecheck` and `mise run test:web`. After
+generating the catalog data and exported notebook assets as described in
 [`notebooks.md`](notebooks.md), start the Vite development server:
 
 ```sh

@@ -22,12 +22,14 @@ receive a site asset path.
 
 [`scripts/export_notebooks.py`](../scripts/export_notebooks.py) owns validation,
 catalog generation, and notebook export. The `validate` command checks only the
-manifest. The `data` command regenerates the frontend catalog. The `export`
-command checks each published notebook, runs it with `marimo export html`, and
-writes its results as one static page. A notebook whose check or export fails
-fails the command, and its page is not written. So does a page over 1,000,000
-bytes (`MAX_PAGE_BYTES`), because marimo embeds every figure in the page as a
-base64 PNG. Lower the figure resolution or plot fewer points to fit.
+manifest. The `data` command regenerates the frontend catalog, and
+`data --check` fails when the committed catalog is out of date without writing
+it. The `export` command does not touch the catalog. It checks each published
+notebook, runs it with `marimo export html`, and writes its results as one
+static page. A notebook whose check or export fails fails the command, and its
+page is not written. So does a page over 1,000,000 bytes (`MAX_PAGE_BYTES`),
+because marimo embeds every figure in the page as a base64 PNG. Lower the figure
+resolution or plot fewer points to fit.
 
 Each `[[redirects]]` entry in the catalog becomes a small static page at the old
 slug. It refreshes to the new page through a relative link, so it works under

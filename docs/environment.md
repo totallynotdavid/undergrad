@@ -1,18 +1,12 @@
 # Environment
 
 The repository uses the tool versions in [`mise.toml`](../mise.toml): Bun,
-Python, Ruff, and uv. The Python workspace requires Python 3.14. Install the
-tools and synchronize all course packages with:
+Python, and uv. The Python workspace requires Python 3.14. Install the tools,
+then the locked Python workspace and site dependencies:
 
 ```sh
 mise install -y
-uv sync --all-packages
-```
-
-Install the site dependencies separately:
-
-```sh
-bun install --cwd site --frozen-lockfile
+mise run install
 ```
 
 The GDAL raster notebook needs the native GDAL library and development headers.
