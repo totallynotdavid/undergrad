@@ -18,7 +18,7 @@ The repository-wide check reads [`notebooks.toml`](../notebooks.toml), validates
 every catalog path, and checks every listed notebook:
 
 ```sh
-mise run check-notebooks
+mise run lint:notebooks
 ```
 
 ## Catalog entries
@@ -39,11 +39,13 @@ from = "curso/seccion/pagina-vieja"
 to = "curso/seccion/pagina-nueva"
 ```
 
-After changing the catalog, validate it and regenerate the site data:
+After changing the catalog, validate it and regenerate the site data, then
+commit the regenerated `site/src/lib/catalog.generated.ts`.
+`mise run lint:catalog` fails when that file is out of date:
 
 ```sh
 uv run python scripts/export_notebooks.py validate
-uv run python scripts/export_notebooks.py data
+mise run data
 ```
 
 The export command checks every entry with `export = true`, runs it, and writes
@@ -63,7 +65,7 @@ stays under the size limit.
 Test the export script itself with:
 
 ```sh
-mise run test-scripts
+mise run test:scripts
 ```
 
 The statistical mechanics notebooks compute their results with numba at export
@@ -72,14 +74,20 @@ interpolation and floating point) have tests that run each notebook and check
 its numbers:
 
 ```sh
-mise run test-notebooks
+mise run test:notebooks
 ```
 
 The tsunami notebook imports the `tsunamis` module of its package. Test that
 module with:
 
 ```sh
-mise run test-tsunamis
+mise run test:tsunamis
+```
+
+The molecular dynamics package has its own tests:
+
+```sh
+mise run test:dinamica-molecular
 ```
 
 Native extensions and external services are local requirements. See

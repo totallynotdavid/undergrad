@@ -7,7 +7,7 @@ computations. Set up the workspace and open a numerical methods notebook with
 
 ```sh
 mise install -y
-uv sync --all-packages
+mise run install
 uv run --package fisica-computacional marimo edit packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_simple.py
 ```
 
