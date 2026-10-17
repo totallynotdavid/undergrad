@@ -139,7 +139,7 @@ def _(ESTADO_INICIAL, integrar, mo, np, parametros):
     _filas = [f"| {_pasos[0]} | {_errores[0]:.3e} | |"]
     _filas += [
         f"| {_dt} | {_e:.3e} | {_e0 / _e:.1f} |"
-        for _dt, _e0, _e in zip(_pasos[1:], _errores, _errores[1:])
+        for _dt, _e0, _e in zip(_pasos[1:], _errores[:-1], _errores[1:], strict=True)
     ]
     _tabla = "\n".join(_filas)
     mo.md(
@@ -260,7 +260,9 @@ def _(mo):
 @app.cell
 def _(D0, DT, en_atractor, integrar, lambdas, np, parametros, plt):
     _a0 = en_atractor[:, 0]
-    _par = integrar(np.stack([_a0, _a0 + [D0, 0.0, 0.0]], axis=1), DT, 4000, parametros)
+    _par = integrar(
+        np.stack([_a0, _a0 + np.array([D0, 0.0, 0.0])], axis=1), DT, 4000, parametros
+    )
     _d = np.linalg.norm(_par[:, :, 1] - _par[:, :, 0], axis=1)
     _t = DT * np.arange(_d.size)
 

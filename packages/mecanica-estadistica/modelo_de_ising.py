@@ -7,13 +7,14 @@ app = marimo.App(width="medium")
 @app.cell
 def _():
     from inspect import cleandoc
+    from itertools import pairwise
 
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
     import plotly.graph_objects as go
 
-    return cleandoc, go, mo, np, plt
+    return cleandoc, go, mo, np, pairwise, plt
 
 
 @app.cell
@@ -195,10 +196,10 @@ def _(
 
 
 @app.cell
-def _(AJUSTE, TAMANOS, TEMPERATURAS, np, observables):
+def _(AJUSTE, TAMANOS, TEMPERATURAS, np, observables, pairwise):
     def cruce(u_pequena: np.ndarray, u_grande: np.ndarray) -> float:
         """Cero de la recta que ajusta U4(L grande) - U4(L pequeña) cerca de Tc."""
-        ventana = (TEMPERATURAS >= AJUSTE[0]) & (TEMPERATURAS <= AJUSTE[1])
+        ventana = (AJUSTE[0] <= TEMPERATURAS) & (AJUSTE[1] >= TEMPERATURAS)
         pendiente, ordenada = np.polyfit(
             TEMPERATURAS[ventana], (u_grande - u_pequena)[ventana], 1
         )
@@ -206,7 +207,7 @@ def _(AJUSTE, TAMANOS, TEMPERATURAS, np, observables):
 
     rng = np.random.default_rng(0)
     cruces = {}
-    for _chico, _grande in zip(TAMANOS[:-1], TAMANOS[1:]):
+    for _chico, _grande in pairwise(TAMANOS):
         _u_c = observables[_chico]["U4"]
         _u_g = observables[_grande]["U4"]
         _estimado = cruce(_u_c.mean(axis=1), _u_g.mean(axis=1))
@@ -297,8 +298,9 @@ def _(
 
     _fig, _ejes = plt.subplots(2, 3, figsize=(12, 7), sharex=True)
     _ejes = _ejes.ravel()
-    for _eje, (_clave, _etiqueta) in zip(_ejes, _paneles):
-        for _L, _color in zip(TAMANOS, _colores):
+    # The sixth axis displays the zoom below.
+    for _eje, (_clave, _etiqueta) in zip(_ejes, _paneles, strict=False):
+        for _L, _color in zip(TAMANOS, _colores, strict=True):
             _datos = observables[_L][_clave]
             _eje.errorbar(
                 TEMPERATURAS,
@@ -321,7 +323,7 @@ def _(
 
     _zoom = _ejes[5]
     _ventana = (TEMPERATURAS >= 4.0) & (TEMPERATURAS <= 5.0)
-    for _L, _color in zip(TAMANOS, _colores):
+    for _L, _color in zip(TAMANOS, _colores, strict=True):
         _datos = observables[_L]["U4"]
         _zoom.errorbar(
             TEMPERATURAS[_ventana],

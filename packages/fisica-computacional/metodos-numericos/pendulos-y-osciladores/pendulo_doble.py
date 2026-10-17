@@ -332,7 +332,7 @@ def _(np, step_rk4):
         b = a + np.array([D0, 0.0, 0.0, 0.0])
         suma = 0.0
         t_est, lam = [], []
-        for i in range(1, int(round(tiempo / dt)) + 1):
+        for i in range(1, round(tiempo / dt) + 1):
             a = step_rk4(a, dt)
             b = step_rk4(b, dt)
             if i % cada == 0:
@@ -348,7 +348,7 @@ def _(np, step_rk4):
         a = np.array(y0, dtype=float)
         b = a + np.array([D0, 0.0, 0.0, 0.0])
         t_sep, dist = [0.0], [D0]
-        for i in range(1, int(round(tiempo / dt)) + 1):
+        for i in range(1, round(tiempo / dt) + 1):
             a = step_rk4(a, dt)
             b = step_rk4(b, dt)
             t_sep.append(i * dt)

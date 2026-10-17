@@ -61,7 +61,9 @@ def _(DATOS, UTCDateTime, np, read):
     def etiqueta(tr):
         return f"{tr.stats.network}.{tr.stats.station}"
 
-    otro_evento = [etiqueta(tr) for tr, p in zip(trazas, principal) if not p]
+    otro_evento = [
+        etiqueta(tr) for tr, p in zip(trazas, principal, strict=True) if not p
+    ]
     otro_origen = (
         UTCDateTime(round(origenes[~principal][0])) if (~principal).any() else None
     )
@@ -154,14 +156,15 @@ def _(etiqueta, plt, principal, trazas):
         return tr.times() + tr.stats.sac.b - tr.stats.sac.o
 
     seccion = sorted(
-        (tr for tr, p in zip(trazas, principal) if p), key=lambda tr: tr.stats.sac.gcarc
+        (tr for tr, p in zip(trazas, principal, strict=True) if p),
+        key=lambda tr: tr.stats.sac.gcarc,
     )
     _fig, _ax = plt.subplots(figsize=(7, 7.2), dpi=72)
     for _i, _tr in enumerate(seccion):
         _x = preparar(_tr)
         # Tras el filtro no queda energía sobre 0.2 Hz: 1 muestra por segundo
         # basta y mantiene la imagen pequeña.
-        _paso = max(1, int(round(_x.stats.sampling_rate)))
+        _paso = max(1, round(_x.stats.sampling_rate))
         _ax.plot(
             tiempo_desde_origen(_x)[::_paso],
             _i + 0.45 * _x.data[::_paso] / abs(_x.data).max(),
@@ -294,7 +297,7 @@ def _(CAMPOS_PICK, TOLERANCIA, etiqueta, mo, np, principal, resultados):
         etiqueta(r["traza"]) for r in resultados if r["picado"]["pick"] is None
     ]
     _filas = []
-    for _r, _p in zip(resultados, principal):
+    for _r, _p in zip(resultados, principal, strict=True):
         _tr = _r["traza"]
         _t = _r["picado"]["pick"]
         _dif = _r["dif"]
@@ -343,7 +346,7 @@ def _(CAMPOS_PICK, TOLERANCIA, etiqueta, mo, np, principal, resultados):
 def _(TOLERANCIA, etiqueta, plt, principal, resultados):
     _fig, _ax = plt.subplots(figsize=(7, 3.6), dpi=72)
     _rotulos = {}
-    for _r, _p in zip(resultados, principal):
+    for _r, _p in zip(resultados, principal, strict=True):
         if _r["dif"] is None:
             continue
         _x = _r["traza"].stats.sac.gcarc
@@ -468,9 +471,11 @@ def _(etiqueta, np, plt, principal, resultados):
         f = np.fft.rfftfreq(x.size, dt)
         return f[1:], np.abs(espectro[1:]) * np.sqrt(2 * dt / (x.size * np.mean(w**2)))
 
-    _por_nombre = {etiqueta(r["traza"]): r for r, p in zip(resultados, principal) if p}
+    _por_nombre = {
+        etiqueta(r["traza"]): r for r, p in zip(resultados, principal, strict=True) if p
+    }
     _fig, _ax = plt.subplots(1, 3, figsize=(10, 3.6), dpi=72, sharey=True)
-    for _a, _nombre in zip(_ax, ["G.MPG", "IU.TUC", "IU.TSUM"]):
+    for _a, _nombre in zip(_ax, ["G.MPG", "IU.TUC", "IU.TSUM"], strict=True):
         _r = _por_nombre[_nombre]
         _tr = _r["traza"]
         _fs = _tr.stats.sampling_rate

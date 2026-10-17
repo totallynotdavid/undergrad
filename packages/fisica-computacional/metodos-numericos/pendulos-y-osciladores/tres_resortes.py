@@ -186,7 +186,7 @@ def _(formas, masas, modos, np, omega, rigidez):
 @app.cell
 def _(plt, t, trayectorias):
     _fig, _ax = plt.subplots(1, 3, figsize=(13, 3.8), sharey=True)
-    for _a, (_nombre, _y) in zip(_ax, trayectorias.items()):
+    for _a, (_nombre, _y) in zip(_ax, trayectorias.items(), strict=True):
         _a.plot(t, _y[:, 0], label=r"$x_1(t)$")
         _a.plot(t, _y[:, 1], label=r"$x_2(t)$")
         _a.set_xlim(0, 3)

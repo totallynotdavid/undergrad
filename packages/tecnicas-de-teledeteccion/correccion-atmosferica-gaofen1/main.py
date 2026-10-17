@@ -384,7 +384,7 @@ def _(Reflectancia):
 
 @app.cell
 def _(Reflectancia, ep, ortho, plt):
-    fig, axv = plt.subplots(1, 2, figsize=(10, 10))
+    _fig, axv = plt.subplots(1, 2, figsize=(10, 10))
     ep.plot_rgb(
         ortho, rgb=(2, 1, 0), ax=axv[0], title="GF-1 Raw RGB", stretch=True, str_clip=4
     )
@@ -401,7 +401,7 @@ def _(Reflectancia, ep, ortho, plt):
 
 @app.cell
 def _(BAND, b1, b2, b3, b4, blue, green, nir, plt, red):
-    fig_1, axh = plt.subplots(4, 2, figsize=(10, 10))
+    _fig, axh = plt.subplots(4, 2, figsize=(10, 10))
     axh[0, 0].hist(BAND["B1"].flatten(), bins=20, range=(1, b1.max()), color="skyblue")
     axh[0, 0].set_title("Raw RGB")
     axh[0, 0].set_ylabel("Blue Band")
@@ -533,7 +533,7 @@ def _(
     cirep_band = computeCIrepband(Reflectancia)
     mcari_band = computeMCARIband(Reflectancia)
     savi_band = computeSAVIband(Reflectancia)
-    fig_2, ax = plt.subplots(3, 3, figsize=(10, 10))
+    _fig, ax = plt.subplots(3, 3, figsize=(10, 10))
     ep.plot_rgb(
         Reflectancia,
         rgb=(2, 1, 0),
