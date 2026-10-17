@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import dataclasses
 import re
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from textwrap import dedent
+from unittest import mock
 from urllib.parse import urljoin
 
 import export_notebooks
+import notebooks_manifest
 from notebooks_manifest import Notebook, Redirect, redirect_errors
 
 NOTEBOOK = dedent(
@@ -122,6 +125,36 @@ class ExportResultsTest(unittest.TestCase):
 
         with self.assertRaises(SystemExit):
             export_notebooks.apply_page_shell("<html><body></body></html>", notebook)
+
+
+class CatalogDataTest(unittest.TestCase):
+    def run_data(self, generated: Path, *flags: str) -> int:
+        argv = ["export_notebooks.py", "data", *flags]
+        with (
+            mock.patch.object(notebooks_manifest, "GENERATED_DATA", generated),
+            mock.patch.object(sys, "argv", argv),
+        ):
+            return export_notebooks.main()
+
+    def test_check_fails_on_a_stale_catalog_without_writing_it(self):
+        with tempfile.TemporaryDirectory() as directory:
+            generated = Path(directory) / "catalog.generated.ts"
+            generated.write_text("stale", encoding="utf-8")
+
+            with self.assertRaises(SystemExit) as raised:
+                self.run_data(generated, "--check")
+
+            self.assertIn("mise run data", str(raised.exception))
+            self.assertEqual(generated.read_text(encoding="utf-8"), "stale")
+
+    def test_check_passes_on_the_catalog_that_data_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            generated = Path(directory) / "catalog.generated.ts"
+            self.run_data(generated)
+            written = generated.read_text(encoding="utf-8")
+
+            self.assertEqual(self.run_data(generated, "--check"), 0)
+            self.assertEqual(generated.read_text(encoding="utf-8"), written)
 
 
 class RedirectTest(unittest.TestCase):

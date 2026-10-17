@@ -15,6 +15,7 @@ from notebooks_manifest import (
     SITE_DIR,
     Notebook,
     Redirect,
+    frontend_data_is_current,
     load_manifest,
     validate_manifest,
     write_frontend_data,
@@ -154,9 +155,8 @@ def write_redirect(redirect: Redirect, output_dir: Path) -> None:
 
 
 def export_notebooks(clean: bool) -> None:
-    site, notebooks, redirects = load_manifest()
+    _, notebooks, redirects = load_manifest()
     validate_manifest(notebooks, redirects)
-    write_frontend_data(site, notebooks)
 
     if clean:
         clean_output_dir(STATIC_NOTEBOOKS_DIR)
@@ -198,6 +198,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Remove exported notebook assets before exporting.",
     )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="With data, fail when the generated catalog is out of date "
+        "instead of writing it.",
+    )
     return parser.parse_args()
 
 
@@ -209,7 +215,12 @@ def main() -> int:
     if args.command == "validate":
         return 0
     if args.command == "data":
-        write_frontend_data(site, notebooks)
+        if not args.check:
+            write_frontend_data(site, notebooks)
+        elif not frontend_data_is_current(site, notebooks):
+            raise SystemExit(
+                "site/src/lib/catalog.generated.ts is out of date. Run `mise run data`."
+            )
         return 0
     if args.command == "export":
         export_notebooks(args.clean)
