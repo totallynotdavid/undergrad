@@ -17,5 +17,5 @@ dependencies = [
 
 [project.optional-dependencies]
 gdal = [
-    "gdal==3.12.2",
+    "gdal==3.13.3",
 ]
