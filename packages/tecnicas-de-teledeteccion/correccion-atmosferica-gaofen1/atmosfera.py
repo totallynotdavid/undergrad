@@ -107,7 +107,7 @@ class Atmospheric:
             ).toList(366)
 
             jan01 = ee.Date.fromYMD(O3_date.get("year"), 1, 1)
-            doy_index = date.difference(
+            doy_index = O3_date.difference(
                 jan01, "day"
             ).toInt()  # (NB. index is one less than doy, so no need to +1)
 
