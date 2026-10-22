@@ -200,15 +200,15 @@ title = "Fundamentos de riesgos y desastres"
 package = "fundamentos-de-riesgos-y-desastres"
 
 [[courses.sections]]
-id = "sigrid"
-title = "SIGRID"
+id = "peligros-geologicos"
+title = "Peligros geologicos"
 
 [[courses.sections.notebooks]]
-id = "huaicos-ancash"
-title = "Analisis de huaicos en Ancash"
-file = "sigrid/analisis_huaicos_ancash.py"
-summary = "Analisis geoespacial de huaicos en Ancash con geopandas sobre datos del SIGRID."
-export = false
+id = "peligros-geologicos-ancash"
+title = "Movimientos en masa en Ancash"
+file = "peligros-geologicos/peligros_geologicos_ancash.py"
+summary = "Inventario de peligros geologicos de INGEMMET en Ancash: tipos de movimiento en masa, provincias mas afectadas, mapa y factores que condicionan los huaicos."
+export = true
 
 [[courses]]
 id = "introduccion-a-sismologia"

@@ -288,17 +288,17 @@ export const courses: Course[] = [
     "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fundamentos-de-riesgos-y-desastres",
     "sections": [
       {
-        "id": "sigrid",
-        "title": "SIGRID",
+        "id": "peligros-geologicos",
+        "title": "Peligros geologicos",
         "notebooks": [
           {
-            "title": "Analisis de huaicos en Ancash",
-            "summary": "Analisis geoespacial de huaicos en Ancash con geopandas sobre datos del SIGRID.",
-            "slug": "fundamentos-de-riesgos-y-desastres/sigrid/huaicos-ancash",
-            "path": "packages/fundamentos-de-riesgos-y-desastres/sigrid/analisis_huaicos_ancash.py",
-            "export": false,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fundamentos-de-riesgos-y-desastres/sigrid/analisis_huaicos_ancash.py",
-            "assetPath": ""
+            "title": "Movimientos en masa en Ancash",
+            "summary": "Inventario de peligros geologicos de INGEMMET en Ancash: tipos de movimiento en masa, provincias mas afectadas, mapa y factores que condicionan los huaicos.",
+            "slug": "fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros-geologicos-ancash",
+            "path": "packages/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros_geologicos_ancash.py",
+            "export": true,
+            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros_geologicos_ancash.py",
+            "assetPath": "/notebooks/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros-geologicos-ancash/"
           }
         ]
       }
