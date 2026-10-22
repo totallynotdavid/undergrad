@@ -1,4 +1,5 @@
 import unittest
+from datetime import UTC, datetime
 
 import numpy as np
 from correction import load_clip, load_inputs, load_metadata, run_correction
@@ -20,6 +21,19 @@ class GaofenCorrectionTest(unittest.TestCase):
         )
         np.testing.assert_allclose(
             corrected[:, 200, 200], reference["sample"], rtol=1e-6
+        )
+
+    def test_clip_reflectances_are_bounded(self):
+        sensor, _ = load_clip()
+        corrected = run_correction(sensor, load_metadata(), load_inputs())
+        finite = corrected[np.isfinite(corrected)]
+
+        self.assertTrue(np.all((finite >= 0) & (finite <= 1.1)))
+
+    def test_acquisition_time_is_utc(self):
+        self.assertEqual(
+            load_metadata()["date"],
+            datetime(2020, 9, 14, 15, 36, 52, tzinfo=UTC),
         )
 
 
