@@ -192,7 +192,7 @@ id = "correccion-atmosferica-gaofen1"
 title = "Correccion atmosferica GaoFen-1"
 file = "correccion-atmosferica-gaofen1/main.py"
 summary = "Correccion atmosferica de imagenes GaoFen-1 con 6S y rasterio."
-export = false
+export = true
 
 [[courses]]
 id = "fundamentos-de-riesgos-y-desastres"
