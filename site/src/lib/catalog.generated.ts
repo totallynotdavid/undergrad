@@ -244,24 +244,24 @@ export const courses: Course[] = [
             "summary": "Acceso y procesamiento de imagenes satelitales con Google Earth Engine.",
             "slug": "tecnicas-de-teledeteccion/earth-engine-y-6s/clase-1-earth-engine",
             "path": "packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_1_earth_engine.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_1_earth_engine.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/tecnicas-de-teledeteccion/earth-engine-y-6s/clase-1-earth-engine/"
           }
         ]
       },
       {
         "id": "raster-y-gdal",
-        "title": "Raster y GDAL",
+        "title": "Raster y rasterio",
         "notebooks": [
           {
-            "title": "Clase 2: GDAL",
-            "summary": "Lectura y manipulacion de rasteres Landsat con GDAL.",
+            "title": "Clase 2: rasterio",
+            "summary": "Lectura y manipulacion de rasteres Landsat con rasterio.",
             "slug": "tecnicas-de-teledeteccion/raster-y-gdal/clase-2-gdal",
             "path": "packages/tecnicas-de-teledeteccion/raster-y-gdal/clase_2_gdal.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/raster-y-gdal/clase_2_gdal.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/tecnicas-de-teledeteccion/raster-y-gdal/clase-2-gdal/"
           }
         ]
       },

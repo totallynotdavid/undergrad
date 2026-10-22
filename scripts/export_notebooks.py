@@ -46,6 +46,15 @@ def run(command: list[str]) -> int:
     return subprocess.run(command, cwd=ROOT, check=False).returncode
 
 
+def marimo_command(action: str, notebook: Notebook) -> list[str]:
+    command = [*MARIMO_RUN, "--package", notebook.package]
+    if action == "export":
+        command.extend(["marimo", "export", "html", notebook.path])
+    else:
+        command.extend(["marimo", action, notebook.path])
+    return command
+
+
 def clean_output_dir(output_dir: Path) -> None:
     output_dir = output_dir.resolve()
     if not output_dir.exists():
@@ -100,13 +109,7 @@ def export_results(notebook: Notebook, output_dir: Path) -> None:
     page_path = output_dir / "index.html"
     status = run(
         [
-            *MARIMO_RUN,
-            "--package",
-            notebook.package,
-            "marimo",
-            "export",
-            "html",
-            notebook.path,
+            *marimo_command("export", notebook),
             "-o",
             str(page_path),
             "-f",
@@ -168,12 +171,7 @@ def export_notebooks(clean: bool) -> None:
 
         check = run(
             [
-                *MARIMO_RUN,
-                "--package",
-                notebook.package,
-                "marimo",
-                "check",
-                notebook.path,
+                *marimo_command("check", notebook),
             ]
         )
         if check:

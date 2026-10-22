@@ -11,80 +11,83 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
-    from osgeo import gdal, gdal_array
+    import rasterio
 
-    return Path, gdal, gdal_array, mo, np, plt
+    return Path, mo, np, plt, rasterio
 
 
 @app.cell
 def _(Path):
     notebook_dir = Path(__file__).resolve().parent
-    filepath = notebook_dir / "LC08_L1TP_007068_20240427_20240427_02_RT_refl.tif"
-    output_path = notebook_dir / "public" / "img_4.png"
-    return filepath, notebook_dir, output_path
+    filepath = notebook_dir / "landsat_scene_007068_20240427_reflectance.tif"
+    return filepath
 
 
 @app.cell
 def _(mo):
     mo.md(r"""
-    # Lectura y visualización de un raster con GDAL
+    # Lectura y visualización de un raster con rasterio
 
-    GDAL representa el raster como un dataset con una o más bandas. En esta
-    práctica abrimos una imagen Landsat, consultamos su metadata, leemos la
-    primera banda como un arreglo de NumPy y enmascaramos sus valores NoData.
+    Rasterio representa el raster como un dataset con una o más bandas. En
+    esta práctica abrimos una imagen Landsat, consultamos su metadata, leemos
+    la primera banda como un arreglo de NumPy y enmascaramos sus valores
+    NoData.
     """)
     return
 
 
 @app.cell
-def _(filepath, gdal, gdal_array, np):
-    dataset = None
-    band = None
-    band_array = None
+def _(filepath, np, rasterio):
+    metadata = None
     masked_array = None
 
     if filepath.exists():
-        dataset = gdal.Open(str(filepath))
-        if dataset is not None:
-            band = dataset.GetRasterBand(1)
-            raster_array = gdal_array.LoadFile(str(filepath))
-            band_array = raster_array[0] if raster_array.ndim == 3 else raster_array
-            nodata = band.GetNoDataValue()
+        with rasterio.open(filepath) as dataset:
+            band_array = dataset.read(1)
+            nodata = dataset.nodata
             if nodata is None:
                 masked_array = np.ma.masked_invalid(band_array)
             else:
                 masked_array = np.ma.masked_equal(band_array, nodata)
+            metadata = {
+                "count": dataset.count,
+                "crs": dataset.crs,
+                "descriptions": dataset.descriptions,
+                "dtype": dataset.dtypes[0],
+                "height": dataset.height,
+                "nodata": nodata,
+                "raster_tags": dataset.tags(),
+                "band_tags": dataset.tags(1),
+                "transform": dataset.transform,
+                "width": dataset.width,
+            }
 
-    return band, band_array, dataset, masked_array
+    return masked_array, metadata
 
 
 @app.cell
-def _(band, dataset, filepath, gdal, mo):
+def _(filepath, metadata, mo):
     metadata_output = None
-    if dataset is None or band is None:
+    if metadata is None:
         metadata_output = mo.md(
             f"No se encontró un raster de entrada en `{filepath}`. "
             "Coloca allí el archivo Landsat para ejecutar el análisis."
         )
     else:
-        if band.GetMinimum() is None or band.GetMaximum() is None:
-            band.ComputeStatistics(False)
-
-        metadata = dataset.GetMetadata()
-        band_metadata = band.GetMetadata()
-        data_type = gdal.GetDataTypeName(band.DataType)
         metadata_output = mo.md(
             f"""
             **Dataset:** `{filepath.name}`
 
-            - Dimensiones: {dataset.RasterXSize} columnas por
-              {dataset.RasterYSize} filas.
-            - Bandas: {dataset.RasterCount}.
-            - Tipo de dato de la banda 1: `{data_type}`.
-            - Valor NoData: `{band.GetNoDataValue()}`.
-            - Mínimo y máximo: `{band.GetMinimum()}`, `{band.GetMaximum()}`.
-            - Entradas de metadata del dataset: {len(metadata)}.
-            - Entradas de metadata de la banda: {len(band_metadata)}.
+            - Dimensiones: {metadata["width"]} columnas por
+              {metadata["height"]} filas.
+            - Bandas: {metadata["count"]}.
+            - Tipo de dato de la banda 1: `{metadata["dtype"]}`.
+            - Valor NoData: `{metadata["nodata"]}`.
+            - CRS: `{metadata["crs"]}`.
+            - Geotransform: `{metadata["transform"]}`.
+            - Nombres de bandas: `{", ".join(metadata["descriptions"])}`.
+            - Entradas de metadata del dataset: {len(metadata["raster_tags"])}.
+            - Entradas de metadata de la banda: {len(metadata["band_tags"])}.
             """
         )
     metadata_output
@@ -92,7 +95,7 @@ def _(band, dataset, filepath, gdal, mo):
 
 
 @app.cell
-def _(masked_array, mo, output_path, plt):
+def _(masked_array, mo, plt):
     figure_output = None
     if masked_array is None:
         figure_output = mo.md(
@@ -101,15 +104,11 @@ def _(masked_array, mo, output_path, plt):
     else:
         figure, axis = plt.subplots(figsize=(8, 6))
         image = axis.imshow(masked_array, cmap="gray")
-        axis.set_title("Banda 1")
+        axis.set_title("Landsat 8: banda B1 (DN de reflectancia)")
         axis.set_xlabel("Columna")
         axis.set_ylabel("Fila")
         figure.colorbar(image, ax=axis, label="Reflectancia")
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        figure.savefig(output_path, dpi=150, bbox_inches="tight")
-        figure_output = mo.vstack(
-            [mo.md(f"La figura se guardó en `{output_path}`."), figure]
-        )
+        figure_output = figure
     figure_output
     return figure_output
 

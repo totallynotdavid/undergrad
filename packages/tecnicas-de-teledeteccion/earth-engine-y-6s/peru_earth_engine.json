@@ -1,0 +1,538 @@
+{
+  "generated_on": "2026-10-22",
+  "description": "Peru Earth Engine lesson fixture; all coordinates are lon, lat.",
+  "datasets": {
+    "elevation": {
+      "id": "USGS/SRTMGL1_003",
+      "date": "SRTM mission"
+    },
+    "land_cover": {
+      "id": "MODIS/061/MCD12Q1",
+      "date": "2024-01-01"
+    },
+    "land_surface_temperature": {
+      "id": "MODIS/061/MOD11A1",
+      "dates": "2025-01-01/2026-01-01",
+      "scale_factor": 0.02,
+      "offset_kelvin": -273.15
+    }
+  },
+  "places": [
+    {
+      "id": "lima",
+      "name": "Lima",
+      "description": "costa del Pacifico",
+      "longitude": -77.0428,
+      "latitude": -12.0464
+    },
+    {
+      "id": "cusco",
+      "name": "Cusco",
+      "description": "Andes altos",
+      "longitude": -71.9675,
+      "latitude": -13.5319
+    },
+    {
+      "id": "iquitos",
+      "name": "Iquitos",
+      "description": "Amazonia",
+      "longitude": -73.2538,
+      "latitude": -3.7437
+    }
+  ],
+  "elevation": [
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "USGS/SRTMGL1_003",
+      "date": "2000-02-11 (SRTM mission)",
+      "elevation_m": 138
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "USGS/SRTMGL1_003",
+      "date": "2000-02-11 (SRTM mission)",
+      "elevation_m": 3336
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "USGS/SRTMGL1_003",
+      "date": "2000-02-11 (SRTM mission)",
+      "elevation_m": 90
+    }
+  ],
+  "land_cover": [
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MCD12Q1",
+      "date": "2024-01-01",
+      "class_code": 13,
+      "class_name": "urbano construido"
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MCD12Q1",
+      "date": "2024-01-01",
+      "class_code": 13,
+      "class_name": "urbano construido"
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MCD12Q1",
+      "date": "2024-01-01",
+      "class_code": 13,
+      "class_name": "urbano construido"
+    }
+  ],
+  "land_surface_temperature": [
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-01-01",
+      "date_end": "2025-02-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 34.5965288595966,
+      "valid_pixels": 66
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-02-01",
+      "date_end": "2025-03-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 35.77369282652993,
+      "valid_pixels": 61
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-03-01",
+      "date_end": "2025-04-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 34.87125670319424,
+      "valid_pixels": 40
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-04-01",
+      "date_end": "2025-05-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 29.65679301533224,
+      "valid_pixels": 74
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-05-01",
+      "date_end": "2025-06-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 28.88061906948274,
+      "valid_pixels": 57
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-06-01",
+      "date_end": "2025-07-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": null,
+      "valid_pixels": 0
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-07-01",
+      "date_end": "2025-08-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": null,
+      "valid_pixels": 0
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-08-01",
+      "date_end": "2025-09-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": null,
+      "valid_pixels": 0
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-09-01",
+      "date_end": "2025-10-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 30.506381977135202,
+      "valid_pixels": 6
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-10-01",
+      "date_end": "2025-11-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 31.445978291121648,
+      "valid_pixels": 66
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-11-01",
+      "date_end": "2025-12-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 32.680300160279806,
+      "valid_pixels": 59
+    },
+    {
+      "place_id": "lima",
+      "place": "Lima",
+      "longitude": -77.0428,
+      "latitude": -12.0464,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-12-01",
+      "date_end": "2026-01-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 32.863825895316836,
+      "valid_pixels": 40
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-01-01",
+      "date_end": "2025-02-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 20.96335974643426,
+      "valid_pixels": 7
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-02-01",
+      "date_end": "2025-03-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 19.380299368305447,
+      "valid_pixels": 61
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-03-01",
+      "date_end": "2025-04-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 18.9009093004495,
+      "valid_pixels": 49
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-04-01",
+      "date_end": "2025-05-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 18.01338875222669,
+      "valid_pixels": 65
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-05-01",
+      "date_end": "2025-06-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 16.5671640832062,
+      "valid_pixels": 67
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-06-01",
+      "date_end": "2025-07-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 15.320819562004598,
+      "valid_pixels": 78
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-07-01",
+      "date_end": "2025-08-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 15.446740698009835,
+      "valid_pixels": 74
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-08-01",
+      "date_end": "2025-09-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 18.83858931552591,
+      "valid_pixels": 76
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-09-01",
+      "date_end": "2025-10-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 23.383512334284312,
+      "valid_pixels": 65
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-10-01",
+      "date_end": "2025-11-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 23.066783836563047,
+      "valid_pixels": 38
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-11-01",
+      "date_end": "2025-12-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 23.96530509868424,
+      "valid_pixels": 66
+    },
+    {
+      "place_id": "cusco",
+      "place": "Cusco",
+      "longitude": -71.9675,
+      "latitude": -13.5319,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-12-01",
+      "date_end": "2026-01-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 20.45569549255562,
+      "valid_pixels": 55
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-01-01",
+      "date_end": "2025-02-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 31.337176984622396,
+      "valid_pixels": 88
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-02-01",
+      "date_end": "2025-03-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 26.786079182630942,
+      "valid_pixels": 11
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-03-01",
+      "date_end": "2025-04-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 28.19342897998096,
+      "valid_pixels": 55
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-04-01",
+      "date_end": "2025-05-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 28.272960092175584,
+      "valid_pixels": 51
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-05-01",
+      "date_end": "2025-06-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 27.492237841945315,
+      "valid_pixels": 65
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-06-01",
+      "date_end": "2025-07-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 27.306558644656853,
+      "valid_pixels": 59
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-07-01",
+      "date_end": "2025-08-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 26.79507965860601,
+      "valid_pixels": 69
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-08-01",
+      "date_end": "2025-09-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 30.03517173874357,
+      "valid_pixels": 84
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-09-01",
+      "date_end": "2025-10-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 30.802513687712278,
+      "valid_pixels": 72
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-10-01",
+      "date_end": "2025-11-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 30.35256676194368,
+      "valid_pixels": 65
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-11-01",
+      "date_end": "2025-12-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 29.690855197608798,
+      "valid_pixels": 62
+    },
+    {
+      "place_id": "iquitos",
+      "place": "Iquitos",
+      "longitude": -73.2538,
+      "latitude": -3.7437,
+      "dataset_id": "MODIS/061/MOD11A1",
+      "date": "2025-12-01",
+      "date_end": "2026-01-01",
+      "qc_mask": "QC_Day bits 0-1 == 00 and bit 2 == 0",
+      "lst_celsius": 28.91543201005931,
+      "valid_pixels": 28
+    }
+  ]
+}

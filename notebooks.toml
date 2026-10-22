@@ -170,18 +170,18 @@ id = "clase-1-earth-engine"
 title = "Clase 1: Earth Engine"
 file = "earth-engine-y-6s/clase_1_earth_engine.py"
 summary = "Acceso y procesamiento de imagenes satelitales con Google Earth Engine."
-export = false
+export = true
 
 [[courses.sections]]
 id = "raster-y-gdal"
-title = "Raster y GDAL"
+title = "Raster y rasterio"
 
 [[courses.sections.notebooks]]
 id = "clase-2-gdal"
-title = "Clase 2: GDAL"
+title = "Clase 2: rasterio"
 file = "raster-y-gdal/clase_2_gdal.py"
-summary = "Lectura y manipulacion de rasteres Landsat con GDAL."
-export = false
+summary = "Lectura y manipulacion de rasteres Landsat con rasterio."
+export = true
 
 [[courses.sections]]
 id = "correccion-atmosferica"

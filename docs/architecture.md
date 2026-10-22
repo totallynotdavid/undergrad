@@ -81,7 +81,5 @@ material, documentation, and build tooling remain outside it.
 ## Course dependencies
 
 Each package `pyproject.toml` owns its course dependencies. The remote-sensing
-package declares the GDAL Python binding as its optional `gdal` extra. Native
-requirements and version compatibility are documented in
-[`environment.md`](environment.md). The repository installer covers the native
-GDAL development packages.
+package declares rasterio as a normal dependency for its raster notebook.
+Package requirements are documented in [`environment.md`](environment.md).
