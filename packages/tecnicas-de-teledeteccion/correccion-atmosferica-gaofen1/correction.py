@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
-from datetime import datetime
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from xml.dom import minidom
 
@@ -22,8 +22,17 @@ SIXS_PATH = (
     Path(importlib.util.find_spec("sixs_bin").submodule_search_locations[0])
     / "sixsV1.1"
 )
-GAIN = np.array([0.1490, 0.1328, 0.1311, 0.1217])
+CHINA_STANDARD_TIME = timezone(timedelta(hours=8))
+
+# CRESDA publishes GF1D PMS MS1-MS4 2020 coefficients as radiance gains.
+# The coefficients use zero offset.
+GAIN = np.array([0.0738, 0.0656, 0.0590, 0.0585])
 BIAS = np.zeros(4)
+
+
+def parse_start_time(value: str) -> datetime:
+    local_time = datetime.strptime(value.strip(), "%Y-%m-%d %H:%M:%S")
+    return local_time.replace(tzinfo=CHINA_STANDARD_TIME).astimezone(UTC)
 
 
 def load_inputs(path: Path = INPUTS_PATH) -> dict[str, object]:
@@ -37,7 +46,7 @@ def load_metadata(path: Path = XML_PATH) -> dict[str, object]:
         return xml.getElementsByTagName(name)[0].firstChild.data.strip()
 
     return {
-        "date": datetime.strptime(value("StartTime"), "%Y-%m-%d %H:%M:%S"),
+        "date": parse_start_time(value("StartTime")),
         "solar_zenith": float(value("SolarZenith")),
         "solar_azimuth": float(value("SolarAzimuth")),
         "view_zenith": float(value("SatelliteZenith")),
@@ -88,7 +97,7 @@ def run_correction(
         path_radiance = sixs.outputs.atmospheric_intrinsic_radiance
         gas = sixs.outputs.trans["global_gas"].upward
         scattering = sixs.outputs.trans["total_scattering"].upward
-        radiance = (sensor[index].astype(np.float64) / GAIN[index]) + BIAS[index]
+        radiance = (sensor[index].astype(np.float64) * GAIN[index]) + BIAS[index]
         reflectance = (
             (radiance - path_radiance) * np.pi / (gas * scattering * (direct + diffuse))
         )
@@ -103,13 +112,9 @@ def live_data() -> tuple[
     from dotenv import load_dotenv
 
     load_dotenv(PACKAGE_DIR.parent / ".env")
-    scene_path = prepare.download_drive_file(
-        SCENE_NAME, prepare.DRIVE_FILES[SCENE_NAME]
-    )
+    scene_path = prepare.data_file(SCENE_NAME)
     date, latitude, longitude = prepare.parse_scene_metadata(
-        prepare.download_drive_file(
-            prepare.XML_PATH.name, prepare.DRIVE_FILES[prepare.XML_PATH.name]
-        )
+        prepare.data_file(prepare.XML_PATH.name)
     )
     inputs = prepare.earth_engine_inputs(date, latitude, longitude)
     with rasterio.open(scene_path) as dataset:

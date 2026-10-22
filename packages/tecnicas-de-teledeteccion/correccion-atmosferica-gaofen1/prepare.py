@@ -1,7 +1,8 @@
 """Prepare the small, offline Gaofen-1 fixture used by ``main.py``.
 
-The large scene and the owner's corrected scene stay in ``.cache/``.  Only
-the small clip and the Earth Engine response JSON belong in the repository.
+The large scene is downloaded to ``.cache/`` unless a verified local data
+directory is configured. Only the small clip and the Earth Engine response JSON
+belong in the repository.
 """
 
 from __future__ import annotations
@@ -21,7 +22,13 @@ import ee
 import numpy as np
 import rasterio
 from atmosfera import Atmospheric
-from correction import load_clip, load_metadata, run_correction
+from correction import (
+    SCENE_NAME,
+    load_clip,
+    load_metadata,
+    parse_start_time,
+    run_correction,
+)
 from dotenv import load_dotenv
 
 PACKAGE_DIR = Path(__file__).resolve().parent
@@ -29,8 +36,6 @@ CACHE_DIR = PACKAGE_DIR / ".cache"
 CLIP_PATH = PACKAGE_DIR / "gaofen1_clip.tif"
 INPUTS_PATH = PACKAGE_DIR / "gaofen1_inputs.json"
 XML_PATH = PACKAGE_DIR / "GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630-MUX.xml"
-R6S_NAME = "R6S_ORTO_GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630.tif"
-
 EE_DEADLINE_MS = 120_000
 EE_MAX_RETRIES = 3
 
@@ -44,11 +49,6 @@ DRIVE_FILES = {
         "id": "1kyiFVj2ZcfmHw1fyeoaNQgEztgfhUsnl",
         "bytes": 3_368,
         "sha256": "c195bbbb3608947646138d8e213fa8471e22e67a1c3a0c172d06ff9ad0b86541",
-    },
-    "R6S_ORTO_GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630.tif": {
-        "id": "1FtoqV5lCzJrm-M5ZngvEdV1lJb5SIaKc",
-        "bytes": 1_594_933_186,
-        "sha256": "4e8222a6e1e7348f9e3f5131766dc69f96f9a6da223dd4895541f66f058201d2",
     },
 }
 
@@ -114,12 +114,24 @@ def download_drive_file(name: str, metadata: dict[str, object]) -> Path:
     raise RuntimeError(f"Could not download {name} after 3 attempts: {last_error}")
 
 
+def data_file(name: str) -> Path:
+    load_dotenv(PACKAGE_DIR.parent / ".env")
+    metadata = DRIVE_FILES[name]
+    data_dir = os.environ.get("GAOFEN1_DATA_DIR", "").strip()
+    if data_dir:
+        candidate = Path(data_dir).expanduser() / name
+        if (
+            candidate.is_file()
+            and candidate.stat().st_size == int(metadata["bytes"])
+            and sha256(candidate) == str(metadata["sha256"])
+        ):
+            return candidate
+    return download_drive_file(name, metadata)
+
+
 def parse_scene_metadata(xml_path: Path) -> tuple[datetime, float, float]:
     xml = minidom.parse(str(xml_path))
-    date = datetime.strptime(
-        xml.getElementsByTagName("StartTime")[0].firstChild.data,
-        "%Y-%m-%d %H:%M:%S",
-    )
+    date = parse_start_time(xml.getElementsByTagName("StartTime")[0].firstChild.data)
     lat = float(xml.getElementsByTagName("CenterLatitude")[0].firstChild.data)
     lon = float(xml.getElementsByTagName("CenterLongitude")[0].firstChild.data)
     return date, lat, lon
@@ -180,41 +192,13 @@ def earth_engine_inputs(
     }
 
 
-def compare_owner_output(owner_path: Path, corrected: np.ndarray) -> dict[str, object]:
-    """Compare the prepared correction with the owner's matching R6S window."""
-
-    with rasterio.open(owner_path) as owner:
-        owner_window = owner.read(window=rasterio.windows.Window(**WINDOW))
-    if owner_window.shape != corrected.shape:
-        raise RuntimeError(
-            "Owner output window shape does not match the corrected clip: "
-            f"{owner_window.shape} != {corrected.shape}"
-        )
-
-    differences = np.abs(corrected - owner_window.astype(np.float64))
-    return {
-        "file": R6S_NAME,
-        "window": WINDOW,
-        "bands": [
-            {
-                "band": f"B{index + 1}",
-                "mean_difference": float(np.nanmean(differences[index])),
-                "max_difference": float(np.nanmax(differences[index])),
-            }
-            for index in range(4)
-        ],
-    }
-
-
-def prepare(include_owner_output: bool = False) -> None:
-    scene_path = download_drive_file(
-        next(iter(DRIVE_FILES)), DRIVE_FILES[next(iter(DRIVE_FILES))]
-    )
-    downloaded_xml = download_drive_file(XML_PATH.name, DRIVE_FILES[XML_PATH.name])
+def prepare() -> None:
+    scene_path = data_file(SCENE_NAME)
+    downloaded_xml = data_file(XML_PATH.name)
     if downloaded_xml.read_bytes() != XML_PATH.read_bytes():
         print(
-            "Drive XML differs from the committed XML; preserving the committed "
-            "XML and using the Drive copy only for validation."
+            "Supplied XML differs from the committed XML; preserving the committed "
+            "XML and using the supplied copy only for validation."
         )
     write_clip(scene_path)
     date, latitude, longitude = parse_scene_metadata(downloaded_xml)
@@ -230,9 +214,6 @@ def prepare(include_owner_output: bool = False) -> None:
         "finite_fraction": [float(finite[index].mean()) for index in range(4)],
     }
     inputs["reference"] = reference
-    if include_owner_output:
-        owner_path = download_drive_file(R6S_NAME, DRIVE_FILES[R6S_NAME])
-        inputs["owner_comparison"] = compare_owner_output(owner_path, corrected)
     INPUTS_PATH.write_text(
         json.dumps(inputs, indent=2) + "\n",
         encoding="utf-8",
@@ -244,14 +225,9 @@ def prepare(include_owner_output: bool = False) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=["prepare"])
-    parser.add_argument(
-        "--include-owner-output",
-        action="store_true",
-        help="download and compare the 1.6 GB owner R6S output",
-    )
     args = parser.parse_args()
     if args.command == "prepare":
-        prepare(include_owner_output=args.include_owner_output)
+        prepare()
 
 
 if __name__ == "__main__":
