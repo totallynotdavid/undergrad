@@ -33,6 +33,18 @@ def _(dedent, mo):
 
 
 @app.cell
+def _(dedent, mo):
+    mo.md(
+        dedent(
+            r"""
+            La hora de adquisición está en hora estándar de China (UTC+8) y se convierte a UTC para 6S y Earth Engine. El resultado difiere del cuaderno del propietario de 2024: aquel dividía el DN entre la ganancia, usaba coeficientes de GF-1 en lugar de GF-1D y tomaba la hora de adquisición como UTC.
+            """
+        )
+    )
+    return
+
+
+@app.cell
 def _(mo):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -128,7 +140,7 @@ def _(Reflectancia, mo, np, pd):
 
 @app.cell
 def _(Reflectancia, mo, np, plt, sensor):
-    fig, axes = plt.subplots(1, 3, figsize=(8, 3), dpi=100)
+    fig, axes = plt.subplots(1, 3, figsize=(6, 2.25), dpi=72)
     raw = np.moveaxis(sensor[[2, 1, 0]].astype(float), 0, -1)
     raw = (raw - raw.min()) / (raw.max() - raw.min())
     corrected = np.clip(np.moveaxis(Reflectancia[[2, 1, 0]], 0, -1), 0, 0.5)
