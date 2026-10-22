@@ -1,0 +1,65 @@
+{
+  "date": "2020-09-14T23:36:52",
+  "point": {
+    "latitude": -3.919659,
+    "longitude": -73.099825
+  },
+  "datasets": {
+    "elevation": "USGS/SRTMGL1_003:elevation",
+    "water_vapour": "ECMWF/ERA5/HOURLY:total_column_water_vapour",
+    "ozone": "TOMS/MERGED_V4:ozone",
+    "aerosol": "MODIS/061/MOD08_M3:Aerosol_Optical_Depth_Land_Ocean_Mean_Mean"
+  },
+  "values": {
+    "elevation_km": 0.121,
+    "water_vapour_g_cm2": 5.372454071044922,
+    "ozone_atm_cm": 0.265,
+    "aerosol_optical_depth_550": 0.28
+  },
+  "reference": {
+    "shape": [4, 512, 512],
+    "mean": [
+      11.649812807287537, 13.69809075944345, 11.276538082819709,
+      47.819155623245415
+    ],
+    "max": [
+      21.76968398223333, 29.06715285458341, 28.57828364098426, 76.77407758217139
+    ],
+    "sample": [
+      11.170426556286284, 12.758369658333555, 10.175147461031777,
+      52.061446318138586
+    ],
+    "finite_fraction": [1.0, 1.0, 1.0, 1.0]
+  },
+  "owner_comparison": {
+    "file": "R6S_ORTO_GF1D_PMS_W73.1_S3.9_20200914_L1A1256801630.tif",
+    "window": {
+      "row_off": 4850,
+      "col_off": 4100,
+      "height": 512,
+      "width": 512
+    },
+    "bands": [
+      {
+        "band": "B1",
+        "mean_difference": 0.911491202578337,
+        "max_difference": 1.7144071115057926
+      },
+      {
+        "band": "B2",
+        "mean_difference": 0.9594524513659509,
+        "max_difference": 2.0482338634945414
+      },
+      {
+        "band": "B3",
+        "mean_difference": 0.6937982107202996,
+        "max_difference": 1.7719214888846508
+      },
+      {
+        "band": "B4",
+        "mean_difference": 2.8792500849162272,
+        "max_difference": 4.626906561663574
+      }
+    ]
+  }
+}

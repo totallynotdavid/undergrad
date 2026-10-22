@@ -59,6 +59,10 @@ run = [
 description = "Run every test suite"
 depends = ["test:*"]
 
+[tasks."test:gaofen1"]
+description = "Test the offline Gaofen-1 atmospheric correction"
+run = "uv run --locked --package tecnicas-de-teledeteccion python -m unittest discover -s packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1 -p 'test_*.py'"
+
 [tasks."test:scripts"]
 description = "Test the notebook export script"
 run = "uv run --locked python -m unittest discover -s scripts"
