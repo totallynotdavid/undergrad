@@ -274,9 +274,9 @@ export const courses: Course[] = [
             "summary": "Correccion atmosferica de imagenes GaoFen-1 con 6S y rasterio.",
             "slug": "tecnicas-de-teledeteccion/correccion-atmosferica/correccion-atmosferica-gaofen1",
             "path": "packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py",
-            "export": false,
+            "export": true,
             "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py",
-            "assetPath": ""
+            "assetPath": "/notebooks/tecnicas-de-teledeteccion/correccion-atmosferica/correccion-atmosferica-gaofen1/"
           }
         ]
       }
