@@ -12,14 +12,8 @@ def main() -> int:
     failures = 0
 
     for notebook in notebooks:
-        command = [
-            "uv",
-            "run",
-            "--locked",
-            "marimo",
-            "check",
-            notebook.path,
-        ]
+        command = ["uv", "run", "--locked", "--package", notebook.package]
+        command.extend(["marimo", "check", notebook.path])
         print("+ " + " ".join(command), flush=True)
         result = subprocess.run(command, cwd=ROOT, check=False)
         if result.returncode:

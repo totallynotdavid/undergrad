@@ -28,7 +28,6 @@ part of this layout.
 | `notebooks.toml`            | tooling | Catalog source: selects the notebook lessons the site publishes |
 | `pyproject.toml`, `uv.lock` | tooling | Python workspace and locked dependency graph                    |
 | `mise.toml`                 | tooling | Pinned developer tools and repository tasks                     |
-| `install.sh`                | tooling | Optional GDAL native dependency setup                           |
 | `readme.md`                 | other   | What the project is and where to start                          |
 | `LICENSE`                   | other   | Licence of the repository's own code                            |
 

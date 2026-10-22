@@ -90,7 +90,6 @@ The molecular dynamics package has its own tests:
 mise run test:dinamica-molecular
 ```
 
-Native extensions and external services are local requirements. See
-[`environment.md`](environment.md) for GDAL setup. A notebook that uses Earth
-Engine or local data must explain its required inputs in its visible marimo
-cells.
+Package dependencies and external services are local requirements. A notebook
+that uses Earth Engine or local data must explain its required inputs in its
+visible marimo cells.
