@@ -42,6 +42,7 @@ def _(mo):
 @app.cell
 def _():
     import fnmatch
+    import importlib.util
     import math
     import os
     from datetime import datetime
@@ -54,19 +55,25 @@ def _():
     import numpy as np
     import pandas as pd
     import rasterio
-    import sixs_bin
     from atmosfera import Atmospheric
     from dotenv import load_dotenv
-    from Py6S import AeroProfile, AtmosProfile, Geometry, SixS
-    from wavelengths import PredefinedWavelengths, Wavelength
+    from gf1pms import BANDS
+    from Py6S import AeroProfile, AtmosProfile, Geometry, SixS, Wavelength
+
+    # Python 3.14 cannot import `6s-bin`, so locate its executable directly.
+    SIXS_PATH = (
+        Path(importlib.util.find_spec("sixs_bin").submodule_search_locations[0])
+        / "sixsV1.1"
+    )
 
     return (
+        SIXS_PATH,
+        BANDS,
         Atmospheric,
         AeroProfile,
         AtmosProfile,
         Geometry,
         Path,
-        PredefinedWavelengths,
         SixS,
         Wavelength,
         datetime,
@@ -81,7 +88,6 @@ def _():
         pd,
         plt,
         rasterio,
-        sixs_bin,
     )
 
 
@@ -268,6 +274,7 @@ def _(
     AeroProfile,
     AtmosProfile,
     Geometry,
+    SIXS_PATH,
     SixS,
     aot,
     dia,
@@ -275,14 +282,12 @@ def _(
     km,
     mes,
     o3,
-    sixs_bin,
     sun_a,
     sun_z,
     view_a,
     view_z,
 ):
-    sixs_path = sixs_bin.get_path("1.1")
-    s = SixS(path=str(sixs_path))
+    s = SixS(path=str(SIXS_PATH))
 
     s.atmos_profile = AtmosProfile.UserWaterAndOzone(h2o, o3)
     s.aero_profile = AeroProfile.Continental
@@ -301,15 +306,9 @@ def _(
 
 
 @app.cell
-def _(PredefinedWavelengths, Wavelength):
+def _(BANDS, Wavelength):
     def spectralResponseFunction(bandname):
-        bandSelect = {
-            "B1": PredefinedWavelengths.GF1PMS_B1,
-            "B2": PredefinedWavelengths.GF1PMS_B2,
-            "B3": PredefinedWavelengths.GF1PMS_B3,
-            "B4": PredefinedWavelengths.GF1PMS_B4,
-        }
-        return Wavelength(bandSelect[bandname])
+        return Wavelength(*BANDS[bandname])
 
     return (spectralResponseFunction,)
 
