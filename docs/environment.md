@@ -63,7 +63,6 @@ uv run --locked --package tecnicas-de-teledeteccion --extra gdal marimo edit pac
 
 Some lessons need external data or credentials. Their source files state the
 required inputs. The current examples are
-[`main.py`](../packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py),
-[`analisis_huaicos_ancash.py`](../packages/fundamentos-de-riesgos-y-desastres/sigrid/analisis_huaicos_ancash.py),
+[`main.py`](../packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py)
 and the Earth Engine lesson in
 [`clase_1_earth_engine.py`](../packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_1_earth_engine.py).
