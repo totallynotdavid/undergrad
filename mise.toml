@@ -78,6 +78,10 @@ run = "uv run --locked --package dinamica-molecular python -m unittest discover 
 description = "Test the tsunami deformation code"
 run = "uv run --locked --package topicos-avanzados-tsunamis python -m unittest discover -s packages/topicos-avanzados-tsunamis/tests"
 
+[tasks."test:riesgos"]
+description = "Test the INGEMMET hazard inventory download"
+run = "uv run --locked --package fundamentos-de-riesgos-y-desastres python -m unittest discover -s packages/fundamentos-de-riesgos-y-desastres/tests"
+
 [tasks."test:web"]
 description = "Test the site with Vitest"
 dir = "site"
