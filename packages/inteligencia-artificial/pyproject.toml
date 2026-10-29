@@ -2,5 +2,5 @@
 name = "inteligencia-artificial"
 version = "0.1.0"
 dependencies = [
-    "pandas>=3.0.6",
+    "pandas>=3.1.0",
 ]
