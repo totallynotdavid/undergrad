@@ -27,7 +27,7 @@ dev = [
     { include-group = "notebooks" },
 ]
 lint = [
-    "ruff>=0.17.3",
+    "ruff>=0.17.5",
 ]
 notebooks = [
     "marimo>=0.25.2",
