@@ -3,11 +3,11 @@
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 
-	import CourseGroup from '#lib/components/CourseGroup.svelte';
 	import Controls from '#lib/components/Controls.svelte';
 	import Footer from '#lib/components/Footer.svelte';
 	import Navbar from '#lib/components/Navbar.svelte';
-	import { site, courses } from '#lib/catalog.generated.js';
+	import TopicGroup from '#lib/components/TopicGroup.svelte';
+	import { site, topics } from '#lib/catalog.generated.js';
 	import {
 		applyFilters,
 		EMPTY_FILTERS,
@@ -26,7 +26,7 @@
 	const filters = $derived(
 		mounted ? parseFilters(new URLSearchParams(page.url.search)) : EMPTY_FILTERS
 	);
-	const filtered = $derived(applyFilters(courses, filters));
+	const filtered = $derived(applyFilters(topics, filters));
 
 	function update(next: Filters) {
 		const query = filtersToSearchParams(next).toString();
@@ -66,35 +66,33 @@
 
 <div class="page">
 	<Navbar title={site.title}>
-		<Controls {filters} {courses} onchange={update} />
+		<Controls {filters} {topics} onchange={update} />
 	</Navbar>
 
-	<h1 class="sr-only">Cuadernos de fisica computacional</h1>
+	<h1 class="sr-only">Computational physics notebooks</h1>
 
 	<main class="main">
 		{#if filtered.length === 0}
 			<div class="empty">
-				<p class="empty__message">
-					Ningun cuaderno coincide con los filtros.
-				</p>
+				<p class="empty__message">No notebook matches these filters.</p>
 				<button
 					class="empty__reset"
 					type="button"
 					onclick={() => update(EMPTY_FILTERS)}
 				>
-					Limpiar filtros
+					Clear filters
 				</button>
 			</div>
 		{:else}
-			<div class="courses">
-				{#each filtered as course (course.id)}
-					<CourseGroup {course} />
+			<div class="topics">
+				{#each filtered as topic (topic.id)}
+					<TopicGroup {topic} />
 				{/each}
 			</div>
 		{/if}
 	</main>
 
-	<Footer title={site.title} repository={site.repository} />
+	<Footer {site} {topics} />
 </div>
 
 <style>
@@ -104,7 +102,7 @@
 		padding: 2.5rem var(--gutter) var(--gutter);
 	}
 
-	.courses {
+	.topics {
 		display: flex;
 		flex-direction: column;
 		gap: 3.5rem;

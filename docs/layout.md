@@ -1,16 +1,16 @@
 # Repository layout
 
 The repository has one site boundary. `site/` contains the frontend and its
-generated static inputs. Course material stays in `packages/` and enters the
+generated static inputs. Notebook source stays in `packages/` and enters the
 site only through the explicit notebook export command. The SvelteKit build does
-not scan the repository root or course packages directly.
+not scan the repository root or the topic packages directly.
 
 ## Top-level folders
 
 | Folder         | Kind            | What belongs there                                                                           |
 | -------------- | --------------- | -------------------------------------------------------------------------------------------- |
 | `site/`        | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports |
-| `packages/`    | notebook source | Course packages, notebooks, supporting Python source, data, and package dependencies         |
+| `packages/`    | notebook source | Topic packages, notebooks, supporting Python source, data, and package dependencies          |
 | `scripts/`     | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
 | `.github/`     | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
 | `docs/`        | other           | Architecture and operator documentation; it is not site content                              |
@@ -47,6 +47,6 @@ site/src/ + site/static/ ──────────────────�
 
 `site/static/notebooks/`, `site/build/`, `site/.svelte-kit/`, and
 `site/node_modules/` are ignored generated or installed content. Do not place
-course source, research notes, native build output, or documentation under
+notebook source, research notes, native build output, or documentation under
 `site/`. Add those files to `packages/` or the appropriate tooling/documentation
 folder instead.

@@ -9,16 +9,12 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "dinamica-molecular",
-    "fisica-computacional",
-    "fisica-moderna",
-    "fundamentos-de-riesgos-y-desastres",
-    "inteligencia-artificial",
-    "introduccion-a-sismologia",
-    "mecanica-estadistica",
-    "tecnicas-de-teledeteccion",
-    "topicos-avanzados-tsunamis",
-    "undergrad",
+    "dynamics",
+    "geophysics",
+    "notebooks",
+    "numerical-methods",
+    "remote-sensing",
+    "statistical-physics",
 ]
 
 [[package]]
@@ -300,31 +296,27 @@ wheels = [
 ]
 
 [[package]]
-name = "dinamica-molecular"
-version = "0.1.0"
-source = { editable = "packages/dinamica-molecular" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numba" },
-    { name = "numpy" },
-    { name = "pillow" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numba", specifier = ">=0.68.1" },
-    { name = "numpy", specifier = ">=2.5.4" },
-    { name = "pillow", specifier = ">=12.0.0" },
-]
-
-[[package]]
 name = "docutils"
 version = "0.23"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/39/a4/5180d9afc57e8fca05601dd652bdff19604c218814037fe90ffc7625a50a/docutils-0.23.tar.gz", hash = "sha256:746f5060322511280a1e50eb76846ed6bf2342984b2ac04dc42caa1a8d78799e", size = 2303823, upload-time = "2026-05-27T17:41:06.934Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/32/91/30151a39f7570f448ed84529390628a651d7f27c87d73c9b887f8189695e/docutils-0.23-py3-none-any.whl", hash = "sha256:25d013af9bf23bc1c7b2b093dff4208166c53a94786c9e447808335ef1185fea", size = 634701, upload-time = "2026-05-27T17:40:58.442Z" },
+]
+
+[[package]]
+name = "dynamics"
+version = "0.1.0"
+source = { virtual = "packages/dynamics" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
 ]
 
 [[package]]
@@ -342,36 +334,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/5f/9c/ff75e1388c4dd22facb16570bf36d33ef69b6eb315c241490369da2af8fa/earthengine_api-1.7.52.tar.gz", hash = "sha256:b73e4f490e9f18323bcd5101be93dc2ad6255b12ba6d5921974899fe269f9b20", size = 437875, upload-time = "2026-11-09T22:56:02.879Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/07/5e/114aaf18eeac75882106b8156dfccf2ba07970b7f2f505e720b264ca5f10/earthengine_api-1.7.52-py3-none-any.whl", hash = "sha256:82c5a8083e95eab27270994ef55bf879827264f8fa245459a52fb4ce50ae7255", size = 484921, upload-time = "2026-11-09T22:56:01.069Z" },
-]
-
-[[package]]
-name = "fisica-computacional"
-version = "0.1.0"
-source = { virtual = "packages/fisica-computacional" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numpy", specifier = ">=2.5.4" },
-]
-
-[[package]]
-name = "fisica-moderna"
-version = "0.1.0"
-source = { virtual = "packages/fisica-moderna" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numpy", specifier = ">=2.5.4" },
 ]
 
 [[package]]
@@ -402,27 +364,6 @@ wheels = [
 ]
 
 [[package]]
-name = "fundamentos-de-riesgos-y-desastres"
-version = "0.1.0"
-source = { editable = "packages/fundamentos-de-riesgos-y-desastres" }
-dependencies = [
-    { name = "certifi" },
-    { name = "geopandas" },
-    { name = "matplotlib" },
-    { name = "pandas" },
-    { name = "requests" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "certifi", specifier = ">=2026.10.23" },
-    { name = "geopandas", specifier = ">=1.2.0" },
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "pandas", specifier = ">=3.1.1" },
-    { name = "requests", specifier = ">=2.34.2" },
-]
-
-[[package]]
 name = "geopandas"
 version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
@@ -437,6 +378,31 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d3/6b/079d42d468f6537b0e8ba04ad411d53fe6b03070801e5b85328b01d28772/geopandas-1.2.0.tar.gz", hash = "sha256:72425b0dec1b77122b1e00f72c2b3b91f320cf0331ae236d37e26865e8808628", size = 337713, upload-time = "2026-09-28T15:53:57.721Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c7/26/10e1061c79b388621b7bae46fcd4942a8c62f960018adf4c38719e9e91ac/geopandas-1.2.0-py3-none-any.whl", hash = "sha256:948fd57df4f713697d5cce149333c0e4714965320c9f5ffa411666c577962eba", size = 368068, upload-time = "2026-09-28T15:53:55.62Z" },
+]
+
+[[package]]
+name = "geophysics"
+version = "0.1.0"
+source = { editable = "packages/geophysics" }
+dependencies = [
+    { name = "certifi" },
+    { name = "geopandas" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "obspy" },
+    { name = "pandas" },
+    { name = "requests" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "certifi", specifier = ">=2026.10.23" },
+    { name = "geopandas", specifier = ">=1.2.0" },
+    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
+    { name = "obspy", specifier = ">=1.5.1" },
+    { name = "pandas", specifier = ">=3.1.1" },
+    { name = "requests", specifier = ">=2.34.2" },
 ]
 
 [[package]]
@@ -593,34 +559,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f5/08/8eea9d4b8302028f3abb2c0813953f7aec26d33b7a8960ed760e65ff29fa/idna-3.20.tar.gz", hash = "sha256:a7db850025b95ded1eae8a46181a1a6c56c92c96f0e2b005d9ff8dc0210cab44", size = 216463, upload-time = "2026-09-17T14:11:04.752Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl", hash = "sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c", size = 69583, upload-time = "2026-09-17T14:11:03.168Z" },
-]
-
-[[package]]
-name = "inteligencia-artificial"
-version = "0.1.0"
-source = { virtual = "packages/inteligencia-artificial" }
-dependencies = [
-    { name = "pandas" },
-]
-
-[package.metadata]
-requires-dist = [{ name = "pandas", specifier = ">=3.1.1" }]
-
-[[package]]
-name = "introduccion-a-sismologia"
-version = "0.1.0"
-source = { virtual = "packages/introduccion-a-sismologia" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-    { name = "obspy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numpy", specifier = ">=2.5.4" },
-    { name = "obspy", specifier = ">=1.5.1" },
 ]
 
 [[package]]
@@ -841,25 +779,6 @@ wheels = [
 ]
 
 [[package]]
-name = "mecanica-estadistica"
-version = "0.1.0"
-source = { virtual = "packages/mecanica-estadistica" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numba" },
-    { name = "numpy" },
-    { name = "plotly" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numba", specifier = ">=0.68.1" },
-    { name = "numpy", specifier = ">=2.5.4" },
-    { name = "plotly", specifier = ">=7.1.0" },
-]
-
-[[package]]
 name = "msgspec"
 version = "0.22.0"
 source = { registry = "https://pypi.org/simple" }
@@ -898,6 +817,33 @@ wheels = [
 ]
 
 [[package]]
+name = "notebooks"
+version = "0.1.0"
+source = { virtual = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "marimo" },
+    { name = "ruff" },
+]
+lint = [
+    { name = "ruff" },
+]
+notebooks = [
+    { name = "marimo" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "marimo", specifier = ">=0.25.2" },
+    { name = "ruff", specifier = ">=0.17.5" },
+]
+lint = [{ name = "ruff", specifier = ">=0.17.5" }]
+notebooks = [{ name = "marimo", specifier = ">=0.25.2" }]
+
+[[package]]
 name = "numba"
 version = "0.68.1"
 source = { registry = "https://pypi.org/simple" }
@@ -916,6 +862,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/d4/c8/893430907c3933bcb713234152ebdefdb41951d508a5f646852ca040c20e/numba-0.68.1-cp314-cp314t-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:10967c80d943d32fec1a28bad89b404c820778c5d472844661900399879cbe95", size = 3606698, upload-time = "2026-10-27T18:12:52.526Z" },
     { url = "https://files.pythonhosted.org/packages/11/85/b2e524942792a397daf6191ea8a660696b63b0842cc922ef9ff9d8b05ec9/numba-0.68.1-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:de5fbbd0bec5496dc0408bf1eeaad4ff64a2b1e3c66b4065e4c42523550ee3e1", size = 3889866, upload-time = "2026-10-27T18:12:54.305Z" },
     { url = "https://files.pythonhosted.org/packages/06/b5/4e1cc8045d866c0e990a3c4dd62c7614382d40a6ceb1878d0cb47618b1e0/numba-0.68.1-cp314-cp314t-win_amd64.whl", hash = "sha256:8b89ed029ec79d017af9101afd8f832b1f7eb1a366227a439437c17f38be6122", size = 2839987, upload-time = "2026-10-27T18:12:55.99Z" },
+]
+
+[[package]]
+name = "numerical-methods"
+version = "0.1.0"
+source = { virtual = "packages/numerical-methods" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
 ]
 
 [[package]]
@@ -1374,6 +1335,33 @@ wheels = [
 ]
 
 [[package]]
+name = "remote-sensing"
+version = "0.1.0"
+source = { virtual = "packages/remote-sensing" }
+dependencies = [
+    { name = "6s-bin" },
+    { name = "earthengine-api" },
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pandas" },
+    { name = "py6s" },
+    { name = "python-dotenv" },
+    { name = "rasterio" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "6s-bin", specifier = ">=0.11.3" },
+    { name = "earthengine-api", specifier = ">=1.7.52" },
+    { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numpy", specifier = ">=2.5.4" },
+    { name = "pandas", specifier = ">=3.1.1" },
+    { name = "py6s", specifier = ">=1.9.2" },
+    { name = "python-dotenv", specifier = ">=1.2.4" },
+    { name = "rasterio", specifier = ">=1.5.2" },
+]
+
+[[package]]
 name = "requests"
 version = "2.34.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1527,30 +1515,24 @@ wheels = [
 ]
 
 [[package]]
-name = "tecnicas-de-teledeteccion"
+name = "statistical-physics"
 version = "0.1.0"
-source = { virtual = "packages/tecnicas-de-teledeteccion" }
+source = { editable = "packages/statistical-physics" }
 dependencies = [
-    { name = "6s-bin" },
-    { name = "earthengine-api" },
     { name = "matplotlib" },
+    { name = "numba" },
     { name = "numpy" },
-    { name = "pandas" },
-    { name = "py6s" },
-    { name = "python-dotenv" },
-    { name = "rasterio" },
+    { name = "pillow" },
+    { name = "plotly" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "6s-bin", specifier = ">=0.11.3" },
-    { name = "earthengine-api", specifier = ">=1.7.52" },
     { name = "matplotlib", specifier = ">=3.11.2" },
+    { name = "numba", specifier = ">=0.68.1" },
     { name = "numpy", specifier = ">=2.5.4" },
-    { name = "pandas", specifier = ">=3.1.1" },
-    { name = "py6s", specifier = ">=1.9.2" },
-    { name = "python-dotenv", specifier = ">=1.2.4" },
-    { name = "rasterio", specifier = ">=1.5.2" },
+    { name = "pillow", specifier = ">=12.0.0" },
+    { name = "plotly", specifier = ">=7.1.0" },
 ]
 
 [[package]]
@@ -1560,21 +1542,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/08/72/fc01563df95c189a9f65850096bdc205bc2fe37da6c740cd64afaf18d07e/tomlkit-0.15.2.tar.gz", hash = "sha256:83e32755ba1d20d9340bd069ee97e9f6232ba2346b63ffcba425de01f7e327a6", size = 190522, upload-time = "2026-10-16T04:07:08.166Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/da/46/7d84138a60a8bd796825b2d38ebe92d0d16501ca57d501b7c5d677401bbc/tomlkit-0.15.2-py3-none-any.whl", hash = "sha256:05562412163a3037b94497385fb7f9204c637bc605af7a48199e41cf2272f437", size = 52225, upload-time = "2026-10-16T04:07:09.216Z" },
-]
-
-[[package]]
-name = "topicos-avanzados-tsunamis"
-version = "0.1.0"
-source = { editable = "packages/topicos-avanzados-tsunamis" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "numpy" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "matplotlib", specifier = ">=3.11.2" },
-    { name = "numpy", specifier = ">=2.5.4" },
 ]
 
 [[package]]
@@ -1594,33 +1561,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/7a/29/6a1391d31cd00ff9e
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl", hash = "sha256:0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec", size = 348210, upload-time = "2026-10-28T09:57:07.276Z" },
 ]
-
-[[package]]
-name = "undergrad"
-version = "0.1.0"
-source = { virtual = "." }
-
-[package.dev-dependencies]
-dev = [
-    { name = "marimo" },
-    { name = "ruff" },
-]
-lint = [
-    { name = "ruff" },
-]
-notebooks = [
-    { name = "marimo" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "marimo", specifier = ">=0.25.2" },
-    { name = "ruff", specifier = ">=0.17.5" },
-]
-lint = [{ name = "ruff", specifier = ">=0.17.5" }]
-notebooks = [{ name = "marimo", specifier = ">=0.25.2" }]
 
 [[package]]
 name = "uritemplate"

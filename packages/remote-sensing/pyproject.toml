@@ -1,0 +1,13 @@
+[project]
+name = "remote-sensing"
+version = "0.1.0"
+dependencies = [
+    "earthengine-api>=1.7.52",
+    "python-dotenv>=1.2.4",
+    "py6s>=1.9.2",
+    "6s-bin>=0.11.3",
+    "rasterio>=1.5.2",
+    "pandas>=3.1.1",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+]

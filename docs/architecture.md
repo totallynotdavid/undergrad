@@ -1,22 +1,24 @@
 # Architecture
 
-Undergrad is a `uv` workspace. Each directory under `packages/` is a course
-package with its own dependencies and teaching material. The root
-`pyproject.toml` defines the workspace and shared development tools. The
+Notebooks is a `uv` workspace. Each directory under `packages/` is a topic
+package with its own dependencies, notebooks, supporting modules and data. The
+root `pyproject.toml` defines the workspace and shared development tools. The
 workspace lockfile is `uv.lock`.
 
 ## Notebook sources
 
-Course notebooks and supporting modules live in their course package. The
-catalog in [`notebooks.toml`](../notebooks.toml) is the source of truth for the
-lessons shown by the site. It assigns each entry a course, section, source path,
-summary, package, and whether the site publishes it (`export`).
+A notebook lives in the package of its topic, next to the modules and data it
+reads. The catalog in [`notebooks.toml`](../notebooks.toml) is the source of
+truth for the site. Each `[[topics]]` table names a package by its directory
+under `packages/`, and each `[[topics.notebooks]]` entry gives a notebook's id,
+title, file and summary. A notebook's slug is `topic-id/notebook-id`. The site
+publishes every notebook in the catalog.
 
 [`scripts/notebooks_manifest.py`](../scripts/notebooks_manifest.py) reads the
-catalog, checks paths and slugs, and writes the typed frontend data to
+catalog, checks ids, paths and packages, and writes the typed frontend data to
 [`site/src/lib/catalog.generated.ts`](../site/src/lib/catalog.generated.ts).
-Every entry receives a source URL to the repository. Published entries also
-receive a site asset path.
+Each notebook receives a source URL to the repository and the path of its
+published page.
 
 ## Export pipeline
 
@@ -24,27 +26,22 @@ receive a site asset path.
 catalog generation, and notebook export. The `validate` command checks only the
 manifest. The `data` command regenerates the frontend catalog, and
 `data --check` fails when the committed catalog is out of date without writing
-it. The `export` command does not touch the catalog. It checks each published
-notebook, runs it with `marimo export html`, and writes its results as one
-static page. A notebook whose check or export fails fails the command, and its
-page is not written. So does a page over 1,000,000 bytes (`MAX_PAGE_BYTES`),
-because marimo embeds every figure in the page as a base64 PNG. Lower the figure
-resolution or plot fewer points to fit.
-
-Each `[[redirects]]` entry in the catalog becomes a small static page at the old
-slug. It refreshes to the new page through a relative link, so it works under
-any base path. Validation rejects a redirect whose target is not an exported
-notebook, and one that duplicates or shares a folder with another page.
+it. The `export` command does not touch the catalog. It checks each notebook,
+runs it with `marimo export html`, and writes its results as one static page. A
+notebook whose check or export fails fails the command, and its page is not
+written. So does a page over 1,000,000 bytes (`MAX_PAGE_BYTES`), because marimo
+embeds every figure in the page as a base64 PNG. Lower the figure resolution or
+plot fewer points to fit.
 
 The export rewrites the page shell that marimo generates: the catalog title and
-summary replace the title and description, the language is `es`, and marimo's
-favicon, manifest, touch icon and two decorative image preloads are removed. The
-export fails if marimo's template no longer has one of these parts. The page
-still loads marimo's frontend scripts from the jsDelivr CDN, pinned to the
-locked marimo version.
+summary replace the title and description, the language is `es` because the
+notebook text is Spanish, and marimo's favicon, manifest, touch icon and two
+decorative image preloads are removed. The export fails if marimo's template no
+longer has one of these parts. The page still loads marimo's frontend scripts
+from the jsDelivr CDN, pinned to the locked marimo version.
 
-The pipeline runs `uv run --locked` with the package named by each catalog
-entry. This keeps notebook imports scoped to the course that owns them.
+The pipeline runs `uv run --locked` with the package of each notebook's topic.
+This keeps notebook imports scoped to the package that owns them.
 
 ```text
 notebooks.toml
@@ -59,27 +56,24 @@ export_notebooks.py ------> site/static/notebooks ----> static site build
 ## Site
 
 [`site/src/routes/+page.svelte`](../site/src/routes/+page.svelte) renders the
-catalog. It loads the generated site data, applies the search and course filters
-from [`site/src/lib/filters.ts`](../site/src/lib/filters.ts), and groups entries
-by course and section.
-
-[`site/src/lib/components/NotebookCard.svelte`](../site/src/lib/components/NotebookCard.svelte)
-uses the `export` field to choose the published asset for exported entries and
-the source URL for other entries.
+catalog. It loads the generated site data, applies the search and topic filters
+from [`site/src/lib/filters.ts`](../site/src/lib/filters.ts), and groups the
+notebooks by topic. Each card links to the notebook's published page.
 
 [`site/src/routes/+layout.ts`](../site/src/routes/+layout.ts) enables
 prerendering. The SvelteKit adapter produces a static site in `site/build`. The
 deployment workflow in
 [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) generates the
-catalog, checks and exports published notebooks, then builds that directory for
-GitHub Pages.
+catalog, checks and exports the notebooks, then builds that directory for GitHub
+Pages.
 
 [`layout.md`](layout.md) defines the folder map and site build boundary. `site/`
-contains only the frontend and generated site inputs. Course source, teaching
-material, documentation, and build tooling remain outside it.
+contains only the frontend and generated site inputs. Notebook source, data,
+documentation, and build tooling remain outside it.
 
-## Course dependencies
+## Package dependencies
 
-Each package `pyproject.toml` owns its course dependencies. The remote-sensing
-package declares rasterio as a normal dependency for its raster notebook.
-Package requirements are documented in [`environment.md`](environment.md).
+Each package `pyproject.toml` owns the dependencies of its notebooks. The
+remote-sensing package declares rasterio as a normal dependency for its raster
+notebook. Package requirements are documented in
+[`environment.md`](environment.md).

@@ -1,22 +1,22 @@
-# Undergrad
+# Notebooks
 
-Undergrad is a collection of Python course notebooks for undergraduate physics
-and geoscience classes. Students and instructors can read, run, and inspect the
-computations. Set up the workspace and open a numerical methods notebook with
-`uv`:
+Notebooks is a collection of computational physics notebooks, written in
+Spanish. Each one works through a physics or geoscience problem in Python, and
+readers can run and inspect every computation. Set up the workspace and open the
+simple pendulum notebook:
 
 ```sh
 mise install -y
 mise run install
-uv run --package fisica-computacional marimo edit packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_simple.py
+uv run --package dynamics marimo edit packages/dynamics/pendulo_simple.py
 ```
 
-The repository contains course packages for numerical physics, dynamical
-systems, statistical mechanics, artificial intelligence, remote sensing, and
-risk and disaster studies. The [notebook catalog](notebooks.toml) selects the
-lessons that the static site publishes or links to as source. A published lesson
-is a read-only page of the notebook's results. The reader's browser never runs
-Python.
+The notebooks are grouped by topic. Each topic is a package under `packages/`:
+numerical methods, dynamics and differential equations, statistical and
+molecular physics, radiation and remote sensing, and solid Earth and hazards.
+The [notebook catalog](notebooks.toml) lists the notebooks that the static site
+publishes. A published notebook is a read-only page of its results. The reader's
+browser never runs Python.
 
 The [architecture](docs/architecture.md) describes the package, catalog, export,
 and site boundaries. The [manual](docs/readme.md) covers notebook checks,

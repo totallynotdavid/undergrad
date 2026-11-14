@@ -1,16 +1,16 @@
-import type { Course } from "./catalog.generated";
+import type { Topic } from "./catalog.generated";
 
 export type Filters = {
   query: string;
-  courseId: string;
+  topicId: string;
 };
 
-export const EMPTY_FILTERS: Filters = { query: "", courseId: "" };
+export const EMPTY_FILTERS: Filters = { query: "", topicId: "" };
 
 export function parseFilters(params: URLSearchParams): Filters {
   return {
     query: params.get("q") ?? "",
-    courseId: params.get("curso") ?? "",
+    topicId: params.get("topic") ?? "",
   };
 }
 
@@ -18,7 +18,7 @@ export function filtersToSearchParams(filters: Filters): URLSearchParams {
   const params = new URLSearchParams();
   const query = filters.query.trim();
   if (query) params.set("q", query);
-  if (filters.courseId) params.set("curso", filters.courseId);
+  if (filters.topicId) params.set("topic", filters.topicId);
   return params;
 }
 
@@ -29,21 +29,18 @@ function fold(value: string): string {
     .toLowerCase();
 }
 
-export function applyFilters(courses: Course[], filters: Filters): Course[] {
+export function applyFilters(topics: Topic[], filters: Filters): Topic[] {
   const needle = fold(filters.query.trim());
-  return courses
-    .filter((course) => !filters.courseId || course.id === filters.courseId)
-    .flatMap((course) => {
-      const sections = course.sections.flatMap((section) => {
-        const notebooks = section.notebooks.filter(
-          (notebook) =>
-            !needle ||
-            fold(
-              `${notebook.title} ${notebook.summary} ${notebook.path}`,
-            ).includes(needle),
-        );
-        return notebooks.length > 0 ? [{ ...section, notebooks }] : [];
-      });
-      return sections.length > 0 ? [{ ...course, sections }] : [];
+  return topics
+    .filter((topic) => !filters.topicId || topic.id === filters.topicId)
+    .flatMap((topic) => {
+      const notebooks = topic.notebooks.filter(
+        (notebook) =>
+          !needle ||
+          fold(
+            `${notebook.title} ${notebook.summary} ${notebook.path}`,
+          ).includes(needle),
+      );
+      return notebooks.length > 0 ? [{ ...topic, notebooks }] : [];
     });
 }

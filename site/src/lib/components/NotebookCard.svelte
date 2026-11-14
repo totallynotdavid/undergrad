@@ -1,25 +1,17 @@
 <script lang="ts">
 	import { asset } from '$app/paths';
 	import type { AssetPath } from '$app/types';
-	import RunState from './RunState.svelte';
 	import type { Notebook } from '#lib/catalog.generated.js';
 
 	let { notebook }: { notebook: Notebook } = $props();
-
-	const href = $derived(
-		notebook.export ? asset(notebook.assetPath as AssetPath) : notebook.sourceUrl
-	);
 </script>
 
-<a class="card" {href} target="_blank" rel="external noopener">
+<a class="card" href={asset(notebook.assetPath as AssetPath)} target="_blank" rel="external noopener">
 	<div class="card__body">
 		<h4 class="card__title">{notebook.title}</h4>
 		<p class="card__summary">{notebook.summary}</p>
 	</div>
-	<div class="card__foot">
-		<RunState exported={notebook.export} />
-		<span class="card__path" title={notebook.path}>{notebook.path}</span>
-	</div>
+	<span class="card__path" title={notebook.path}>{notebook.path}</span>
 </a>
 
 <style>
@@ -78,12 +70,6 @@
 		margin: 0;
 		line-height: 1.5;
 		color: var(--content-secondary);
-	}
-	.card__foot {
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-		min-width: 0;
 	}
 	.card__path {
 		overflow: hidden;

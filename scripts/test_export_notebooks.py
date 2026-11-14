@@ -1,18 +1,15 @@
 from __future__ import annotations
 
-import dataclasses
-import re
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 from textwrap import dedent
 from unittest import mock
-from urllib.parse import urljoin
 
 import export_notebooks
 import notebooks_manifest
-from notebooks_manifest import Notebook, Redirect, redirect_errors
+from notebooks_manifest import Notebook
 
 NOTEBOOK = dedent(
     """\
@@ -60,17 +57,13 @@ OVERSIZED_CELL = dedent(
 
 def catalog_entry(path: Path) -> Notebook:
     return Notebook(
-        course_id="curso",
-        course="Curso",
-        section_id="seccion",
-        section="Seccion",
+        topic_id="numerical-methods",
+        topic="Fundamentos numericos",
         title="Titulo <de> prueba",
         summary="Resumen de prueba",
         path=str(path),
-        package="fisica-computacional",
-        package_dir="packages/fisica-computacional",
-        slug="curso/seccion/prueba",
-        export=True,
+        package_dir="packages/numerical-methods",
+        slug="numerical-methods/prueba",
     )
 
 
@@ -155,53 +148,6 @@ class CatalogDataTest(unittest.TestCase):
 
             self.assertEqual(self.run_data(generated, "--check"), 0)
             self.assertEqual(generated.read_text(encoding="utf-8"), written)
-
-
-class RedirectTest(unittest.TestCase):
-    def notebooks(self, *slugs: str, export: bool = True) -> list[Notebook]:
-        return [
-            dataclasses.replace(catalog_entry(Path(slug)), slug=slug, export=export)
-            for slug in slugs
-        ]
-
-    def test_redirect_page_resolves_to_the_new_page_under_any_base_path(self):
-        redirect = Redirect(source="curso/viejo/pagina", target="curso/nuevo/pagina")
-
-        with tempfile.TemporaryDirectory() as directory:
-            export_notebooks.write_redirect(redirect, Path(directory))
-            page = (Path(directory) / redirect.source / "index.html").read_text(
-                encoding="utf-8"
-            )
-
-        url = re.search(r'http-equiv="refresh" content="0; url=([^"]+)"', page)
-        self.assertIsNotNone(url)
-        for base in ("https://sitio.test", "https://sitio.test/undergrad"):
-            old_page = f"{base}/notebooks/{redirect.source}/"
-            self.assertEqual(
-                urljoin(old_page, url.group(1)), f"{base}/notebooks/{redirect.target}/"
-            )
-        self.assertIn(f'<a href="{url.group(1)}">', page)
-
-    def test_redirect_validation(self):
-        new = "curso/nuevo/pagina"
-        old = Redirect("curso/viejo/pagina", new)
-        cases = {
-            "valid": (True, [old], None),
-            "target is not exported": (False, [old], "not an exported notebook"),
-            "replaces a page": (True, [Redirect(new, new)], "collides"),
-            "sits above a page": (True, [Redirect("curso/nuevo", new)], "collides"),
-            "sits inside a page": (True, [Redirect(f"{new}/x", new)], "collides"),
-            "duplicate address": (True, [old, old], "Duplicate"),
-        }
-        for name, (export, redirects, message) in cases.items():
-            with self.subTest(name):
-                errors = redirect_errors(self.notebooks(new, export=export), redirects)
-
-                if message is None:
-                    self.assertEqual(errors, [])
-                else:
-                    self.assertEqual(len(errors), 1)
-                    self.assertIn(message, errors[0])
 
 
 if __name__ == "__main__":

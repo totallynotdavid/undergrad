@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import type { Course } from "./catalog.generated";
+import type { Topic } from "./catalog.generated";
 import {
   applyFilters,
   filtersToSearchParams,
@@ -8,124 +8,79 @@ import {
   type Filters,
 } from "./filters";
 
-const courses: Course[] = [
+const topics: Topic[] = [
   {
-    id: "dinamica",
-    title: "Dinamica",
-    folderUrl: "https://example.test/dinamica",
-    sections: [
-      {
-        id: "caos",
-        title: "Caos",
-        notebooks: [
-          nb(
-            "Atractor de Lorenz",
-            "Sistema caotico clasico",
-            "a/lorenz.py",
-            true,
-          ),
-          nb(
-            "Mapa logistico",
-            "Bifurcaciones y periodo",
-            "a/logistico.py",
-            false,
-          ),
-        ],
-      },
+    id: "dynamics",
+    title: "Dynamics",
+    folderUrl: "https://example.test/dynamics",
+    notebooks: [
+      nb("Lorenz attractor", "A classic chaotic system", "a/lorenz.py"),
+      nb("Logistic map", "Bifurcations and period doubling", "a/logistic.py"),
     ],
   },
   {
-    id: "estadistica",
-    title: "Mecanica estadistica",
-    folderUrl: "https://example.test/estadistica",
-    sections: [
-      {
-        id: "montecarlo",
-        title: "Monte Carlo",
-        notebooks: [
-          nb("Modelo de Ising", "Metropolis en una red", "b/ising.py", true),
-        ],
-      },
-    ],
+    id: "statistical-physics",
+    title: "Statistical physics",
+    folderUrl: "https://example.test/statistical-physics",
+    notebooks: [nb("Ising model", "Metropolis on a lattice", "b/ising.py")],
   },
 ];
 
-function nb(title: string, summary: string, path: string, exported: boolean) {
-  return {
-    title,
-    summary,
-    slug: path,
-    path,
-    export: exported,
-    sourceUrl: "",
-    assetPath: "",
-  };
+function nb(title: string, summary: string, path: string) {
+  return { title, summary, slug: path, path, sourceUrl: "", assetPath: "" };
 }
 
-function count(result: Course[]): number {
-  return result.reduce(
-    (sum, course) =>
-      sum +
-      course.sections.reduce((n, section) => n + section.notebooks.length, 0),
-    0,
-  );
+function count(result: Topic[]): number {
+  return result.reduce((sum, topic) => sum + topic.notebooks.length, 0);
 }
 
 function filters(partial: Partial<Filters>): Filters {
-  return { query: "", courseId: "", ...partial };
+  return { query: "", topicId: "", ...partial };
 }
 
 test("parseFilters reads the two query keys with empty defaults", () => {
-  expect(parseFilters(new URLSearchParams("q=lorenz&curso=dinamica"))).toEqual({
+  expect(parseFilters(new URLSearchParams("q=lorenz&topic=dynamics"))).toEqual({
     query: "lorenz",
-    courseId: "dinamica",
+    topicId: "dynamics",
   });
   expect(parseFilters(new URLSearchParams(""))).toEqual({
     query: "",
-    courseId: "",
+    topicId: "",
   });
 });
 
 test("filtersToSearchParams omits empty and trimmed-empty values", () => {
   expect(
-    filtersToSearchParams(filters({ query: "  ", courseId: "" })).toString(),
+    filtersToSearchParams(filters({ query: "  ", topicId: "" })).toString(),
   ).toBe("");
   expect(
     filtersToSearchParams(
-      filters({ query: "  lorenz  ", courseId: "dinamica" }),
+      filters({ query: "  lorenz  ", topicId: "dynamics" }),
     ).toString(),
-  ).toBe("q=lorenz&curso=dinamica");
+  ).toBe("q=lorenz&topic=dynamics");
 });
 
-test("applyFilters keeps the notebooks matching the course and the folded query", () => {
+test("applyFilters keeps the notebooks matching the topic and the folded query", () => {
   const cases: [string, Partial<Filters>, number][] = [
     ["empty filters keep every notebook", {}, 3],
     ["query folds diacritics in the title", { query: "LÓRENZ" }, 1],
     ["query matches the summary", { query: "metropolis" }, 1],
     ["query matches the path", { query: "ising.py" }, 1],
-    ["course keeps only its notebooks", { courseId: "estadistica" }, 1],
+    ["topic keeps only its notebooks", { topicId: "statistical-physics" }, 1],
+    ["topic and query intersect", { topicId: "dynamics", query: "lorenz" }, 1],
     [
-      "course and query intersect",
-      { courseId: "dinamica", query: "lorenz" },
-      1,
-    ],
-    [
-      "course and query disjoint",
-      { courseId: "estadistica", query: "lorenz" },
+      "topic and query disjoint",
+      { topicId: "statistical-physics", query: "lorenz" },
       0,
     ],
   ];
   for (const [name, partial, expected] of cases) {
-    expect(count(applyFilters(courses, filters(partial))), name).toBe(expected);
+    expect(count(applyFilters(topics, filters(partial))), name).toBe(expected);
   }
 });
 
-test("a filter that matches nothing yields an empty catalog, not empty sections", () => {
-  expect(applyFilters(courses, filters({ query: "zzz" }))).toEqual([]);
-  const pruned = applyFilters(
-    courses,
-    filters({ courseId: "dinamica", query: "lorenz" }),
-  );
-  expect(pruned.map((course) => course.id)).toEqual(["dinamica"]);
-  expect(pruned[0].sections.map((section) => section.id)).toEqual(["caos"]);
+test("a filter that matches nothing yields an empty catalog, not empty topics", () => {
+  expect(applyFilters(topics, filters({ query: "zzz" }))).toEqual([]);
+  const pruned = applyFilters(topics, filters({ query: "lorenz" }));
+  expect(pruned.map((topic) => topic.id)).toEqual(["dynamics"]);
 });

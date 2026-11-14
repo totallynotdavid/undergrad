@@ -1,21 +1,21 @@
 <script lang="ts">
-	import type { Course } from '#lib/catalog.generated.js';
+	import type { Topic } from '#lib/catalog.generated.js';
 	import type { Filters } from '#lib/filters.js';
 
 	let {
 		filters,
-		courses,
+		topics,
 		onchange
 	}: {
 		filters: Filters;
-		courses: Course[];
+		topics: Topic[];
 		onchange: (next: Filters) => void;
 	} = $props();
 </script>
 
 <form class="controls" role="search" onsubmit={(event) => event.preventDefault()}>
 	<div class="controls__field controls__field--search">
-		<label class="controls__label" for="nb-search">Buscar</label>
+		<label class="controls__label" for="nb-search">Search</label>
 		<input
 			id="nb-search"
 			name="q"
@@ -29,17 +29,17 @@
 		<kbd class="controls__hint" aria-hidden="true">/</kbd>
 	</div>
 	<div class="controls__field">
-		<label class="controls__label" for="nb-course">Curso</label>
+		<label class="controls__label" for="nb-topic">Topic</label>
 		<select
-			id="nb-course"
-			name="curso"
+			id="nb-topic"
+			name="topic"
 			class="controls__input controls__select"
-			value={filters.courseId}
-			onchange={(event) => onchange({ ...filters, courseId: event.currentTarget.value })}
+			value={filters.topicId}
+			onchange={(event) => onchange({ ...filters, topicId: event.currentTarget.value })}
 		>
-			<option value="">Todos los cursos</option>
-			{#each courses as course (course.id)}
-				<option value={course.id}>{course.title}</option>
+			<option value="">All topics</option>
+			{#each topics as topic (topic.id)}
+				<option value={topic.id}>{topic.title}</option>
 			{/each}
 		</select>
 	</div>

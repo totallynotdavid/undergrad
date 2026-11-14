@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import html
-import posixpath
 import re
 import shutil
 import subprocess
@@ -14,7 +13,6 @@ from notebooks_manifest import (
     ROOT,
     SITE_DIR,
     Notebook,
-    Redirect,
     frontend_data_is_current,
     load_manifest,
     validate_manifest,
@@ -131,55 +129,18 @@ def export_results(notebook: Notebook, output_dir: Path) -> None:
     page_path.write_text(page, encoding="utf-8")
 
 
-REDIRECT_PAGE = """\
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <title>Pagina movida</title>
-    <meta name="robots" content="noindex" />
-    <meta http-equiv="refresh" content="0; url={url}" />
-  </head>
-  <body>
-    <p>Esta pagina se movio. <a href="{url}">Ir a la nueva direccion</a>.</p>
-  </body>
-</html>
-"""
-
-
-def write_redirect(redirect: Redirect, output_dir: Path) -> None:
-    # A relative link works under any site base path.
-    url = html.escape(posixpath.relpath(redirect.target, redirect.source) + "/")
-    page_dir = output_dir / redirect.source
-    page_dir.mkdir(parents=True, exist_ok=True)
-    (page_dir / "index.html").write_text(
-        REDIRECT_PAGE.format(url=url), encoding="utf-8"
-    )
-
-
 def export_notebooks(clean: bool) -> None:
-    _, notebooks, redirects = load_manifest()
-    validate_manifest(notebooks, redirects)
+    _, notebooks = load_manifest()
+    validate_manifest(notebooks)
 
     if clean:
         clean_output_dir(STATIC_NOTEBOOKS_DIR)
 
     STATIC_NOTEBOOKS_DIR.mkdir(parents=True, exist_ok=True)
     for notebook in notebooks:
-        if not notebook.export:
-            continue
-
-        check = run(
-            [
-                *marimo_command("check", notebook),
-            ]
-        )
-        if check:
+        if run(marimo_command("check", notebook)):
             raise SystemExit(f"Check failed for {notebook.path}")
         export_results(notebook, STATIC_NOTEBOOKS_DIR / notebook.slug)
-
-    for redirect in redirects:
-        write_redirect(redirect, STATIC_NOTEBOOKS_DIR)
 
 
 def parse_args() -> argparse.Namespace:
@@ -207,8 +168,8 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    site, notebooks, redirects = load_manifest()
-    validate_manifest(notebooks, redirects)
+    site, notebooks = load_manifest()
+    validate_manifest(notebooks)
 
     if args.command == "validate":
         return 0

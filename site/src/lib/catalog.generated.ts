@@ -6,22 +6,15 @@ export interface Notebook {
   summary: string;
   slug: string;
   path: string;
-  export: boolean;
   sourceUrl: string;
   assetPath: string;
 }
 
-export interface Section {
-  id: string;
-  title: string;
-  notebooks: Notebook[];
-}
-
-export interface Course {
+export interface Topic {
   id: string;
   title: string;
   folderUrl: string;
-  sections: Section[];
+  notebooks: Notebook[];
 }
 
 export interface Site {
@@ -32,341 +25,211 @@ export interface Site {
 
 export const site: Site = {
   "title": "Notebooks",
-  "description": "Cuadernos de fisica computacional: metodos numericos, sistemas dinamicos, mecanica estadistica y teledeteccion.",
-  "repository": "https://github.com/totallynotdavid/undergrad"
+  "description": "Computational physics notebooks in Spanish: numerical methods, dynamical systems, statistical physics, remote sensing and geophysics.",
+  "repository": "https://github.com/totallynotdavid/notebooks"
 };
 
-export const courses: Course[] = [
+export const topics: Topic[] = [
   {
-    "id": "fisica-computacional",
-    "title": "Fisica computacional",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fisica-computacional",
-    "sections": [
+    "id": "numerical-methods",
+    "title": "Numerical methods",
+    "folderUrl": "https://github.com/totallynotdavid/notebooks/tree/master/packages/numerical-methods",
+    "notebooks": [
       {
-        "id": "metodos-numericos",
-        "title": "Metodos numericos",
-        "notebooks": [
-          {
-            "title": "Error de punto flotante",
-            "summary": "Representacion binaria con float.hex, epsilon de maquina con numpy.finfo y las diferencias entre float32 y float64 al sumar, restar y acumular.",
-            "slug": "fisica-computacional/metodos-numericos/punto-flotante",
-            "path": "packages/fisica-computacional/metodos-numericos/errores-numericos/punto_flotante.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/errores-numericos/punto_flotante.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/punto-flotante/"
-          },
-          {
-            "title": "Derivacion numerica",
-            "summary": "Diferencias hacia adelante, hacia atras y centradas, el error contra h con su orden y el piso de redondeo, y la extrapolacion de Richardson.",
-            "slug": "fisica-computacional/metodos-numericos/derivacion-numerica",
-            "path": "packages/fisica-computacional/metodos-numericos/derivacion-numerica/derivacion_numerica.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/derivacion-numerica/derivacion_numerica.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/derivacion-numerica/"
-          },
-          {
-            "title": "Solucion de ecuaciones no lineales",
-            "summary": "Biseccion, falsa posicion y Newton con sus graficas de convergencia, el orden observado y el caso de la raiz multiple.",
-            "slug": "fisica-computacional/metodos-numericos/raices",
-            "path": "packages/fisica-computacional/metodos-numericos/solucion-ecuaciones-no-lineales/raices.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/solucion-ecuaciones-no-lineales/raices.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/raices/"
-          },
-          {
-            "title": "Interpolacion polinomial",
-            "summary": "Lagrange, diferencias divididas de Newton y diferencias finitas, y el fenomeno de Runge con nodos equiespaciados y de Chebyshev.",
-            "slug": "fisica-computacional/metodos-numericos/interpolacion",
-            "path": "packages/fisica-computacional/metodos-numericos/interpolacion/interpolacion.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/interpolacion/interpolacion.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/interpolacion/"
-          },
-          {
-            "title": "Pendulo simple",
-            "summary": "Periodo exacto con la integral eliptica completa frente a pequenas oscilaciones, y deriva de la energia con velocity Verlet y RK4.",
-            "slug": "fisica-computacional/metodos-numericos/pendulo-simple",
-            "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_simple.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_simple.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/pendulo-simple/"
-          },
-          {
-            "title": "Pendulo doble",
-            "summary": "Pendulo doble caotico con Euler y RK4, deriva de la energia de cada metodo y exponente de Lyapunov desde dos trayectorias cercanas.",
-            "slug": "fisica-computacional/metodos-numericos/pendulo-doble",
-            "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_doble.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/pendulo_doble.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/pendulo-doble/"
-          },
-          {
-            "title": "Dos masas y tres resortes",
-            "summary": "Modos normales por descomposicion en valores propios y la serie temporal RK4 que los muestra.",
-            "slug": "fisica-computacional/metodos-numericos/tres-resortes",
-            "path": "packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/tres_resortes.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/pendulos-y-osciladores/tres_resortes.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/tres-resortes/"
-          },
-          {
-            "title": "EDP de calor en una dimension",
-            "summary": "Ecuacion de calor 1D con diferencias finitas: esquema explicito con r = 0.4, 0.5 y 0.6 (inestable), Crank-Nicolson y la solucion de Fourier.",
-            "slug": "fisica-computacional/metodos-numericos/edp-calor",
-            "path": "packages/fisica-computacional/metodos-numericos/edp/edp_calor.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/edp/edp_calor.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/edp-calor/"
-          },
-          {
-            "title": "Integracion de Monte Carlo",
-            "summary": "Estimador de Monte Carlo con NumPy, su error que decae como 1/sqrt(N) y reduccion de varianza por muestreo por importancia.",
-            "slug": "fisica-computacional/metodos-numericos/monte-carlo",
-            "path": "packages/fisica-computacional/metodos-numericos/monte-carlo/main.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-computacional/metodos-numericos/monte-carlo/main.py",
-            "assetPath": "/notebooks/fisica-computacional/metodos-numericos/monte-carlo/"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "fisica-moderna",
-    "title": "Fisica moderna",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fisica-moderna",
-    "sections": [
-      {
-        "id": "sistemas-dinamicos",
-        "title": "Sistemas dinamicos",
-        "notebooks": [
-          {
-            "title": "Atractor de Lorenz",
-            "summary": "Sistema de Lorenz integrado con RK4: el atractor, su mayor exponente de Lyapunov, el mapa de maximos de z y la bifurcacion en rho.",
-            "slug": "fisica-moderna/sistemas-dinamicos/atractor-de-lorenz",
-            "path": "packages/fisica-moderna/atractor_de_lorenz.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-moderna/atractor_de_lorenz.py",
-            "assetPath": "/notebooks/fisica-moderna/sistemas-dinamicos/atractor-de-lorenz/"
-          }
-        ]
+        "title": "Floating-point error",
+        "summary": "Binary representation with float.hex, machine epsilon from numpy.finfo, and how float32 and float64 differ when adding, subtracting and accumulating.",
+        "slug": "numerical-methods/floating-point",
+        "path": "packages/numerical-methods/punto_flotante.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/numerical-methods/punto_flotante.py",
+        "assetPath": "/notebooks/numerical-methods/floating-point/"
       },
       {
-        "id": "radiacion",
-        "title": "Radiacion",
-        "notebooks": [
-          {
-            "title": "Curva de Planck",
-            "summary": "Ley de Planck con sus limites de Rayleigh-Jeans y Wien, el desplazamiento de Wien y la ley de Stefan-Boltzmann por integracion numerica.",
-            "slug": "fisica-moderna/radiacion/curva-de-planck",
-            "path": "packages/fisica-moderna/curva-de-planck/main.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fisica-moderna/curva-de-planck/main.py",
-            "assetPath": "/notebooks/fisica-moderna/radiacion/curva-de-planck/"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "mecanica-estadistica",
-    "title": "Mecanica estadistica",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/mecanica-estadistica",
-    "sections": [
-      {
-        "id": "monte-carlo",
-        "title": "Monte Carlo",
-        "notebooks": [
-          {
-            "title": "Volumen de la hiperesfera",
-            "summary": "Monte Carlo por rechazo del volumen de la bola unitaria frente a la formula exacta, y por que la tasa de aceptacion se hunde al crecer la dimension.",
-            "slug": "mecanica-estadistica/monte-carlo/volumen-hiperesfera",
-            "path": "packages/mecanica-estadistica/calcular_volumen_esfera_n_dimensiones.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/mecanica-estadistica/calcular_volumen_esfera_n_dimensiones.py",
-            "assetPath": "/notebooks/mecanica-estadistica/monte-carlo/volumen-hiperesfera/"
-          },
-          {
-            "title": "Modelo de Ising 3D",
-            "summary": "Metropolis para el modelo de Ising 3D con varios tamanos de red: magnetizacion, energia, susceptibilidad, calor especifico y el cruce del cumulante de Binder que ubica la temperatura critica.",
-            "slug": "mecanica-estadistica/monte-carlo/modelo-de-ising",
-            "path": "packages/mecanica-estadistica/modelo_de_ising.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/mecanica-estadistica/modelo_de_ising.py",
-            "assetPath": "/notebooks/mecanica-estadistica/monte-carlo/modelo-de-ising/"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "inteligencia-artificial",
-    "title": "Inteligencia artificial",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/inteligencia-artificial",
-    "sections": [
-      {
-        "id": "datos-tabulares",
-        "title": "Datos tabulares",
-        "notebooks": [
-          {
-            "title": "Limpieza de datos tabulares",
-            "summary": "Limpieza y codificacion de variables sobre datos tabulares, con el dataset Titanic.",
-            "slug": "inteligencia-artificial/datos-tabulares/limpieza-datos-tabulares",
-            "path": "packages/inteligencia-artificial/limpieza_datos_tabulares.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/inteligencia-artificial/limpieza_datos_tabulares.py",
-            "assetPath": "/notebooks/inteligencia-artificial/datos-tabulares/limpieza-datos-tabulares/"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "id": "tecnicas-de-teledeteccion",
-    "title": "Tecnicas de teledeteccion",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/tecnicas-de-teledeteccion",
-    "sections": [
-      {
-        "id": "earth-engine-y-6s",
-        "title": "Earth Engine y 6S",
-        "notebooks": [
-          {
-            "title": "Clase 0: Py6S",
-            "summary": "Transferencia radiativa atmosferica con el modelo 6S a traves de Py6S.",
-            "slug": "tecnicas-de-teledeteccion/earth-engine-y-6s/clase-0-py6s",
-            "path": "packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_0_py6s.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_0_py6s.py",
-            "assetPath": "/notebooks/tecnicas-de-teledeteccion/earth-engine-y-6s/clase-0-py6s/"
-          },
-          {
-            "title": "Clase 1: Earth Engine",
-            "summary": "Acceso y procesamiento de imagenes satelitales con Google Earth Engine.",
-            "slug": "tecnicas-de-teledeteccion/earth-engine-y-6s/clase-1-earth-engine",
-            "path": "packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_1_earth_engine.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/earth-engine-y-6s/clase_1_earth_engine.py",
-            "assetPath": "/notebooks/tecnicas-de-teledeteccion/earth-engine-y-6s/clase-1-earth-engine/"
-          }
-        ]
+        "title": "Numerical differentiation",
+        "summary": "Forward, backward and central differences, the error against h with its order and rounding floor, and Richardson extrapolation.",
+        "slug": "numerical-methods/numerical-differentiation",
+        "path": "packages/numerical-methods/derivacion_numerica.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/numerical-methods/derivacion_numerica.py",
+        "assetPath": "/notebooks/numerical-methods/numerical-differentiation/"
       },
       {
-        "id": "raster-y-gdal",
-        "title": "Raster y rasterio",
-        "notebooks": [
-          {
-            "title": "Clase 2: rasterio",
-            "summary": "Lectura y manipulacion de rasteres Landsat con rasterio.",
-            "slug": "tecnicas-de-teledeteccion/raster-y-gdal/clase-2-gdal",
-            "path": "packages/tecnicas-de-teledeteccion/raster-y-gdal/clase_2_gdal.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/raster-y-gdal/clase_2_gdal.py",
-            "assetPath": "/notebooks/tecnicas-de-teledeteccion/raster-y-gdal/clase-2-gdal/"
-          }
-        ]
+        "title": "Solving nonlinear equations",
+        "summary": "Bisection, false position and Newton's method with their convergence plots, the observed order, and the multiple-root case.",
+        "slug": "numerical-methods/root-finding",
+        "path": "packages/numerical-methods/raices.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/numerical-methods/raices.py",
+        "assetPath": "/notebooks/numerical-methods/root-finding/"
       },
       {
-        "id": "correccion-atmosferica",
-        "title": "Correccion atmosferica",
-        "notebooks": [
-          {
-            "title": "Correccion atmosferica GaoFen-1",
-            "summary": "Correccion atmosferica de imagenes GaoFen-1 con 6S y rasterio.",
-            "slug": "tecnicas-de-teledeteccion/correccion-atmosferica/correccion-atmosferica-gaofen1",
-            "path": "packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1/main.py",
-            "assetPath": "/notebooks/tecnicas-de-teledeteccion/correccion-atmosferica/correccion-atmosferica-gaofen1/"
-          }
-        ]
+        "title": "Polynomial interpolation",
+        "summary": "Lagrange, Newton divided differences and finite differences, and Runge's phenomenon with equispaced and Chebyshev nodes.",
+        "slug": "numerical-methods/interpolation",
+        "path": "packages/numerical-methods/interpolacion.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/numerical-methods/interpolacion.py",
+        "assetPath": "/notebooks/numerical-methods/interpolation/"
+      },
+      {
+        "title": "Monte Carlo integration",
+        "summary": "The Monte Carlo estimator in NumPy, its error falling as 1/sqrt(N), and variance reduction by importance sampling.",
+        "slug": "numerical-methods/monte-carlo",
+        "path": "packages/numerical-methods/monte_carlo.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/numerical-methods/monte_carlo.py",
+        "assetPath": "/notebooks/numerical-methods/monte-carlo/"
       }
     ]
   },
   {
-    "id": "fundamentos-de-riesgos-y-desastres",
-    "title": "Fundamentos de riesgos y desastres",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/fundamentos-de-riesgos-y-desastres",
-    "sections": [
+    "id": "dynamics",
+    "title": "Dynamics and differential equations",
+    "folderUrl": "https://github.com/totallynotdavid/notebooks/tree/master/packages/dynamics",
+    "notebooks": [
       {
-        "id": "peligros-geologicos",
-        "title": "Peligros geologicos",
-        "notebooks": [
-          {
-            "title": "Movimientos en masa en Ancash",
-            "summary": "Inventario de peligros geologicos de INGEMMET en Ancash: tipos de movimiento en masa, provincias mas afectadas, mapa y factores que condicionan los huaicos.",
-            "slug": "fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros-geologicos-ancash",
-            "path": "packages/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros_geologicos_ancash.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros_geologicos_ancash.py",
-            "assetPath": "/notebooks/fundamentos-de-riesgos-y-desastres/peligros-geologicos/peligros-geologicos-ancash/"
-          }
-        ]
+        "title": "Simple pendulum",
+        "summary": "The exact period from the complete elliptic integral against small oscillations, and energy drift under velocity Verlet and RK4.",
+        "slug": "dynamics/simple-pendulum",
+        "path": "packages/dynamics/pendulo_simple.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/dynamics/pendulo_simple.py",
+        "assetPath": "/notebooks/dynamics/simple-pendulum/"
+      },
+      {
+        "title": "Two masses and three springs",
+        "summary": "Normal modes from an eigenvalue decomposition, and the RK4 time series that shows them.",
+        "slug": "dynamics/three-springs",
+        "path": "packages/dynamics/tres_resortes.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/dynamics/tres_resortes.py",
+        "assetPath": "/notebooks/dynamics/three-springs/"
+      },
+      {
+        "title": "Double pendulum",
+        "summary": "A chaotic double pendulum with Euler and RK4, the energy drift of each method, and a Lyapunov exponent from two nearby trajectories.",
+        "slug": "dynamics/double-pendulum",
+        "path": "packages/dynamics/pendulo_doble.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/dynamics/pendulo_doble.py",
+        "assetPath": "/notebooks/dynamics/double-pendulum/"
+      },
+      {
+        "title": "Lorenz attractor",
+        "summary": "The Lorenz system integrated with RK4: the attractor, its largest Lyapunov exponent, the map of z maxima, and the bifurcation in rho.",
+        "slug": "dynamics/lorenz-attractor",
+        "path": "packages/dynamics/atractor_de_lorenz.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/dynamics/atractor_de_lorenz.py",
+        "assetPath": "/notebooks/dynamics/lorenz-attractor/"
+      },
+      {
+        "title": "The heat equation in one dimension",
+        "summary": "The 1D heat equation with finite differences: the explicit scheme at r = 0.4, 0.5 and 0.6 (unstable), Crank-Nicolson, and the Fourier solution.",
+        "slug": "dynamics/heat-equation",
+        "path": "packages/dynamics/edp_calor.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/dynamics/edp_calor.py",
+        "assetPath": "/notebooks/dynamics/heat-equation/"
       }
     ]
   },
   {
-    "id": "introduccion-a-sismologia",
-    "title": "Introduccion a la sismologia",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/introduccion-a-sismologia",
-    "sections": [
+    "id": "statistical-physics",
+    "title": "Statistical and molecular physics",
+    "folderUrl": "https://github.com/totallynotdavid/notebooks/tree/master/packages/statistical-physics",
+    "notebooks": [
       {
-        "id": "procesamiento-de-senales",
-        "title": "Procesamiento de senales",
-        "notebooks": [
-          {
-            "title": "Procesamiento de registros SAC con ObsPy",
-            "summary": "Registros del terremoto de Pisco 2007: seccion sismica por distancia, espectros y picado de la onda P con STA/LTA.",
-            "slug": "introduccion-a-sismologia/procesamiento-de-senales/procesamiento-sac",
-            "path": "packages/introduccion-a-sismologia/lab3/procesamiento_sac.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/introduccion-a-sismologia/lab3/procesamiento_sac.py",
-            "assetPath": "/notebooks/introduccion-a-sismologia/procesamiento-de-senales/procesamiento-sac/"
-          }
-        ]
+        "title": "Volume of a hypersphere",
+        "summary": "Rejection Monte Carlo for the volume of the unit ball against the exact formula, and why the acceptance rate collapses as the dimension grows.",
+        "slug": "statistical-physics/hypersphere-volume",
+        "path": "packages/statistical-physics/volumen_hiperesfera.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/statistical-physics/volumen_hiperesfera.py",
+        "assetPath": "/notebooks/statistical-physics/hypersphere-volume/"
+      },
+      {
+        "title": "3D Ising model",
+        "summary": "Metropolis sampling of the 3D Ising model on several lattice sizes: magnetization, energy, susceptibility, specific heat, and the Binder cumulant crossing that locates the critical temperature.",
+        "slug": "statistical-physics/ising-model",
+        "path": "packages/statistical-physics/modelo_de_ising.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/statistical-physics/modelo_de_ising.py",
+        "assetPath": "/notebooks/statistical-physics/ising-model/"
+      },
+      {
+        "title": "Liquid argon and potassium clusters",
+        "summary": "Lennard-Jones with velocity Verlet and periodic boundaries: energy, temperature, g(r) and diffusion, then a tight-binding potential for K clusters.",
+        "slug": "statistical-physics/argon-and-potassium",
+        "path": "packages/statistical-physics/argon_y_potasio.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/statistical-physics/argon_y_potasio.py",
+        "assetPath": "/notebooks/statistical-physics/argon-and-potassium/"
       }
     ]
   },
   {
-    "id": "dinamica-molecular",
-    "title": "Dinamica molecular",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/dinamica-molecular",
-    "sections": [
+    "id": "remote-sensing",
+    "title": "Radiation and remote sensing",
+    "folderUrl": "https://github.com/totallynotdavid/notebooks/tree/master/packages/remote-sensing",
+    "notebooks": [
       {
-        "id": "simulacion",
-        "title": "Simulacion",
-        "notebooks": [
-          {
-            "title": "Argon liquido y cumulos de potasio",
-            "summary": "Lennard-Jones con velocity Verlet y condiciones periodicas: energia, temperatura, g(r), difusion, y un potencial de enlace fuerte para cumulos de K.",
-            "slug": "dinamica-molecular/simulacion/argon-y-potasio",
-            "path": "packages/dinamica-molecular/cuadernos/simulacion_argon.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/dinamica-molecular/cuadernos/simulacion_argon.py",
-            "assetPath": "/notebooks/dinamica-molecular/simulacion/argon-y-potasio/"
-          }
-        ]
+        "title": "Planck's law",
+        "summary": "Planck's law with its Rayleigh-Jeans and Wien limits, Wien's displacement law, and the Stefan-Boltzmann law by numerical integration.",
+        "slug": "remote-sensing/planck-curve",
+        "path": "packages/remote-sensing/curva_de_planck.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/remote-sensing/curva_de_planck.py",
+        "assetPath": "/notebooks/remote-sensing/planck-curve/"
+      },
+      {
+        "title": "Radiative transfer with 6S",
+        "summary": "Atmospheric radiative transfer with the 6S model through Py6S.",
+        "slug": "remote-sensing/radiative-transfer-6s",
+        "path": "packages/remote-sensing/transferencia_radiativa_6s.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/remote-sensing/transferencia_radiativa_6s.py",
+        "assetPath": "/notebooks/remote-sensing/radiative-transfer-6s/"
+      },
+      {
+        "title": "Earth Engine over Peru",
+        "summary": "SRTM elevation, MODIS land cover and land surface temperature over Lima, Cusco and Iquitos with Google Earth Engine.",
+        "slug": "remote-sensing/earth-engine-peru",
+        "path": "packages/remote-sensing/earth_engine_peru.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/remote-sensing/earth_engine_peru.py",
+        "assetPath": "/notebooks/remote-sensing/earth-engine-peru/"
+      },
+      {
+        "title": "Landsat rasters with rasterio",
+        "summary": "Reading a Landsat scene with rasterio: metadata, bands, and masking NoData values.",
+        "slug": "remote-sensing/landsat-rasterio",
+        "path": "packages/remote-sensing/landsat_rasterio.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/remote-sensing/landsat_rasterio.py",
+        "assetPath": "/notebooks/remote-sensing/landsat-rasterio/"
+      },
+      {
+        "title": "GaoFen-1 atmospheric correction",
+        "summary": "Atmospheric correction of GaoFen-1 images with 6S and rasterio.",
+        "slug": "remote-sensing/gaofen1-atmospheric-correction",
+        "path": "packages/remote-sensing/gaofen1/correccion_atmosferica_gaofen1.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/remote-sensing/gaofen1/correccion_atmosferica_gaofen1.py",
+        "assetPath": "/notebooks/remote-sensing/gaofen1-atmospheric-correction/"
       }
     ]
   },
   {
-    "id": "topicos-avanzados-tsunamis",
-    "title": "Topicos avanzados en tsunamis",
-    "folderUrl": "https://github.com/totallynotdavid/undergrad/tree/master/packages/topicos-avanzados-tsunamis",
-    "sections": [
+    "id": "geophysics",
+    "title": "Solid Earth and hazards",
+    "folderUrl": "https://github.com/totallynotdavid/notebooks/tree/master/packages/geophysics",
+    "notebooks": [
       {
-        "id": "fuente-sismica",
-        "title": "Fuente sismica",
-        "notebooks": [
-          {
-            "title": "De la falla al tsunami",
-            "summary": "Deformacion vertical del fondo con el modelo de Okada para el terremoto de Pisco de 2007, validada contra Fortran, y condicion inicial del tsunami con el filtro de Kajiura.",
-            "slug": "topicos-avanzados-tsunamis/fuente-sismica/deformacion-tsunami",
-            "path": "packages/topicos-avanzados-tsunamis/deformacion_tsunami.py",
-            "export": true,
-            "sourceUrl": "https://github.com/totallynotdavid/undergrad/blob/master/packages/topicos-avanzados-tsunamis/deformacion_tsunami.py",
-            "assetPath": "/notebooks/topicos-avanzados-tsunamis/fuente-sismica/deformacion-tsunami/"
-          }
-        ]
+        "title": "Processing SAC records with ObsPy",
+        "summary": "Records of the 2007 Pisco earthquake: a record section by distance, spectra, and P-wave picking with STA/LTA.",
+        "slug": "geophysics/sac-processing",
+        "path": "packages/geophysics/procesamiento_sac.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/geophysics/procesamiento_sac.py",
+        "assetPath": "/notebooks/geophysics/sac-processing/"
+      },
+      {
+        "title": "From fault to tsunami",
+        "summary": "Seafloor uplift from the Okada model for the 2007 Pisco earthquake, checked against the Fortran code, and the tsunami's initial condition through the Kajiura filter.",
+        "slug": "geophysics/fault-to-tsunami",
+        "path": "packages/geophysics/deformacion_tsunami.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/geophysics/deformacion_tsunami.py",
+        "assetPath": "/notebooks/geophysics/fault-to-tsunami/"
+      },
+      {
+        "title": "Mass movements in Ancash",
+        "summary": "INGEMMET's geological hazard inventory for Ancash: types of mass movement, the most affected provinces, a map, and the factors behind debris flows.",
+        "slug": "geophysics/ancash-landslides",
+        "path": "packages/geophysics/peligros_geologicos_ancash.py",
+        "sourceUrl": "https://github.com/totallynotdavid/notebooks/blob/master/packages/geophysics/peligros_geologicos_ancash.py",
+        "assetPath": "/notebooks/geophysics/ancash-landslides/"
       }
     ]
   }

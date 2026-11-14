@@ -60,32 +60,25 @@ run = [
 description = "Run every test suite"
 depends = ["test:*"]
 
-[tasks."test:gaofen1"]
+[tasks."test:numerical-methods"]
+description = "Run the numerical methods notebooks and check their results"
+run = "uv run --locked --package numerical-methods python -m unittest discover -s packages/numerical-methods/tests"
+
+[tasks."test:statistical-physics"]
+description = "Test the molecular dynamics code and the statistical physics notebooks"
+run = "uv run --locked --package statistical-physics python -m unittest discover -s packages/statistical-physics/tests"
+
+[tasks."test:remote-sensing"]
 description = "Test the offline Gaofen-1 atmospheric correction"
-run = "uv run --locked --package tecnicas-de-teledeteccion python -m unittest discover -s packages/tecnicas-de-teledeteccion/correccion-atmosferica-gaofen1 -p 'test_*.py'"
+run = "uv run --locked --package remote-sensing python -m unittest discover -s packages/remote-sensing/gaofen1 -p 'test_*.py'"
+
+[tasks."test:geophysics"]
+description = "Test the tsunami deformation code and the INGEMMET hazard inventory download"
+run = "uv run --locked --package geophysics python -m unittest discover -s packages/geophysics/tests"
 
 [tasks."test:scripts"]
 description = "Test the notebook export script"
 run = "uv run --locked python -m unittest discover -s scripts"
-
-[tasks."test:notebooks"]
-description = "Run the statistical mechanics and numerical methods notebooks and check their results"
-run = [
-  "uv run --locked --package mecanica-estadistica python -m unittest discover -s packages/mecanica-estadistica",
-  "uv run --locked --package fisica-computacional python -m unittest discover -s packages/fisica-computacional",
-]
-
-[tasks."test:dinamica-molecular"]
-description = "Test the molecular dynamics package"
-run = "uv run --locked --package dinamica-molecular python -m unittest discover -s packages/dinamica-molecular/tests"
-
-[tasks."test:tsunamis"]
-description = "Test the tsunami deformation code"
-run = "uv run --locked --package topicos-avanzados-tsunamis python -m unittest discover -s packages/topicos-avanzados-tsunamis/tests"
-
-[tasks."test:riesgos"]
-description = "Test the INGEMMET hazard inventory download"
-run = "uv run --locked --package fundamentos-de-riesgos-y-desastres python -m unittest discover -s packages/fundamentos-de-riesgos-y-desastres/tests"
 
 [tasks."test:web"]
 description = "Test the site with Vitest"

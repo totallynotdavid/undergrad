@@ -1,259 +1,151 @@
 [site]
 title = "Notebooks"
-description = "Cuadernos de fisica computacional: metodos numericos, sistemas dinamicos, mecanica estadistica y teledeteccion."
-repository = "https://github.com/totallynotdavid/undergrad"
+description = "Computational physics notebooks in Spanish: numerical methods, dynamical systems, statistical physics, remote sensing and geophysics."
+repository = "https://github.com/totallynotdavid/notebooks"
 branch = "master"
 
-[defaults]
-root = "packages"
+[[topics]]
+id = "numerical-methods"
+title = "Numerical methods"
 
-[[redirects]]
-from = "fisica-general/pendulos/pendulo-doble"
-to = "fisica-computacional/metodos-numericos/pendulo-doble"
+[[topics.notebooks]]
+id = "floating-point"
+title = "Floating-point error"
+file = "punto_flotante.py"
+summary = "Binary representation with float.hex, machine epsilon from numpy.finfo, and how float32 and float64 differ when adding, subtracting and accumulating."
 
-[[courses]]
-id = "fisica-computacional"
-title = "Fisica computacional"
-package = "fisica-computacional"
+[[topics.notebooks]]
+id = "numerical-differentiation"
+title = "Numerical differentiation"
+file = "derivacion_numerica.py"
+summary = "Forward, backward and central differences, the error against h with its order and rounding floor, and Richardson extrapolation."
 
-[[courses.sections]]
-id = "metodos-numericos"
-title = "Metodos numericos"
+[[topics.notebooks]]
+id = "root-finding"
+title = "Solving nonlinear equations"
+file = "raices.py"
+summary = "Bisection, false position and Newton's method with their convergence plots, the observed order, and the multiple-root case."
 
-[[courses.sections.notebooks]]
-id = "punto-flotante"
-title = "Error de punto flotante"
-file = "metodos-numericos/errores-numericos/punto_flotante.py"
-summary = "Representacion binaria con float.hex, epsilon de maquina con numpy.finfo y las diferencias entre float32 y float64 al sumar, restar y acumular."
-export = true
+[[topics.notebooks]]
+id = "interpolation"
+title = "Polynomial interpolation"
+file = "interpolacion.py"
+summary = "Lagrange, Newton divided differences and finite differences, and Runge's phenomenon with equispaced and Chebyshev nodes."
 
-[[courses.sections.notebooks]]
-id = "derivacion-numerica"
-title = "Derivacion numerica"
-file = "metodos-numericos/derivacion-numerica/derivacion_numerica.py"
-summary = "Diferencias hacia adelante, hacia atras y centradas, el error contra h con su orden y el piso de redondeo, y la extrapolacion de Richardson."
-export = true
-
-[[courses.sections.notebooks]]
-id = "raices"
-title = "Solucion de ecuaciones no lineales"
-file = "metodos-numericos/solucion-ecuaciones-no-lineales/raices.py"
-summary = "Biseccion, falsa posicion y Newton con sus graficas de convergencia, el orden observado y el caso de la raiz multiple."
-export = true
-
-[[courses.sections.notebooks]]
-id = "interpolacion"
-title = "Interpolacion polinomial"
-file = "metodos-numericos/interpolacion/interpolacion.py"
-summary = "Lagrange, diferencias divididas de Newton y diferencias finitas, y el fenomeno de Runge con nodos equiespaciados y de Chebyshev."
-export = true
-
-[[courses.sections.notebooks]]
-id = "pendulo-simple"
-title = "Pendulo simple"
-file = "metodos-numericos/pendulos-y-osciladores/pendulo_simple.py"
-summary = "Periodo exacto con la integral eliptica completa frente a pequenas oscilaciones, y deriva de la energia con velocity Verlet y RK4."
-export = true
-
-[[courses.sections.notebooks]]
-id = "pendulo-doble"
-title = "Pendulo doble"
-file = "metodos-numericos/pendulos-y-osciladores/pendulo_doble.py"
-summary = "Pendulo doble caotico con Euler y RK4, deriva de la energia de cada metodo y exponente de Lyapunov desde dos trayectorias cercanas."
-export = true
-
-[[courses.sections.notebooks]]
-id = "tres-resortes"
-title = "Dos masas y tres resortes"
-file = "metodos-numericos/pendulos-y-osciladores/tres_resortes.py"
-summary = "Modos normales por descomposicion en valores propios y la serie temporal RK4 que los muestra."
-export = true
-
-[[courses.sections.notebooks]]
-id = "edp-calor"
-title = "EDP de calor en una dimension"
-file = "metodos-numericos/edp/edp_calor.py"
-summary = "Ecuacion de calor 1D con diferencias finitas: esquema explicito con r = 0.4, 0.5 y 0.6 (inestable), Crank-Nicolson y la solucion de Fourier."
-export = true
-
-[[courses.sections.notebooks]]
+[[topics.notebooks]]
 id = "monte-carlo"
-title = "Integracion de Monte Carlo"
-file = "metodos-numericos/monte-carlo/main.py"
-summary = "Estimador de Monte Carlo con NumPy, su error que decae como 1/sqrt(N) y reduccion de varianza por muestreo por importancia."
-export = true
+title = "Monte Carlo integration"
+file = "monte_carlo.py"
+summary = "The Monte Carlo estimator in NumPy, its error falling as 1/sqrt(N), and variance reduction by importance sampling."
 
-[[courses]]
-id = "fisica-moderna"
-title = "Fisica moderna"
-package = "fisica-moderna"
+[[topics]]
+id = "dynamics"
+title = "Dynamics and differential equations"
 
-[[courses.sections]]
-id = "sistemas-dinamicos"
-title = "Sistemas dinamicos"
+[[topics.notebooks]]
+id = "simple-pendulum"
+title = "Simple pendulum"
+file = "pendulo_simple.py"
+summary = "The exact period from the complete elliptic integral against small oscillations, and energy drift under velocity Verlet and RK4."
 
-[[courses.sections.notebooks]]
-id = "atractor-de-lorenz"
-title = "Atractor de Lorenz"
+[[topics.notebooks]]
+id = "three-springs"
+title = "Two masses and three springs"
+file = "tres_resortes.py"
+summary = "Normal modes from an eigenvalue decomposition, and the RK4 time series that shows them."
+
+[[topics.notebooks]]
+id = "double-pendulum"
+title = "Double pendulum"
+file = "pendulo_doble.py"
+summary = "A chaotic double pendulum with Euler and RK4, the energy drift of each method, and a Lyapunov exponent from two nearby trajectories."
+
+[[topics.notebooks]]
+id = "lorenz-attractor"
+title = "Lorenz attractor"
 file = "atractor_de_lorenz.py"
-summary = "Sistema de Lorenz integrado con RK4: el atractor, su mayor exponente de Lyapunov, el mapa de maximos de z y la bifurcacion en rho."
-export = true
+summary = "The Lorenz system integrated with RK4: the attractor, its largest Lyapunov exponent, the map of z maxima, and the bifurcation in rho."
 
-[[courses.sections]]
-id = "radiacion"
-title = "Radiacion"
+[[topics.notebooks]]
+id = "heat-equation"
+title = "The heat equation in one dimension"
+file = "edp_calor.py"
+summary = "The 1D heat equation with finite differences: the explicit scheme at r = 0.4, 0.5 and 0.6 (unstable), Crank-Nicolson, and the Fourier solution."
 
-[[courses.sections.notebooks]]
-id = "curva-de-planck"
-title = "Curva de Planck"
-file = "curva-de-planck/main.py"
-summary = "Ley de Planck con sus limites de Rayleigh-Jeans y Wien, el desplazamiento de Wien y la ley de Stefan-Boltzmann por integracion numerica."
-export = true
+[[topics]]
+id = "statistical-physics"
+title = "Statistical and molecular physics"
 
-[[courses]]
-id = "mecanica-estadistica"
-title = "Mecanica estadistica"
-package = "mecanica-estadistica"
+[[topics.notebooks]]
+id = "hypersphere-volume"
+title = "Volume of a hypersphere"
+file = "volumen_hiperesfera.py"
+summary = "Rejection Monte Carlo for the volume of the unit ball against the exact formula, and why the acceptance rate collapses as the dimension grows."
 
-[[courses.sections]]
-id = "monte-carlo"
-title = "Monte Carlo"
-
-[[courses.sections.notebooks]]
-id = "volumen-hiperesfera"
-title = "Volumen de la hiperesfera"
-file = "calcular_volumen_esfera_n_dimensiones.py"
-summary = "Monte Carlo por rechazo del volumen de la bola unitaria frente a la formula exacta, y por que la tasa de aceptacion se hunde al crecer la dimension."
-export = true
-
-[[courses.sections.notebooks]]
-id = "modelo-de-ising"
-title = "Modelo de Ising 3D"
+[[topics.notebooks]]
+id = "ising-model"
+title = "3D Ising model"
 file = "modelo_de_ising.py"
-summary = "Metropolis para el modelo de Ising 3D con varios tamanos de red: magnetizacion, energia, susceptibilidad, calor especifico y el cruce del cumulante de Binder que ubica la temperatura critica."
-export = true
+summary = "Metropolis sampling of the 3D Ising model on several lattice sizes: magnetization, energy, susceptibility, specific heat, and the Binder cumulant crossing that locates the critical temperature."
 
-[[courses]]
-id = "inteligencia-artificial"
-title = "Inteligencia artificial"
-package = "inteligencia-artificial"
+[[topics.notebooks]]
+id = "argon-and-potassium"
+title = "Liquid argon and potassium clusters"
+file = "argon_y_potasio.py"
+summary = "Lennard-Jones with velocity Verlet and periodic boundaries: energy, temperature, g(r) and diffusion, then a tight-binding potential for K clusters."
 
-[[courses.sections]]
-id = "datos-tabulares"
-title = "Datos tabulares"
+[[topics]]
+id = "remote-sensing"
+title = "Radiation and remote sensing"
 
-[[courses.sections.notebooks]]
-id = "limpieza-datos-tabulares"
-title = "Limpieza de datos tabulares"
-file = "limpieza_datos_tabulares.py"
-summary = "Limpieza y codificacion de variables sobre datos tabulares, con el dataset Titanic."
-export = true
+[[topics.notebooks]]
+id = "planck-curve"
+title = "Planck's law"
+file = "curva_de_planck.py"
+summary = "Planck's law with its Rayleigh-Jeans and Wien limits, Wien's displacement law, and the Stefan-Boltzmann law by numerical integration."
 
-[[courses]]
-id = "tecnicas-de-teledeteccion"
-title = "Tecnicas de teledeteccion"
-package = "tecnicas-de-teledeteccion"
+[[topics.notebooks]]
+id = "radiative-transfer-6s"
+title = "Radiative transfer with 6S"
+file = "transferencia_radiativa_6s.py"
+summary = "Atmospheric radiative transfer with the 6S model through Py6S."
 
-[[courses.sections]]
-id = "earth-engine-y-6s"
-title = "Earth Engine y 6S"
+[[topics.notebooks]]
+id = "earth-engine-peru"
+title = "Earth Engine over Peru"
+file = "earth_engine_peru.py"
+summary = "SRTM elevation, MODIS land cover and land surface temperature over Lima, Cusco and Iquitos with Google Earth Engine."
 
-[[courses.sections.notebooks]]
-id = "clase-0-py6s"
-title = "Clase 0: Py6S"
-file = "earth-engine-y-6s/clase_0_py6s.py"
-summary = "Transferencia radiativa atmosferica con el modelo 6S a traves de Py6S."
-export = true
+[[topics.notebooks]]
+id = "landsat-rasterio"
+title = "Landsat rasters with rasterio"
+file = "landsat_rasterio.py"
+summary = "Reading a Landsat scene with rasterio: metadata, bands, and masking NoData values."
 
-[[courses.sections.notebooks]]
-id = "clase-1-earth-engine"
-title = "Clase 1: Earth Engine"
-file = "earth-engine-y-6s/clase_1_earth_engine.py"
-summary = "Acceso y procesamiento de imagenes satelitales con Google Earth Engine."
-export = true
+[[topics.notebooks]]
+id = "gaofen1-atmospheric-correction"
+title = "GaoFen-1 atmospheric correction"
+file = "gaofen1/correccion_atmosferica_gaofen1.py"
+summary = "Atmospheric correction of GaoFen-1 images with 6S and rasterio."
 
-[[courses.sections]]
-id = "raster-y-gdal"
-title = "Raster y rasterio"
+[[topics]]
+id = "geophysics"
+title = "Solid Earth and hazards"
 
-[[courses.sections.notebooks]]
-id = "clase-2-gdal"
-title = "Clase 2: rasterio"
-file = "raster-y-gdal/clase_2_gdal.py"
-summary = "Lectura y manipulacion de rasteres Landsat con rasterio."
-export = true
+[[topics.notebooks]]
+id = "sac-processing"
+title = "Processing SAC records with ObsPy"
+file = "procesamiento_sac.py"
+summary = "Records of the 2007 Pisco earthquake: a record section by distance, spectra, and P-wave picking with STA/LTA."
 
-[[courses.sections]]
-id = "correccion-atmosferica"
-title = "Correccion atmosferica"
-
-[[courses.sections.notebooks]]
-id = "correccion-atmosferica-gaofen1"
-title = "Correccion atmosferica GaoFen-1"
-file = "correccion-atmosferica-gaofen1/main.py"
-summary = "Correccion atmosferica de imagenes GaoFen-1 con 6S y rasterio."
-export = true
-
-[[courses]]
-id = "fundamentos-de-riesgos-y-desastres"
-title = "Fundamentos de riesgos y desastres"
-package = "fundamentos-de-riesgos-y-desastres"
-
-[[courses.sections]]
-id = "peligros-geologicos"
-title = "Peligros geologicos"
-
-[[courses.sections.notebooks]]
-id = "peligros-geologicos-ancash"
-title = "Movimientos en masa en Ancash"
-file = "peligros-geologicos/peligros_geologicos_ancash.py"
-summary = "Inventario de peligros geologicos de INGEMMET en Ancash: tipos de movimiento en masa, provincias mas afectadas, mapa y factores que condicionan los huaicos."
-export = true
-
-[[courses]]
-id = "introduccion-a-sismologia"
-title = "Introduccion a la sismologia"
-package = "introduccion-a-sismologia"
-
-[[courses.sections]]
-id = "procesamiento-de-senales"
-title = "Procesamiento de senales"
-
-[[courses.sections.notebooks]]
-id = "procesamiento-sac"
-title = "Procesamiento de registros SAC con ObsPy"
-file = "lab3/procesamiento_sac.py"
-summary = "Registros del terremoto de Pisco 2007: seccion sismica por distancia, espectros y picado de la onda P con STA/LTA."
-export = true
-
-[[courses]]
-id = "dinamica-molecular"
-title = "Dinamica molecular"
-package = "dinamica-molecular"
-
-[[courses.sections]]
-id = "simulacion"
-title = "Simulacion"
-
-[[courses.sections.notebooks]]
-id = "argon-y-potasio"
-title = "Argon liquido y cumulos de potasio"
-file = "cuadernos/simulacion_argon.py"
-summary = "Lennard-Jones con velocity Verlet y condiciones periodicas: energia, temperatura, g(r), difusion, y un potencial de enlace fuerte para cumulos de K."
-export = true
-
-[[courses]]
-id = "topicos-avanzados-tsunamis"
-title = "Topicos avanzados en tsunamis"
-package = "topicos-avanzados-tsunamis"
-
-[[courses.sections]]
-id = "fuente-sismica"
-title = "Fuente sismica"
-
-[[courses.sections.notebooks]]
-id = "deformacion-tsunami"
-title = "De la falla al tsunami"
+[[topics.notebooks]]
+id = "fault-to-tsunami"
+title = "From fault to tsunami"
 file = "deformacion_tsunami.py"
-summary = "Deformacion vertical del fondo con el modelo de Okada para el terremoto de Pisco de 2007, validada contra Fortran, y condicion inicial del tsunami con el filtro de Kajiura."
-export = true
+summary = "Seafloor uplift from the Okada model for the 2007 Pisco earthquake, checked against the Fortran code, and the tsunami's initial condition through the Kajiura filter."
+
+[[topics.notebooks]]
+id = "ancash-landslides"
+title = "Mass movements in Ancash"
+file = "peligros_geologicos_ancash.py"
+summary = "INGEMMET's geological hazard inventory for Ancash: types of mass movement, the most affected provinces, a map, and the factors behind debris flows."

@@ -1,5 +1,5 @@
 [project]
-name = "undergrad"
+name = "notebooks"
 version = "0.1.0"
 readme = "readme.md"
 requires-python = ">=3.14,<3.15"

@@ -9,6 +9,7 @@ from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "notebooks.toml"
+PACKAGES = "packages"
 SITE_DIR = ROOT / "site"
 GENERATED_DATA = SITE_DIR / "src" / "lib" / "catalog.generated.ts"
 
@@ -24,27 +25,21 @@ class SiteConfig:
 
 
 @dataclass(frozen=True)
-class Redirect:
-    source: str
-    target: str
-
-
-@dataclass(frozen=True)
 class Notebook:
-    course_id: str
-    course: str
-    section_id: str
-    section: str
+    topic_id: str
+    topic: str
     title: str
     summary: str
     path: str
-    package: str
     package_dir: str
     slug: str
-    export: bool
+
+    @property
+    def package(self) -> str:
+        return self.topic_id
 
 
-def load_manifest() -> tuple[SiteConfig, list[Notebook], list[Redirect]]:
+def load_manifest() -> tuple[SiteConfig, list[Notebook]]:
     with MANIFEST.open("rb") as file:
         data = tomllib.load(file)
 
@@ -55,47 +50,31 @@ def load_manifest() -> tuple[SiteConfig, list[Notebook], list[Redirect]]:
         repository=site_data["repository"].rstrip("/"),
         branch=site_data["branch"],
     )
-    root = data.get("defaults", {}).get("root", "notebooks").strip("/")
-    notebooks = expand_notebooks(root, data.get("courses", []))
-    redirects = [
-        Redirect(source=entry["from"].strip("/"), target=entry["to"].strip("/"))
-        for entry in data.get("redirects", [])
-    ]
-    return site, notebooks, redirects
+    return site, expand_notebooks(data.get("topics", []))
 
 
-def expand_notebooks(root: str, courses: list[dict]) -> list[Notebook]:
+def expand_notebooks(topics: list[dict]) -> list[Notebook]:
+    """Each topic id names the workspace package under packages/ that holds it."""
     notebooks: list[Notebook] = []
-    for course in courses:
-        course_id = course["id"]
-        package = course.get("package", course_id)
-        for section in course.get("sections", []):
-            section_id = section["id"]
-            for entry in section.get("notebooks", []):
-                notebook_id = entry["id"]
-                file_path = entry["file"].strip("/")
-                export = entry["export"]
-                notebooks.append(
-                    Notebook(
-                        course_id=course_id,
-                        course=course["title"],
-                        section_id=section_id,
-                        section=section["title"],
-                        title=entry["title"],
-                        summary=entry["summary"],
-                        path=f"{root}/{package}/{file_path}",
-                        package=package,
-                        package_dir=f"{root}/{package}",
-                        slug=f"{course_id}/{section_id}/{notebook_id}",
-                        export=export,
-                    )
+    for topic in topics:
+        topic_id = topic["id"]
+        package_dir = f"{PACKAGES}/{topic_id}"
+        for entry in topic.get("notebooks", []):
+            notebooks.append(
+                Notebook(
+                    topic_id=topic_id,
+                    topic=topic["title"],
+                    title=entry["title"],
+                    summary=entry["summary"],
+                    path=f"{package_dir}/{entry['file'].strip('/')}",
+                    package_dir=package_dir,
+                    slug=f"{topic_id}/{entry['id']}",
                 )
+            )
     return notebooks
 
 
-def validate_manifest(
-    notebooks: list[Notebook], redirects: list[Redirect] | None = None
-) -> None:
+def validate_manifest(notebooks: list[Notebook]) -> None:
     slugs: set[str] = set()
     paths: set[str] = set()
     errors: list[str] = []
@@ -115,49 +94,14 @@ def validate_manifest(
         if Path(notebook.path).is_absolute() or ".." in Path(notebook.path).parts:
             errors.append(f"Invalid notebook path: {notebook.path}")
 
-        notebook_path = ROOT / notebook.path
-        if not notebook_path.exists():
+        if not (ROOT / notebook.path).exists():
             errors.append(f"Missing notebook: {notebook.path}")
 
-        if notebook.export and not notebook.package:
-            errors.append(f"Missing package for exported notebook: {notebook.path}")
-
-    errors.extend(redirect_errors(notebooks, redirects or []))
+        if not (ROOT / notebook.package_dir / "pyproject.toml").exists():
+            errors.append(f"Topic {notebook.topic_id} has no package")
 
     if errors:
-        raise SystemExit("\n".join(errors))
-
-
-def redirect_errors(notebooks: list[Notebook], redirects: list[Redirect]) -> list[str]:
-    exported = {notebook.slug for notebook in notebooks if notebook.export}
-    slugs = {notebook.slug for notebook in notebooks}
-    sources: set[str] = set()
-    errors: list[str] = []
-
-    for redirect in redirects:
-        if redirect.source in sources:
-            errors.append(f"Duplicate redirect: {redirect.source}")
-        sources.add(redirect.source)
-
-        if not SLUG_PATTERN.fullmatch(redirect.source):
-            errors.append(f"Invalid redirect source: {redirect.source}")
-
-        # A redirect is a folder index, so it cannot overlap a notebook route.
-        for slug in slugs:
-            if (
-                slug == redirect.source
-                or slug.startswith(redirect.source + "/")
-                or redirect.source.startswith(slug + "/")
-            ):
-                errors.append(f"Redirect {redirect.source} collides with page {slug}")
-
-        if redirect.target not in exported:
-            errors.append(
-                f"Redirect {redirect.source} points to {redirect.target}, "
-                "which is not an exported notebook"
-            )
-
-    return errors
+        raise SystemExit("\n".join(sorted(set(errors))))
 
 
 def ts_header() -> str:
@@ -169,22 +113,15 @@ export interface Notebook {
   summary: string;
   slug: string;
   path: string;
-  export: boolean;
   sourceUrl: string;
   assetPath: string;
 }
 
-export interface Section {
-  id: string;
-  title: string;
-  notebooks: Notebook[];
-}
-
-export interface Course {
+export interface Topic {
   id: string;
   title: string;
   folderUrl: string;
-  sections: Section[];
+  notebooks: Notebook[];
 }
 
 export interface Site {
@@ -203,13 +140,11 @@ def render_frontend_data(site: SiteConfig, notebooks: list[Notebook]) -> str:
         "repository": site.repository,
     }
     site_ts = json.dumps(site_public, ensure_ascii=False, indent=2)
-    courses_ts = json.dumps(
-        build_courses(site, notebooks), ensure_ascii=False, indent=2
-    )
+    topics_ts = json.dumps(build_topics(site, notebooks), ensure_ascii=False, indent=2)
     return (
         ts_header()
         + f"export const site: Site = {site_ts};\n\n"
-        + f"export const courses: Course[] = {courses_ts};\n"
+        + f"export const topics: Topic[] = {topics_ts};\n"
     )
 
 
@@ -224,34 +159,20 @@ def frontend_data_is_current(site: SiteConfig, notebooks: list[Notebook]) -> boo
     )
 
 
-def build_courses(site: SiteConfig, notebooks: list[Notebook]) -> list[dict]:
-    courses: list[dict] = []
+def build_topics(site: SiteConfig, notebooks: list[Notebook]) -> list[dict]:
+    topics: dict[str, dict] = {}
     for notebook in notebooks:
-        course = _find(courses, notebook.course_id)
-        if course is None:
-            course = {
-                "id": notebook.course_id,
-                "title": notebook.course,
+        topic = topics.setdefault(
+            notebook.topic_id,
+            {
+                "id": notebook.topic_id,
+                "title": notebook.topic,
                 "folderUrl": folder_url(site, notebook),
-                "sections": [],
-            }
-            courses.append(course)
-
-        section = _find(course["sections"], notebook.section_id)
-        if section is None:
-            section = {
-                "id": notebook.section_id,
-                "title": notebook.section,
                 "notebooks": [],
-            }
-            course["sections"].append(section)
-
-        section["notebooks"].append(notebook_data(site, notebook))
-    return courses
-
-
-def _find(items: list[dict], item_id: str) -> dict | None:
-    return next((item for item in items if item["id"] == item_id), None)
+            },
+        )
+        topic["notebooks"].append(notebook_data(site, notebook))
+    return list(topics.values())
 
 
 def notebook_data(site: SiteConfig, notebook: Notebook) -> dict:
@@ -260,17 +181,14 @@ def notebook_data(site: SiteConfig, notebook: Notebook) -> dict:
         "summary": notebook.summary,
         "slug": notebook.slug,
         "path": notebook.path,
-        "export": notebook.export,
         "sourceUrl": source_url(site, notebook),
-        "assetPath": f"/notebooks/{notebook.slug}/" if notebook.export else "",
+        "assetPath": f"/notebooks/{notebook.slug}/",
     }
 
 
 def source_url(site: SiteConfig, notebook: Notebook) -> str:
-    encoded_path = quote(notebook.path)
-    return f"{site.repository}/blob/{site.branch}/{encoded_path}"
+    return f"{site.repository}/blob/{site.branch}/{quote(notebook.path)}"
 
 
 def folder_url(site: SiteConfig, notebook: Notebook) -> str:
-    encoded_dir = quote(notebook.package_dir)
-    return f"{site.repository}/tree/{site.branch}/{encoded_dir}"
+    return f"{site.repository}/tree/{site.branch}/{quote(notebook.package_dir)}"
