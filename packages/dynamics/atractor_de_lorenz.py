@@ -9,8 +9,10 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
-    return mo, np, plt
+    return figura_animada, go, mo, np, plt
 
 
 @app.cell(hide_code=True)
@@ -253,31 +255,124 @@ def _(mo):
     Un solo par de trayectorias, sin renormalizar, muestra las dos fases: un
     crecimiento exponencial y la saturación en el tamaño del atractor. La recta
     es $d_0 e^{\lambda_1 t}$ con el $\lambda_1$ de arriba.
+
+    La animación recorre el tramo en que la separación se hace visible. A la
+    izquierda, las dos trayectorias en el plano $x$–$z$ sobre el atractor en
+    gris; a la derecha, el punto marca $d(t)$ en la curva completa.
     """)
     return
 
 
 @app.cell
-def _(D0, DT, en_atractor, integrar, lambdas, np, parametros, plt):
+def _(D0, DT, en_atractor, integrar, np, parametros):
     _a0 = en_atractor[:, 0]
-    _par = integrar(
+    par = integrar(
         np.stack([_a0, _a0 + np.array([D0, 0.0, 0.0])], axis=1), DT, 4000, parametros
     )
-    _d = np.linalg.norm(_par[:, :, 1] - _par[:, :, 0], axis=1)
-    _t = DT * np.arange(_d.size)
+    distancia = np.linalg.norm(par[:, :, 1] - par[:, :, 0], axis=1)
+    t_par = DT * np.arange(distancia.size)
+    return distancia, par, t_par
 
-    fig_sep, ax_sep = plt.subplots(figsize=(8, 4))
-    ax_sep.semilogy(_t, _d, "k", linewidth=1.2, label="distancia entre trayectorias")
-    ax_sep.semilogy(
-        _t, D0 * np.exp(lambdas.mean() * _t), "r--", label=r"$d_0 e^{\lambda_1 t}$"
+
+@app.cell
+def _(D0, DT, distancia, figura_animada, go, lambdas, np, par, t_par):
+    _INICIO, _FIN, _CADA = 14.0, 24.0, 4
+    _ESTELA = 7
+    _pasos = np.arange(round(_INICIO / DT), round(_FIN / DT) + 1, _CADA)
+    _atras = _CADA * np.arange(_ESTELA - 1, -1, -1)
+
+    def _r(valores):
+        return np.round(valores, 1).tolist()
+
+    def _cifras(valores):
+        return [float(f"{_v:.3g}") for _v in valores]
+
+    def _estela(paso, j):
+        indices = paso - _atras
+        return {"x": _r(par[indices, 0, j]), "y": _r(par[indices, 2, j])}
+
+    def _cuadro(k):
+        paso = _pasos[k]
+        return [
+            _estela(paso, 0),
+            _estela(paso, 1),
+            {"x": [round(t_par[paso], 2)], "y": _cifras([distancia[paso]])},
+        ]
+
+    def _punta(color):
+        return go.Scatter(
+            mode="lines+markers",
+            line={"color": color, "width": 2},
+            marker={"color": color, "size": [0] * (_ESTELA - 1) + [10]},
+            showlegend=False,
+            hoverinfo="skip",
+        )
+
+    _fondo = slice(0, 1201, 3)
+    _curva = slice(0, None, 10)
+    _recta = np.array([0.0, 22.0])
+    _inicial = _cuadro(0)
+    _trazas = [
+        go.Scatter(
+            x=_r(par[_fondo, 0, 0]),
+            y=_r(par[_fondo, 2, 0]),
+            mode="lines",
+            line={"color": "#d5d9e0", "width": 1},
+            showlegend=False,
+            hoverinfo="skip",
+        ),
+        go.Scatter(
+            x=_r(t_par[_curva]),
+            y=_cifras(distancia[_curva]),
+            xaxis="x2",
+            yaxis="y2",
+            mode="lines",
+            line={"color": "#2a3f5f", "width": 1.5},
+            name="d(t)",
+        ),
+        go.Scatter(
+            x=_recta,
+            y=_cifras(D0 * np.exp(lambdas.mean() * _recta)),
+            xaxis="x2",
+            yaxis="y2",
+            mode="lines",
+            line={"color": "#ef553b", "dash": "dash", "width": 1.5},
+            name="d₀ e^(λ₁ t)",
+        ),
+        _punta("#636efa").update(**_inicial[0]),
+        _punta("#00cc96").update(**_inicial[1]),
+        go.Scatter(
+            **_inicial[2],
+            xaxis="x2",
+            yaxis="y2",
+            mode="markers",
+            marker={"color": "#2a3f5f", "size": 10},
+            showlegend=False,
+            hoverinfo="skip",
+        ),
+    ]
+    figura_animada(
+        _trazas,
+        [_cuadro(k) for k in range(_pasos.size)],
+        t_par[_pasos],
+        animadas=[3, 4, 5],
+        ms_por_cuadro=60,
+        formato="{:.1f}",
+        sufijo="",
+        title="Dos trayectorias separadas por d₀ = 10⁻⁸",
+        xaxis={"domain": [0, 0.45], "title": {"text": "x"}, "range": [-20, 20]},
+        yaxis={"title": {"text": "z"}, "range": [3, 50]},
+        xaxis2={"domain": [0.58, 1], "title": {"text": "t"}, "range": [0, 40]},
+        yaxis2={
+            "anchor": "x2",
+            "type": "log",
+            "title": {"text": "d(t)"},
+            "range": [-9, 3],
+            "exponentformat": "power",
+        },
+        legend={"x": 1, "xanchor": "right", "y": 0.02, "yanchor": "bottom"},
+        height=500,
     )
-    ax_sep.set_ylim(1e-9, 1e3)
-    ax_sep.set_xlabel("Tiempo t")
-    ax_sep.set_ylabel("d(t)")
-    ax_sep.legend()
-    ax_sep.grid(True, which="both", alpha=0.3)
-    fig_sep.tight_layout()
-    fig_sep
     return
 
 

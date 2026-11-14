@@ -11,13 +11,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return md, mo, np, plt
+    return figura_animada, go, md, mo, np, plt
 
 
 @app.cell(hide_code=True)
@@ -430,7 +432,106 @@ def _(md):
         hacia cero al crecer $T$. En el caso moderado también decrece con $T$,
         lo que es consistente con $\lambda=0$ (movimiento regular), pero un
         estimador de tiempo finito no lo demuestra.
+        """
+    )
+    return
 
+
+@app.cell
+def _(L1, L2, casos, integrate, np, step_rk4):
+    DESVIO = 1e-3
+    DT_ANIM, CADA, TIEMPO_ANIM = 0.002, 20, 10.0
+    _y0 = casos["grande (2.5, 2.0)"]
+    _pasos = round(TIEMPO_ANIM / DT_ANIM)
+    _pares = [
+        integrate(step_rk4, y0, DT_ANIM, _pasos)[::CADA]
+        for y0 in (_y0, _y0 + np.array([DESVIO, 0.0, 0.0, 0.0]))
+    ]
+
+    def _posiciones(y):
+        x1, y1 = L1 * np.sin(y[:, 0]), -L1 * np.cos(y[:, 0])
+        return x1, y1, x1 + L2 * np.sin(y[:, 2]), y1 - L2 * np.cos(y[:, 2])
+
+    pos_a, pos_b = (_posiciones(y) for y in _pares)
+    t_anim = np.arange(len(_pares[0])) * DT_ANIM * CADA
+    _dist = np.hypot(pos_a[2] - pos_b[2], pos_a[3] - pos_b[3])
+    t_diverge = t_anim[np.argmax(_dist > 0.1)]
+    return DESVIO, pos_a, pos_b, t_anim, t_diverge
+
+
+@app.cell(hide_code=True)
+def _(DESVIO, md, t_diverge):
+    md(
+        rf"""
+        ## Dos péndulos casi iguales
+
+        La animación suelta dos péndulos desde $(2.5,\ 2.0)$ rad; el segundo
+        empieza con $\theta_1$ mayor en {DESVIO:g} rad. Durante los primeros
+        segundos se mueven como uno solo. A los {t_diverge:.1f} s la segunda
+        masa de uno ya está a más de 10 cm de la del otro, y poco después sus
+        movimientos no se parecen. Cada péndulo deja la estela de su segunda
+        masa en los últimos 0.6 s.
+        """
+    )
+    return
+
+
+@app.cell
+def _(figura_animada, go, np, pos_a, pos_b, t_anim):
+    _estela = 16
+
+    def _varilla(p, i):
+        return {
+            "x": [0, round(p[0][i], 2), round(p[2][i], 2)],
+            "y": [0, round(p[1][i], 2), round(p[3][i], 2)],
+        }
+
+    def _cola(p, i):
+        j = np.arange(max(0, i - _estela), i + 1, 2)
+        return {"x": np.round(p[2][j], 2).tolist(), "y": np.round(p[3][j], 2).tolist()}
+
+    _colores = ("#636efa", "#ef553b")
+    _nombres = ("θ₁(0) = 2.5 rad", "θ₁(0) = 2.5 rad + 10⁻³")
+    _trazas = [
+        go.Scatter(
+            **_cola(p, 0),
+            mode="lines",
+            line={"color": c, "width": 1},
+            opacity=0.5,
+            showlegend=False,
+        )
+        for p, c in zip((pos_a, pos_b), _colores, strict=True)
+    ] + [
+        go.Scatter(
+            **_varilla(p, 0),
+            mode="lines+markers",
+            name=n,
+            line={"color": c, "width": 2},
+            marker={"size": [4, 12, 12]},
+        )
+        for p, c, n in zip((pos_a, pos_b), _colores, _nombres, strict=True)
+    ]
+    figura_animada(
+        _trazas,
+        [
+            [_cola(pos_a, i), _cola(pos_b, i), _varilla(pos_a, i), _varilla(pos_b, i)]
+            for i in range(len(t_anim))
+        ],
+        t_anim,
+        ms_por_cuadro=40,
+        formato="{:.1f}",
+        title="Dos péndulos dobles que empiezan a 10⁻³ rad",
+        xaxis={"range": [-2.2, 2.2], "showticklabels": False},
+        yaxis={"range": [-2.2, 2.2], "scaleanchor": "x", "showticklabels": False},
+        height=560,
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
         ## Referencia
 
         Ch. Skokos, «The Lyapunov characteristic exponents and their

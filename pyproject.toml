@@ -6,7 +6,7 @@ requires-python = ">=3.14,<3.15"
 dependencies = []
 
 [tool.uv.workspace]
-members = ["packages/*"]
+members = ["packages/*", "lib/*"]
 
 [tool.ruff]
 line-length = 88

@@ -1,0 +1,12 @@
+[project]
+name = "animation"
+version = "0.1.0"
+description = "Plotly figures whose frames play in the browser, shared by the topic packages."
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "plotly>=7.1.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14"]
+build-backend = "uv_build"

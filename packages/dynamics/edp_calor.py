@@ -11,13 +11,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return md, np, plt
+    return figura_animada, go, md, np, plt
 
 
 @app.cell(hide_code=True)
@@ -210,10 +212,82 @@ def _(md):
         pero en el límite de estabilidad: el modo más oscilante no decae y
         conserva el ruido que el salto inicial en el borde le entrega. Con
         $r=0.6$ ese modo se multiplica por $-1.4$ en cada paso, y el perfil
-        que se ve es sólo la oscilación de nodo a nodo, miles de millones de
-        muchos órdenes de magnitud mayor que la temperatura física. La escala
-        vertical está recortada; la anotación da el valor real.
+        que se ve es sólo la oscilación de nodo a nodo, muchos órdenes de
+        magnitud mayor que la temperatura física. La escala vertical está
+        recortada; la anotación da el valor real.
+
+        La animación sigue a $r=0.4$ y $r=0.6$ cada $0.03$ de tiempo. La
+        oscilación de $r=0.6$ aparece junto al borde caliente, donde está el
+        salto inicial, se propaga hacia la izquierda y hacia $t=0.3$ ya sale
+        de la gráfica; desde ahí la anotación sigue su crecimiento mientras
+        $r=0.4$ sigue a la solución de Fourier.
         """
+    )
+    return
+
+
+@app.cell
+def _(T_FINAL, explicitos, figura_animada, fourier, go, np, x):
+    _CADA_T = 0.03
+    _tiempos = np.arange(0.0, T_FINAL + 1e-9, _CADA_T)
+
+    def _perfil(r, t):
+        _t, _T = explicitos[r]
+        return _T[round(t / (_t[1] - _t[0]))]
+
+    def _y(valores):
+        # Fuera de [-20, 120] el valor exacto no cambia el dibujo y alarga el JSON.
+        return np.round(np.clip(valores, -200.0, 300.0), 1).tolist()
+
+    def _cuadro(t):
+        inestable = _perfil(0.6, t)
+        return [
+            {"y": _y(fourier(t))},
+            {"y": _y(_perfil(0.4, t))},
+            {"y": _y(inestable)},
+            {"text": [f"r = 0.6: max|T| = {abs(inestable).max():.3g}"]},
+        ]
+
+    _inicial = _cuadro(0.0)
+    _trazas = [
+        go.Scatter(
+            x=x,
+            **_inicial[0],
+            mode="lines",
+            name="Fourier",
+            line={"color": "#c8ccd4", "width": 7},
+        ),
+        go.Scatter(
+            x=x, **_inicial[1], mode="lines+markers", name="r = 0.4", marker={"size": 5}
+        ),
+        go.Scatter(
+            x=x, **_inicial[2], mode="lines+markers", name="r = 0.6", marker={"size": 5}
+        ),
+        go.Scatter(
+            x=[0],
+            y=[0.5],
+            yaxis="y2",
+            **_inicial[3],
+            mode="text",
+            textposition="middle right",
+            showlegend=False,
+            hoverinfo="skip",
+        ),
+    ]
+    figura_animada(
+        _trazas,
+        [_cuadro(t) for t in _tiempos],
+        _tiempos,
+        ms_por_cuadro=120,
+        prefijo="t = ",
+        sufijo="",
+        title="Explícito estable e inestable frente a la solución de Fourier",
+        xaxis={"title": {"text": "x"}},
+        yaxis={"title": {"text": "T(x, t)"}, "range": [-20, 120], "domain": [0, 0.9]},
+        # Franja sobre la gráfica para la anotación: Plotly oculta un texto
+        # fuera del rango de su eje.
+        yaxis2={"domain": [0.9, 1], "range": [0, 1], "visible": False},
+        height=520,
     )
     return
 

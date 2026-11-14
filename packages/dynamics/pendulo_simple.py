@@ -11,13 +11,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return md, np, plt
+    return figura_animada, go, md, np, plt
 
 
 @app.cell(hide_code=True)
@@ -208,7 +210,63 @@ def _(md):
         corrección $1+\theta_0^2/16$ lo reduce a 0.4 % a 60°, pero a 150°
         todavía falla en 19 %: la serie en $\theta_0$ converge mal cerca de
         $\pi$, y por eso existen aproximaciones analíticas más elaboradas.
+
+        La animación suelta tres péndulos a la vez desde 30°, 90° y 150°,
+        integrados con RK4. En la aproximación lineal oscilarían juntos; el de
+        mayor amplitud se queda atrás desde la primera oscilación.
         """
+    )
+    return
+
+
+@app.cell
+def _(OMEGA0, figura_animada, go, np, paso_rk4, periodo_exacto):
+    _amplitudes = np.radians([30, 90, 150])
+    _dt, _cada = 1e-3, 50  # un cuadro cada 0.05 s
+    _cuadros_totales = round(2 * periodo_exacto(_amplitudes[-1]) / (_dt * _cada))
+    # rhs opera por columnas, así que RK4 avanza los tres péndulos a la vez.
+    _y = np.array([_amplitudes, np.zeros(3)])
+    _angulos = [_y[0].copy()]
+    for _ in range(_cuadros_totales):
+        for _ in range(_cada):
+            _y = paso_rk4(_y, _dt)
+        _angulos.append(_y[0].copy())
+    _angulos = np.array(_angulos)
+    _tiempos = _dt * _cada * np.arange(len(_angulos))
+
+    def _varillas(theta):
+        return [
+            {"x": [0, round(np.sin(a), 3)], "y": [0, round(-np.cos(a), 3)]}
+            for a in theta
+        ]
+
+    _nombres = [
+        f"θ₀ = {round(np.degrees(a))}°, T = {periodo_exacto(a):.2f} s"
+        for a in _amplitudes
+    ]
+    _trazas = [
+        go.Scatter(
+            **varilla,
+            mode="lines+markers",
+            marker={"size": [4, 16]},
+            line={"width": 2},
+            name=nombre,
+        )
+        for varilla, nombre in zip(_varillas(_angulos[0]), _nombres, strict=True)
+    ]
+    figura_animada(
+        _trazas,
+        [_varillas(theta) for theta in _angulos],
+        _tiempos,
+        title=f"Tres amplitudes; en la aproximación lineal T₀ = {2 * np.pi / OMEGA0:.2f} s",
+        xaxis={"range": [-1.2, 1.2], "zeroline": False, "showticklabels": False},
+        yaxis={
+            "range": [-1.2, 1.2],
+            "scaleanchor": "x",
+            "zeroline": False,
+            "showticklabels": False,
+        },
+        height=520,
     )
     return
 

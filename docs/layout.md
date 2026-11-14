@@ -11,6 +11,7 @@ not scan the repository root or the topic packages directly.
 | -------------- | --------------- | -------------------------------------------------------------------------------------------- |
 | `site/`        | site            | SvelteKit source, frontend tests, static site assets, and ignored generated notebook exports |
 | `packages/`    | notebook source | Topic packages, notebooks, supporting Python source, data, and package dependencies          |
+| `lib/`         | notebook source | Workspace libraries that several topic packages import; they hold no notebooks               |
 | `scripts/`     | tooling         | Catalog validation, frontend data generation, notebook checks, and publication orchestration |
 | `.github/`     | tooling         | CI and GitHub Pages deployment workflows, and the contributing guide                         |
 | `docs/`        | other           | Architecture and operator documentation; it is not site content                              |

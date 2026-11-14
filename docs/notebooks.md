@@ -51,6 +51,31 @@ the size it would have at 100 dpi. Notebooks that publish many figures lower
 `plt.rcParams["figure.dpi"]` (to 72, or 70 for the tsunami notebook) so the page
 stays under the size limit.
 
+## Animations
+
+A published page has no Python kernel, so a slider widget cannot move a figure.
+An animation is a Plotly figure whose frames the browser plays. Build it with
+`figura_animada` from `lib/animation`, and add `animation` to the package's
+dependencies with `{ workspace = true }` in `[tool.uv.sources]`:
+
+```python
+from animation import figura_animada
+
+figura_animada(trazas, cuadros, tiempos, animadas=[2, 3], title="...")
+```
+
+`trazas` are the initial traces. `cuadros` holds one list per time in `tiempos`,
+with one dict per trace in `animadas` that carries only the fields that change.
+A field a frame omits keeps its initial value, so fixed data travels once.
+
+Every frame repeats its data in the page, so keep frames small:
+
+- Round coordinates to the precision the plot shows.
+- Draw points that accumulate as one trace per batch and change only
+  `marker.opacity` in the frames; see `monte_carlo.py`.
+- Plotly hides a text trace outside its axis range. Put a label above the plot
+  on a hidden second axis; see `edp_calor.py`.
+
 ## Tests
 
 Each package with tests has a task named after it. `mise run test` runs them

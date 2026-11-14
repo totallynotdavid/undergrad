@@ -11,13 +11,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return md, np, plt
+    return figura_animada, go, md, np, plt
 
 
 @app.cell(hide_code=True)
@@ -197,6 +199,107 @@ def _(plt, t, trayectorias):
     _ax[0].legend()
     _fig.tight_layout()
     _fig
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        La animación muestra los mismos tres casos durante 3 s, a un tercio de
+        la velocidad real. Los desplazamientos están dibujados a 0.3 de su
+        escala para que las masas no se crucen.
+        """
+    )
+    return
+
+
+@app.cell
+def _(M1, M2, figura_animada, go, np, t, trayectorias):
+    _ESCALA, _CADA, _DURACION = 0.3, 2, 3.0
+    _filas = (2.0, 1.0, 0.0)
+    _etiquetas = ("modo 1", "modo 2", "x₁(0) = 1, x₂(0) = 0")
+    _cuadros_idx = np.arange(0, np.searchsorted(t, _DURACION) + 1, _CADA)
+    _vueltas = 6
+    _u = np.concatenate([[0.0, 0.15], np.linspace(0.2, 0.8, 2 * _vueltas), [0.85, 1.0]])
+    _zig = np.concatenate(
+        [[0.0, 0.0], 0.12 * (-1.0) ** np.arange(2 * _vueltas), [0.0, 0.0]]
+    )
+
+    def _resortes_x(x1, x2):
+        """Abscisas de los tres resortes de una fila, separados por None."""
+        a, b = 1 + _ESCALA * x1, 2 + _ESCALA * x2
+        xs = []
+        for izq, der in ((0.0, a), (a, b), (b, 3.0)):
+            xs += [*np.round(izq + _u * (der - izq), 2).tolist(), None]
+        return xs
+
+    _y_resorte = [
+        y for fila in _filas for _ in range(3) for y in [*(fila + _zig).tolist(), None]
+    ]
+    _y_masas = [fila for fila in _filas for _ in range(2)]
+    _series = [trayectorias[n] for n in trayectorias]
+
+    def _cuadro(i):
+        resortes, masas_x = [], []
+        for y in _series:
+            resortes += _resortes_x(y[i, 0], y[i, 1])
+            masas_x += [
+                round(1 + _ESCALA * y[i, 0], 2),
+                round(2 + _ESCALA * y[i, 1], 2),
+            ]
+        return [{"x": resortes}, {"x": masas_x}]
+
+    _paredes = go.Scatter(
+        x=[p for _ in _filas for p in (0, 0, None, 3, 3, None)],
+        y=[y for fila in _filas for y in (fila - 0.3, fila + 0.3, None) * 2],
+        mode="lines",
+        line={"color": "#2a3f5f", "width": 4},
+        hoverinfo="skip",
+        showlegend=False,
+    )
+    _inicial = _cuadro(0)
+    _trazas = [
+        _paredes,
+        go.Scatter(
+            x=_inicial[0]["x"],
+            y=_y_resorte,
+            mode="lines",
+            line={"color": "#8c96a8", "width": 1.5},
+            hoverinfo="skip",
+            showlegend=False,
+        ),
+        go.Scatter(
+            x=_inicial[1]["x"],
+            y=_y_masas,
+            mode="markers",
+            marker={
+                "symbol": "square",
+                "size": [22 * np.sqrt(m) for _ in _filas for m in (M1, M2)],
+                "color": ["#636efa", "#ef553b"] * len(_filas),
+            },
+            hoverinfo="skip",
+            showlegend=False,
+        ),
+    ]
+    figura_animada(
+        _trazas,
+        [_cuadro(i) for i in _cuadros_idx],
+        t[_cuadros_idx],
+        animadas=[1, 2],
+        ms_por_cuadro=60,
+        title="m₁ = 1 kg (azul) y m₂ = 2 kg (rojo), a un tercio de la velocidad real",
+        xaxis={"range": [-0.1, 3.1], "visible": False},
+        yaxis={
+            "range": [-0.6, 2.6],
+            "tickvals": list(_filas),
+            "ticktext": list(_etiquetas),
+            "showgrid": False,
+            "zeroline": False,
+        },
+        margin={"l": 140, "r": 20, "t": 50, "b": 20},
+        height=480,
+    )
     return
 
 

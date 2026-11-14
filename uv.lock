@@ -9,6 +9,7 @@ resolution-markers = [
 
 [manifest]
 members = [
+    "animation",
     "dynamics",
     "geophysics",
     "notebooks",
@@ -42,6 +43,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/63/e9/4a4480601992a529c
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/87/e62f55c956b583380e7d2a71705dfd431ee32dd1689d50491ba0c610fc11/affine-3.0.1-py3-none-any.whl", hash = "sha256:cda3b303325e7bf2bf34817e68753a0d1c4cacbdd451fe67c4878dc2ecbaa540", size = 10887, upload-time = "2026-08-28T18:38:12.837Z" },
 ]
+
+[[package]]
+name = "animation"
+version = "0.1.0"
+source = { editable = "lib/animation" }
+dependencies = [
+    { name = "plotly" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "plotly", specifier = ">=7.1.0" }]
 
 [[package]]
 name = "anyio"
@@ -309,14 +321,18 @@ name = "dynamics"
 version = "0.1.0"
 source = { virtual = "packages/dynamics" }
 dependencies = [
+    { name = "animation" },
     { name = "matplotlib" },
     { name = "numpy" },
+    { name = "plotly" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "animation", editable = "lib/animation" },
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "numpy", specifier = ">=2.5.4" },
+    { name = "plotly", specifier = ">=7.1.0" },
 ]
 
 [[package]]
@@ -869,14 +885,18 @@ name = "numerical-methods"
 version = "0.1.0"
 source = { virtual = "packages/numerical-methods" }
 dependencies = [
+    { name = "animation" },
     { name = "matplotlib" },
     { name = "numpy" },
+    { name = "plotly" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "animation", editable = "lib/animation" },
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "numpy", specifier = ">=2.5.4" },
+    { name = "plotly", specifier = ">=7.1.0" },
 ]
 
 [[package]]

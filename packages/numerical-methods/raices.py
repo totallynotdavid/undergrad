@@ -12,13 +12,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return Decimal, getcontext, md, np, plt
+    return Decimal, figura_animada, getcontext, go, md, np, plt
 
 
 @app.cell(hide_code=True)
@@ -73,22 +75,24 @@ def _(np):
         return np.array(medios), np.array(anchos)
 
     def falsa_posicion(f, a, b, n):
-        """n pasos de falsa posición. Devuelve las abscisas del corte."""
+        """n pasos de falsa posición. Devuelve las abscisas del corte y el
+        intervalo [a, b] cuya cuerda dio cada una."""
         fa, fb = f(a), f(b)
         if fa * fb > 0:
             raise ValueError("f(a) y f(b) deben tener signos opuestos")
-        cortes = []
+        cortes, intervalos = [], []
         for _ in range(n):
             c = (a * fb - b * fa) / (fb - fa)
             fc = f(c)
             cortes.append(c)
+            intervalos.append((a, b))
             if fc == 0:
                 break
             if np.sign(fc) == np.sign(fa):
                 a, fa = c, fc
             else:
                 b, fb = c, fc
-        return np.array(cortes)
+        return np.array(cortes), np.array(intervalos)
 
     def newton(f, df, x0, n, multiplicidad=1):
         """n pasos de Newton. `multiplicidad` = 1 es el método clásico."""
@@ -204,16 +208,153 @@ def _(
     np,
 ):
     _medios, anchos_biseccion = biseccion(f_cubica, -6.0, -4.0, 50)
+    _cortes, intervalos_falsa = falsa_posicion(f_cubica, -6.0, -4.0, 40)
     historias = {
         "bisección": _medios,
-        "falsa posición": falsa_posicion(f_cubica, -6.0, -4.0, 40),
+        "falsa posición": _cortes,
         "Newton ($x_0=-6$)": newton(f_cubica, df_cubica, -6.0, 6),
     }
     errores = {
         nombre: np.array([float(e) for e in error_absoluto(h)])
         for nombre, h in historias.items()
     }
-    return anchos_biseccion, errores
+    return anchos_biseccion, errores, historias, intervalos_falsa
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        La animación avanza una iteración por cuadro. La bisección muestra el
+        intervalo que queda y su punto medio; falsa posición, la cuerda y su
+        corte con el eje; Newton, la tangente en $x_{k-1}$ y su corte $x_k$.
+        Cada panel da el error de su $x_k$.
+        """
+    )
+    return
+
+
+@app.cell
+def _(
+    anchos_biseccion,
+    errores,
+    f_cubica,
+    figura_animada,
+    go,
+    historias,
+    intervalos_falsa,
+    np,
+):
+    _K = 6
+    _NOMBRES = list(historias)
+    _medios = historias["bisección"]
+    _newton = np.concatenate([[-6.0], historias["Newton ($x_0=-6$)"]])
+
+    def _error(nombre, k):
+        return {"text": [f"|x{k} − x*| = {errores[nombre][k - 1]:.1e}"]}
+
+    def _cuadro(k):
+        medio, ancho = _medios[k - 1], anchos_biseccion[k - 1]
+        a, b = intervalos_falsa[k - 1]
+        corte = historias["falsa posición"][k - 1]
+        anterior, nuevo = _newton[k - 1], _newton[k]
+        return [
+            {"x": [medio - ancho, medio + ancho]},
+            {"x": [medio, medio], "y": [0.0, f_cubica(medio)]},
+            {"x": [a, b], "y": [f_cubica(a), f_cubica(b)]},
+            {"x": [corte, corte], "y": [0.0, f_cubica(corte)]},
+            {"x": [anterior, nuevo], "y": [f_cubica(anterior), 0.0]},
+            *(_error(nombre, k) for nombre in _NOMBRES),
+        ]
+
+    _xs = np.linspace(-6.2, -3.8, 121)
+    _ejes = [("x", "y"), ("x2", "y2"), ("x3", "y3")]
+    _curvas = [
+        go.Scatter(
+            x=_xs,
+            y=f_cubica(_xs),
+            xaxis=ex,
+            yaxis=ey,
+            mode="lines",
+            line={"color": "#8a94a6", "width": 1.5},
+            showlegend=False,
+            hoverinfo="skip",
+        )
+        for ex, ey in _ejes
+    ]
+
+    def _marca(ejes, color, **estilo):
+        return go.Scatter(
+            xaxis=ejes[0],
+            yaxis=ejes[1],
+            line={"color": color, **estilo},
+            marker={"color": color, "size": 8},
+            showlegend=False,
+            hoverinfo="skip",
+        )
+
+    _inicial = _cuadro(1)
+    _animadas = [
+        _marca(_ejes[0], "#636efa", width=8).update(
+            mode="lines", y=[0.0, 0.0], opacity=0.5
+        ),
+        _marca(_ejes[0], "#636efa", dash="dot").update(mode="lines+markers"),
+        _marca(_ejes[1], "#ef553b").update(mode="lines+markers"),
+        _marca(_ejes[1], "#ef553b", dash="dot").update(mode="lines+markers"),
+        _marca(_ejes[2], "#00cc96").update(mode="lines+markers"),
+        *(
+            go.Scatter(
+                x=[-6.15],
+                y=[17.0],
+                xaxis=ex,
+                yaxis=ey,
+                mode="text",
+                textposition="middle right",
+                showlegend=False,
+                hoverinfo="skip",
+            )
+            for ex, ey in _ejes
+        ),
+    ]
+    for _traza, _valores in zip(_animadas, _inicial, strict=True):
+        _traza.update(**_valores)
+
+    _eje_y = {"range": [-36, 21], "zerolinecolor": "#8a94a6", "zerolinewidth": 1}
+    _titulos = ["bisección", "falsa posición", "Newton, x₀ = −6"]
+    figura_animada(
+        [*_curvas, *_animadas],
+        [_cuadro(k) for k in range(1, _K + 1)],
+        list(range(1, _K + 1)),
+        animadas=range(3, 3 + len(_animadas)),
+        ms_por_cuadro=1200,
+        formato="{}",
+        prefijo="k = ",
+        sufijo="",
+        title="Una iteración por cuadro, f(x) = x³ + 5x² + 2",
+        xaxis={"domain": [0, 0.3], "range": [-6.2, -3.8]},
+        xaxis2={"domain": [0.35, 0.65], "range": [-6.2, -3.8]},
+        xaxis3={"domain": [0.7, 1], "range": [-6.2, -3.8]},
+        yaxis={**_eje_y, "title": {"text": "f(x)"}},
+        yaxis2={**_eje_y, "anchor": "x2", "showticklabels": False},
+        yaxis3={**_eje_y, "anchor": "x3", "showticklabels": False},
+        annotations=[
+            {
+                "text": titulo,
+                "x": (inicio + fin) / 2,
+                "xref": "paper",
+                "y": 1.02,
+                "yref": "paper",
+                "yanchor": "bottom",
+                "showarrow": False,
+            }
+            for titulo, (inicio, fin) in zip(
+                _titulos, [(0, 0.3), (0.35, 0.65), (0.7, 1)], strict=True
+            )
+        ],
+        margin={"l": 50, "r": 20, "t": 80, "b": 20},
+        height=460,
+    )
+    return
 
 
 @app.cell

@@ -11,13 +11,15 @@ def _():
     import marimo as mo
     import matplotlib.pyplot as plt
     import numpy as np
+    import plotly.graph_objects as go
+    from animation import figura_animada
 
     plt.rcParams["figure.dpi"] = 72
 
     def md(text):
         return mo.md(dedent(text))
 
-    return md, np, plt
+    return figura_animada, go, md, np, plt
 
 
 @app.cell(hide_code=True)
@@ -116,6 +118,155 @@ def _(estimador, md, np, problemas):
                 *_filas,
             ]
         )
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def _(md):
+    md(
+        r"""
+        La animación sigue la primera integral. Cada cuadro agrega puntos
+        uniformes en el cuadrado: azules si caen en el círculo, rojos si no.
+        A la derecha, $\hat I_N = 4\cdot(\text{fracción dentro})$ oscila y se
+        acerca a $\pi$ dentro de la banda $\pi\pm2\sigma_{\hat I}$, que se
+        estrecha como $N^{-1/2}$.
+        """
+    )
+    return
+
+
+@app.cell
+def _(figura_animada, go, np):
+    _N_MAX = 5000
+    _rng = np.random.default_rng(3)
+    _puntos = np.round(_rng.uniform(-1.0, 1.0, size=(_N_MAX, 2)), 3)
+    _dentro = (np.sum(_puntos**2, axis=1) <= 1.0).astype(int)
+    _estimacion = 4.0 * np.cumsum(_dentro) / np.arange(1, _N_MAX + 1)
+    _cortes = np.unique(np.round(np.geomspace(10, _N_MAX, 30)).astype(int))
+    _marcas = np.unique(np.round(np.geomspace(10, _N_MAX, 200)).astype(int))
+    _p = np.pi / 4
+    _sigma = 4.0 * np.sqrt(_p * (1 - _p) / _marcas)
+
+    # Cada lote de puntos es una traza y los cuadros sólo cambian su
+    # opacidad: los puntos viajan una vez en la página, no en cada cuadro.
+    _lotes = [
+        go.Scatter(
+            x=_puntos[_a:_b, 0],
+            y=_puntos[_a:_b, 1],
+            mode="markers",
+            marker={
+                "size": 4,
+                "opacity": int(_b == _cortes[0]),
+                "color": _dentro[_a:_b],
+                "colorscale": [[0, "#ef553b"], [1, "#636efa"]],
+                "cmin": 0,
+                "cmax": 1,
+            },
+            hoverinfo="skip",
+            showlegend=False,
+        )
+        for _a, _b in zip(np.r_[0, _cortes[:-1]], _cortes, strict=True)
+    ]
+    _fijas = [
+        go.Scatter(
+            x=np.r_[_marcas, _marcas[::-1]],
+            y=np.round(np.r_[np.pi + 2 * _sigma, (np.pi - 2 * _sigma)[::-1]], 4),
+            fill="toself",
+            fillcolor="rgba(99, 110, 250, 0.15)",
+            line={"width": 0},
+            xaxis="x2",
+            yaxis="y2",
+            name="π ± 2σ",
+            hoverinfo="skip",
+        ),
+        go.Scatter(
+            x=[_marcas[0], _N_MAX],
+            y=[np.pi, np.pi],
+            mode="lines",
+            line={"color": "#8a94a6", "dash": "dash"},
+            xaxis="x2",
+            yaxis="y2",
+            name="π",
+        ),
+    ]
+
+    def _curva(n):
+        _k = _marcas[_marcas <= n]
+        return {"x": _k, "y": np.round(_estimacion[_k - 1], 4)}
+
+    def _punto(n):
+        return {"x": [n], "y": [round(_estimacion[n - 1], 4)]}
+
+    def _rotulo(n):
+        return {"text": [f"estimación = {_estimacion[n - 1]:.4f}"]}
+
+    _animadas = [
+        go.Scatter(
+            **_curva(_cortes[0]),
+            mode="lines",
+            line={"color": "#636efa"},
+            xaxis="x2",
+            yaxis="y2",
+            name="estimación",
+        ),
+        go.Scatter(
+            **_punto(_cortes[0]),
+            mode="markers",
+            marker={"size": 9, "color": "#636efa"},
+            xaxis="x2",
+            yaxis="y2",
+            showlegend=False,
+        ),
+        go.Scatter(
+            x=[12],
+            y=[3.95],
+            **_rotulo(_cortes[0]),
+            mode="text",
+            textposition="middle right",
+            xaxis="x2",
+            yaxis="y2",
+            showlegend=False,
+        ),
+    ]
+    _cuadros = [
+        [{"marker": {"opacity": int(_j <= _i)}} for _j in range(len(_lotes))]
+        + [_curva(_c), _punto(_c), _rotulo(_c)]
+        for _i, _c in enumerate(_cortes)
+    ]
+    _primera = len(_lotes) + len(_fijas)
+    figura_animada(
+        _lotes + _fijas + _animadas,
+        _cuadros,
+        _cortes,
+        animadas=[*range(len(_lotes)), *range(_primera, _primera + 3)],
+        ms_por_cuadro=300,
+        formato="{}",
+        prefijo="N = ",
+        sufijo="",
+        title="Estimación de π con puntos al azar",
+        shapes=[
+            {
+                "type": "circle",
+                "xref": "x",
+                "yref": "y",
+                "x0": -1,
+                "y0": -1,
+                "x1": 1,
+                "y1": 1,
+                "line": {"color": "#2a3f5f", "width": 1},
+            }
+        ],
+        xaxis={"domain": [0, 0.4], "range": [-1.05, 1.05], "constrain": "domain"},
+        yaxis={"range": [-1.05, 1.05], "scaleanchor": "x"},
+        xaxis2={
+            "domain": [0.5, 1],
+            "type": "log",
+            "range": [1, np.log10(1.25 * _N_MAX)],
+        },
+        yaxis2={"anchor": "x2", "range": [2.2, 4.1], "title": {"text": "estimación"}},
+        legend={"x": 1, "xanchor": "right", "y": 0.02, "yanchor": "bottom"},
+        height=480,
     )
     return
 

@@ -1,9 +1,15 @@
 # Architecture
 
 Notebooks is a `uv` workspace. Each directory under `packages/` is a topic
-package with its own dependencies, notebooks, supporting modules and data. The
-root `pyproject.toml` defines the workspace and shared development tools. The
+package with its own dependencies, notebooks, supporting modules and data. Each
+directory under `lib/` is a library that topic packages share; a package lists
+it as a dependency with `{ workspace = true }` in `[tool.uv.sources]`. The root
+`pyproject.toml` defines the workspace and shared development tools. The
 workspace lockfile is `uv.lock`.
+
+`lib/animation` builds the Plotly figures whose frames play in the browser, so
+an exported page animates without a Python kernel. `figura_animada` adds the
+play and pause buttons and the slider; see [notebooks](notebooks.md#animations).
 
 ## Notebook sources
 
@@ -30,8 +36,9 @@ it. The `export` command does not touch the catalog. It checks each notebook,
 runs it with `marimo export html`, and writes its results as one static page. A
 notebook whose check or export fails fails the command, and its page is not
 written. So does a page over 1,000,000 bytes (`MAX_PAGE_BYTES`), because marimo
-embeds every figure in the page as a base64 PNG. Lower the figure resolution or
-plot fewer points to fit.
+embeds every figure in the page: a Matplotlib figure as a base64 PNG and a
+Plotly figure as JSON escaped twice, about 2.7 times its raw size. Lower the
+figure resolution, plot fewer points or use fewer frames to fit.
 
 The export rewrites the page shell that marimo generates: the catalog title and
 summary replace the title and description, the language is `es` because the

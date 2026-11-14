@@ -2,6 +2,11 @@
 name = "dynamics"
 version = "0.1.0"
 dependencies = [
+    "animation",
     "matplotlib>=3.11.2",
     "numpy>=2.5.4",
+    "plotly>=7.1.0",
 ]
+
+[tool.uv.sources]
+animation = { workspace = true }
